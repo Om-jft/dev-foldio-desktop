@@ -1,0 +1,602 @@
+<UserControl x:Class="DSLR_Tool_PC.Controles.TurnTableControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:DSLR_Tool_PC.Controles" 
+             mc:Ignorable="d" 
+             >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DSLRPCToolSub/Theme/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter1" />
+            <local:IntToString x:Key="Conv_IntToString" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="#2e2f30">
+        <!--<materialDesign:Card Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="0" Background="#2e2f30">-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="0" ></RowDefinition>
+            </Grid.RowDefinitions>
+
+
+            <!-- border -->
+            <Grid Grid.Row="0" Visibility="Collapsed">
+                <StackPanel>
+                    <Grid x:Name="gridCursor7" Margin="0,4" Height="2" Background="Black" HorizontalAlignment="Right"></Grid>
+                </StackPanel>
+            </Grid>
+
+            <!-- 360 device Name-->
+            <Grid Grid.Row="1" >
+                <StackPanel Margin="18,15,0,10" Orientation="Horizontal"  VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <TextBlock Text="360 Device Control" Style="{StaticResource Sub_Heading_Title}" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Select Device Panel-->
+            <Grid Grid.Row="2" Visibility="{Binding IsSelectedDevicePanel, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="167"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Grid.Column="1" Margin="0,0,10,0" Background="#2e2f30" BorderThickness="1" BorderBrush="#535657" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition ></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" LastChildFill="False" >
+                            <TextBlock DockPanel.Dock="Bottom" Text="Please Connect with the Foldio360" Foreground="#ffffff" HorizontalAlignment="Center" FontSize="12" FontWeight="Normal" />
+                            <TextBlock DockPanel.Dock="Bottom" Text="NOT CONNECTED" Foreground="White" HorizontalAlignment="Center" FontWeight="Medium" FontSize="13" Height="20" />
+                        </DockPanel>
+                        <Button Grid.Row="1" Width="100" Height="24" Content="SELECT DEVICE" 
+                                    Command="{Binding SelectBTDevice}" Style="{StaticResource RoundButtonTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Bluetooth Turn Off Panel-->
+            <Grid Grid.Row="3" Visibility="{Binding IsPCBluetoothOFF, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="167"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Grid.Column="1" Margin="0,0,10,0" Background="#2e2f30" BorderThickness="1" BorderBrush="#535657" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition ></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" LastChildFill="False" >
+                            <TextBlock DockPanel.Dock="Bottom" Text="Please enable bluetooth" Foreground="#ffffff" HorizontalAlignment="Center" FontSize="11" FontWeight="Light"  />
+                            <TextBlock DockPanel.Dock="Bottom" Text="BLUETOOTH INACCESSIBLE" Foreground="White" HorizontalAlignment="Center" FontWeight="Medium" FontSize="13" Height="20" />
+                        </DockPanel>
+                        <Image Grid.Row="1" Margin="0,10,0,0" Width="80" Source="../Assets/Images/none/BTInaccess.JPG" ></Image>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- List of foldio device Bluetooth finding Panel-->
+            <Grid Grid.Row="4" Visibility="Collapsed" >
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="180"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Grid.Column="1" Background="#FFFFFF" BorderThickness="1" BorderBrush="#535657" Padding="0 5 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="20"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <TextBlock Text="SELECT DEVICE" FontSize="10" FontWeight="Black" Foreground="{StaticResource blackBrush}" FontFamily="Roboto"/>
+                        </StackPanel>
+                        <Grid Grid.Row="0" x:Name="gridCursor10" Height="1" Background="#FFD3D0D0" VerticalAlignment="Bottom" />
+                        <StackPanel Grid.Row="1" >
+                            <ScrollViewer VerticalScrollBarVisibility="Visible">
+                                <ListBox Name="lbTodoList" HorizontalContentAlignment="Stretch" ItemsSource="{Binding FoldioItems, Mode=TwoWay}" 
+                                             SelectedItem="{Binding Path=SelectedtemFoldioDevice, Mode=TwoWay}" DataContextChanged="lbTodoList_DataContextChanged" >
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="30" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Title, Mode=TwoWay}" Margin="10,0,0,0" FontSize="9" FontWeight="Bold" HorizontalAlignment="Left" FontFamily="Roboto" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding DeviceAddress, Mode=TwoWay}" Visibility="Collapsed" />
+                                                <Image Source="../Assets/Images/none/B1.png" Margin="0,8,0,10" Width="10" HorizontalAlignment="Right" VerticalAlignment="Center" ></Image>
+                                                <Grid Grid.ColumnSpan="2" Height="1" Background="#FFD3D0D0" VerticalAlignment="Bottom" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ScrollViewer>
+                        </StackPanel>
+                        <Image Grid.Row="2" Source="../Assets/Images/none/L1.png" >
+                            <Image.RenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform/>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
+                        </Image>
+                        <Button Grid.Row="3" Width="120" Height="28" Margin="0,0,0,-3" Content="CANCEL" Foreground="#ffffff" Background="{StaticResource blackBrush}" BorderThickness="0" FontSize="11" FontWeight="Medium"  FontFamily="roboto"
+                                    Command="{Binding SelectBTDevice}" Style="{StaticResource RoundButtonTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- No Foldio Device enable Panel-->
+            <Grid Grid.Row="5" Visibility="Collapsed" >
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="180"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Grid.Column="1" Background="#FFFFFF" BorderThickness="1" BorderBrush="#535657" Padding="0 5 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="25"></RowDefinition>
+                            <RowDefinition Height="20"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <TextBlock Text="SELECT DEVICE" FontSize="10" FontWeight="Black" Foreground="{StaticResource blackBrush}" FontFamily="Roboto"/>
+                        </StackPanel>
+                        <Grid Grid.Row="0" x:Name="gridCursor11" Height="1" Background="#FFD3D0D0" VerticalAlignment="Bottom" />
+                        <StackPanel Grid.Row="1" >
+
+                            <TextBlock Margin="0,15,0,0" Text="Can't find the Foldio360" Foreground="{StaticResource blackBrush}" HorizontalAlignment="Center" FontWeight="Medium" FontSize="13" Height="20" />
+                            <TextBlock Margin="0,0,0,10" Text="Please check turn on the device" Foreground="{StaticResource blackBrush}" HorizontalAlignment="Center" FontSize="12" FontWeight="Normal" />
+                            <Image Source="../Assets/Images/none/360-device-white@3x.png" Width="140"/>
+                        </StackPanel>
+                        <Image Grid.Row="2" Source="../Assets/Images/none/L1.png" ></Image>
+                        <Button Grid.Row="3" Width="120" Height="28" Margin="0,0,0,-3" Content="CANCEL" Foreground="#ffffff" Background="{StaticResource blackBrush}" BorderThickness="0" FontSize="11" FontWeight="Medium"  FontFamily="roboto"
+                                    Command="{Binding SelectBTDevice}" Style="{StaticResource RoundButtonTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Selected Foldio device Panel-->
+            <Grid Grid.Row="6" Visibility="{Binding IsFoldioFound, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="167"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Grid.Column="1" Margin="0,0,10,0" Background="{StaticResource blackBrush}" BorderThickness="1" BorderBrush="#535657" >
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="59"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <StackPanel Orientation="Vertical" Grid.Row="1" >
+                                    <Label Content="Device Info" FontSize="10" Foreground="#ffffff"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="{Binding DisplayedDeviceImagePath}" Stretch="None"/>
+                                </Grid.Background>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+
+                            </Grid>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" >
+                                <Label Content="Device Name" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" >
+                                <Label Content="{Binding DeviceName}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" >
+                                <Label Content="Version" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" >
+                                <Label Content="{Binding DeviceVersion}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" >
+                                <Label Content="Serial Number" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" >
+                                <Label Content="{Binding DeviceSlno}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff"/>
+                            </StackPanel>
+
+                        </Grid>
+
+                    </Grid>
+
+                </Border>
+            </Grid>
+
+            <!-- 360 Photo Capturing Mode Or Device Rotation Mode -->
+            <Grid Grid.Row="6" Visibility="{Binding IsDeviceActivityMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="167"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource blackBrush}" BorderThickness="1" BorderBrush="#535657" Padding="0 5 0 0">
+                    <Grid Opacity="0.08">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="59"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <StackPanel Orientation="Vertical" Margin="15,5,0,0"  VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" >
+                                    <Label Content="Device Info" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="{Binding DisplayedDeviceImagePath}" Stretch="None"/>
+                                </Grid.Background>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+
+                            </Grid>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" >
+                                <Label Content="Device Name" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" >
+                                <Label Content="{Binding DeviceName}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" >
+                                <Label Content="Version" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" >
+                                <Label Content="{Binding DeviceVersion}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" >
+                                <Label Content="Serial Number" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" >
+                                <Label Content="{Binding DeviceSlno}" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </Grid>
+                </Border>
+                <StackPanel Grid.ColumnSpan="3" Grid.RowSpan="3" VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition ></RowDefinition>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" LastChildFill="False" >
+                            <TextBlock Margin="0,8,0,0" DockPanel.Dock="Bottom" Text="Do not turn off the Foldio360" Foreground="#ffffff" HorizontalAlignment="Center" FontSize="12" FontWeight="Normal" />
+                            <TextBlock DockPanel.Dock="Bottom" Text="{Binding lbl_DeviceActivityHeader}" Foreground="White" HorizontalAlignment="Center" FontWeight="Medium" FontSize="13" Height="20" />
+                        </DockPanel>
+                        <Button Grid.Row="1" Margin="0,25,0,0" Width="100" Height="24" Content="{Binding btn_DeviceActivityCaption}" FontSize="12"
+                                    Command="{Binding cmd_DeviceActivity}" Style="{StaticResource RoundButtonTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+
+            <!-- Device Control with sliders Panel-->
+            <Grid Grid.Row="8" IsEnabled="{Binding IsDeviceControlEnable}">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                    <!--<Label Content="Device Control" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#ffffff" FontSize="13" FontWeight="Bold"/>-->
+                    <TextBlock Text="Device Control" Margin="17,0,0,0" Width="120" Style="{StaticResource Sub_Heading_Title}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" >
+                    <Label Content="Halo Edge" Margin="14,11,0,0" Width="70"  FontSize="10" FontWeight="Medium" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#7f8486" HorizontalContentAlignment="Left" />
+                    <Grid Height="20" Width="230">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" Padding="0 0 0 0" Width="35" TextAlignment="Right" FontSize="12" Foreground="#ffffff" Background="Transparent" 
+                                                 BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"
+                                             Text="{Binding Value, ElementName=sldHaloEdge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="5 0 0 0" FontSize="10" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider x:Name="sldHaloEdge" Grid.Column="1" Width="155" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" 
+                                Maximum="100" Minimum="0" VerticalAlignment="Center" Value="{Binding HaloEdge}" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Margin="15,5,0,0" Visibility="{Binding IsNotDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}" >
+                    <Label Content="Colour Temparature" Margin="0,0,0,-3" FontSize="9" FontWeight="Medium" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                    <Grid RenderTransformOrigin="0.692,27.78">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" Padding="0 0 0 0" Width="35" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" 
+                                                 BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"
+                                             Text="{Binding Value, ElementName=sldColorTemparature, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Text="K" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider x:Name="sldColorTemparature" Grid.Column="1" Width="155" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" 
+                                Maximum="5600" Minimum="2300" VerticalAlignment="Center" Value="{Binding ColorTemparature}" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="20,25,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" >
+                    <!--<Button x:Name="Left_Rotation" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Width="110" Height="24" 
+                                 Style="{StaticResource IconSelector12}"  Command="{Binding Left_Rotation}"  >
+                    </Button>
+                    <Button x:Name="Right_Rotation" Margin="5,0,0,0"  Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Width="110" Height="24" 
+                                 Style="{StaticResource IconSelector11}" Command="{Binding Right_Rotation}" >
+                    </Button>-->
+                    <ToggleButton x:Name="TB_Left" Height="24" Width="110" BorderThickness="0" Style="{StaticResource TglBtn_Left}" Checked="TB_Left_Checked" Unchecked="TB_Left_Unchecked" IsChecked="{Binding IsLeftCheckedEvent}">
+                        <ToggleButton.Background>
+                            <ImageBrush ImageSource="../Assets/Images/none/Group 15.png"/>
+                        </ToggleButton.Background>
+                    </ToggleButton>
+                    <ToggleButton x:Name="TB_Right" Margin="5,0,0,0" Height="24" Width="110" BorderThickness="0" Style="{StaticResource TglBtn_Right}" Checked="TB_Right_Checked" Unchecked="TB_Right_Unchecked" IsChecked="{Binding IsRightCheckedEvent}" >
+                        <ToggleButton.Background>
+                            <ImageBrush ImageSource="../Assets/Images/none/Group 19.png"/>
+                        </ToggleButton.Background>
+                    </ToggleButton>
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="20,10,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" >
+                    <Button   Content="-360" FontSize="12" FontWeight="Bold" Cursor="Hand" Style="{StaticResource AngleSelector}" 
+                                  Command="{Binding Minus_360_Command}" >
+                    </Button>
+                    <Button   Content="-90" FontSize="12" FontWeight="Bold" Cursor="Hand" Style="{StaticResource AngleSelector}" 
+                                  Command="{Binding Minus_90_Command}" >
+                    </Button>
+                    <Button   Content="+90" FontSize="12" FontWeight="Bold" Cursor="Hand" Style="{StaticResource AngleSelector}" 
+                                  Command="{Binding Plus_90_Command}" >
+                    </Button>
+                    <Button   Content="+360" FontSize="12" FontWeight="Bold" Cursor="Hand" Style="{StaticResource AngleSelector}" 
+                                  Command="{Binding Plus_360_Command}" >
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="20,10,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" >
+                    <!--<Button Margin="0,0,6,0" Width="69" Height="34" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Foreground="#ffffff" 
+                                Style="{StaticResource IconSelector13}" Command="{Binding Left_with_Angle}" >
+                        </Button>-->
+                    <ToggleButton x:Name="TB_MoveLeft" Margin="0,0,6,0" Height="34" Width="69" BorderThickness="0" Style="{StaticResource TglBtn_MoveLeft}" IsChecked="{Binding MoveLeftCheckedStatus}" >
+                        <ToggleButton.Background>
+                            <ImageBrush ImageSource="../Assets/Images/none/Group 11.png"/>
+                        </ToggleButton.Background>
+                    </ToggleButton>
+                    <Border BorderThickness="2" BorderBrush="Black" Margin="0,0,0,0" CornerRadius="5">
+                        <TextBox BorderThickness="0" BorderBrush="Black" FontSize="14" Width="69" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" 
+                                     Foreground="#ffffff" Background="Transparent" FontWeight="Medium" FontFamily="Roboto" MaxLines="5" 
+                                     Text="{Binding Path=RotationAngle_Text, UpdateSourceTrigger=PropertyChanged}" />
+                    </Border>
+                    <!--<Button Margin="6,0,0,0" Width="69" Height="34" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Foreground="#ffffff" 
+                                Style="{StaticResource IconSelector14}" Command="{Binding Right_with_Angle}" >
+                        </Button>-->
+                    <ToggleButton x:Name="TB_MoveRight" Margin="6,0,0,0" Height="34" Width="69" BorderThickness="0" Style="{StaticResource TglBtn_MoveRight}" IsChecked="{Binding MoveRightCheckedStatus}" >
+                        <ToggleButton.Background>
+                            <ImageBrush ImageSource="../Assets/Images/none/Group 14.png"/>
+                        </ToggleButton.Background>
+                    </ToggleButton>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="9">
+                <StackPanel>
+                    <Grid x:Name="gridCursor8" Margin="0,20"  Width="260" Height="2" Background="Black" HorizontalAlignment="Right"></Grid>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <!--<Label Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff" FontSize="13" FontWeight="Bold"/>-->
+                    <TextBlock Text="Settings" Style="{StaticResource Sub_Heading_Title}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="15,0,0,-3" VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <Label Content="Frame Number" FontSize="9" FontWeight="Medium" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <ComboBox Name="cmbFrameNumber" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="180" Height="24" FontSize="13" FontWeight="Bold" IsEnabled="{Binding FrameNumberEnable}"
+                                   ItemsSource="{Binding FrameNumbers}" SelectedValue="{Binding SelectedFrame,Mode=TwoWay}" DisplayMemberPath="ItemName" SelectedIndex="0" >
+                    </ComboBox>
+                    <Button x:Name="btn_FramePrev" Style="{StaticResource Minus}" Margin="5,0,0,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_PrevValue}" CommandParameter="Frame_Prev" />
+                    <Button x:Name="btn_FrameNext" Style="{StaticResource Plus}" Margin="0,0,15,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_NextValue}" CommandParameter="Frame_Next" />
+                </StackPanel>
+
+                <StackPanel Visibility="Collapsed" Grid.Row="3" Orientation="Vertical" Margin="15,10,0,-3" VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <Label Content="Angle" FontSize="9" FontWeight="Medium" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                </StackPanel>
+
+                <StackPanel Visibility="Collapsed" Grid.Row="4" Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <ComboBox Name="cmbAngle" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="180" Height="24" FontSize="13" FontWeight="Bold" 
+                                   ItemsSource="{Binding Angles}" SelectedValue="{Binding SelectedAngleValue,Mode=TwoWay}" DisplayMemberPath="ItemName" SelectedIndex="0" >
+                    </ComboBox>
+                    <Button x:Name="btn_AnglePrev" Style="{StaticResource Minus}" Margin="5,0,0,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_PrevValue}" CommandParameter="Angle_Prev" />
+                    <Button x:Name="btn_AngleNext" Style="{StaticResource Plus}" Margin="0,0,15,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_NextValue}" CommandParameter="Angle_Next" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Orientation="Vertical" Margin="15,10,0,-3" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                    <Label Content="Speed" FontSize="9" FontWeight="Medium" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                    <ComboBox Name="cmbSpeed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="180" Height="24" FontSize="13" FontWeight="Bold" 
+                                  ItemsSource="{Binding Speeds}" SelectedValue="{Binding SelectedSpeed,Mode=TwoWay}" SelectedIndex="{Binding SelectedSpeedIndex, Mode=TwoWay}" DisplayMemberPath="ItemName"  >
+                    </ComboBox>
+                    <Button x:Name="btn_SpeedPrev" Style="{StaticResource Minus}" Margin="5,0,0,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_PrevValue}" CommandParameter="Speed_Prev" />
+                    <Button x:Name="btn_SpeedNext" Style="{StaticResource Plus}" Margin="0,0,15,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_NextValue}" CommandParameter="Speed_Next" />
+                </StackPanel>
+
+                <Separator Grid.Row="2" Margin="20,0,0,0"  Height="1" Name="Separator8" Width="180"  Foreground="#7f8486" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                <Separator Grid.Row="4" Margin="20,0,0,0"  Height="1" Name="Separator9" Width="180"  Foreground="#7f8486" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                <Separator Grid.Row="6" Margin="20,0,0,0"  Height="1" Name="Separator10" Width="180"  Foreground="#7f8486" VerticalAlignment="Bottom" HorizontalAlignment="Left" Visibility="{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}" />
+            </Grid>
+
+            <Grid Grid.Row="11" >
+                <StackPanel>
+                    <Grid x:Name="gridCursor9" Margin="0,15,0,0"  Width="260" Height="2" Background="Black" HorizontalAlignment="Right"></Grid>
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="grd_RotOption" Grid.Row="12" Margin="0,0,0,10" Visibility="{Binding IsDeviceAndVedioMode, Converter={StaticResource BooleanToVisibilityConverter1}}" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <!--<Label Content="Rotation Options" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#ffffff" FontSize="13" FontWeight="Bold"/>-->
+                    <TextBlock Text="Rotation Options" Style="{StaticResource Sub_Heading_Title}" />
+                </StackPanel>
+                <StackPanel Margin="20,10,0,0" Grid.Row="1">
+                    <RadioButton Background="Transparent" Content="Single Turn" GroupName="Rotation_Op" IsChecked="{Binding IsCheckedSingleTurn}" FontSize="11" FontWeight="Bold" Style="{StaticResource RadioSelector}" Foreground="DarkGray" />
+                </StackPanel>
+                <StackPanel Margin="20,10,0,0" Grid.Row="2">
+                    <RadioButton Background="Transparent" Content="Continuous Rotation" GroupName="Rotation_Op" IsChecked="{Binding IsCheckedContinueTurn}"  FontSize="11" FontWeight="Bold" Style="{StaticResource RadioSelector}" Foreground="DarkGray" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="13" Margin="0,0,0,15" Visibility="{Binding IsNotDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions >
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition ></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="20,15,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" >
+                    <TextBlock Text="Center Point Indicator" Style="{StaticResource Sub_Heading_Title}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Margin="20,10,0,0" Orientation="Horizontal">
+                    <RadioButton Grid.Column="0" Width="120" Background="Transparent" Content="Indicator ON" GroupName="MC_Indicator" IsChecked="True" FontSize="10" FontWeight="Bold" Style="{StaticResource RadioSelector}" />
+                    <RadioButton Grid.Column="1" Background="Transparent" Content="Indicator OFF"  GroupName="MC_Indicator" FontSize="10" FontWeight="Bold" Style="{StaticResource RadioSelector}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!--</materialDesign:Card>-->
+    </Grid>
+</UserControl>

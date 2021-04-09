@@ -1,0 +1,169 @@
+﻿<UserControl x:Class="DSLR_Tool_PC.Controles.PhotoEdit"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DSLR_Tool_PC.Controles"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" Width="260"
+              >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries> 
+                <ResourceDictionary Source="/DSLRPCToolSub/Theme/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <materialDesign:Card Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="0" Background="#2e2f30">
+            <StackPanel Margin="15">
+                <TextBlock Margin="0 0 0 10" Text="Photo Edit" Style="{StaticResource Sub_Heading_Title}" />
+                <StackPanel>
+                    <TextBlock Text="Background Filter" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto" Margin="0,0,0,5" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsBackgroundFilterApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" IsEnabled="{Binding IsBackgroundFilterApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding ElementName=sldBackground, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="30" TextAlignment="Left" 
+                                             FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" Thumb.DragCompleted="sldBackground_DragCompleted" Name="sldBackground"  
+                                Maximum="100" Minimum="0" VerticalAlignment="Center" Value="{Binding BackgroundFilter}"  IsEnabled="{Binding IsBackgroundFilterApply}"  />
+                    </Grid>
+                </StackPanel>
+
+                <Separator Margin="0,15,0,15" Height="1px" Name="Separator22" Background="#444647" Grid.Row="3"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" >
+                        <RadioButton x:Name="rbIncldBG" IsChecked="{Binding IsIncludeBGApply}" FontSize="10" FontWeight="Black" FontFamily="Roboto" Background="Transparent" Foreground="#ffffff" GroupName="MCSites" Style="{StaticResource RadioSelector}" Width="20" Height="20" />
+                        <Label Padding="3,5,8,5" Content="Include Background" FontSize="12" FontWeight="Medium" FontFamily="Roboto" Background="Transparent" Foreground="#ffffff"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <RadioButton x:Name="rbObjOnly" IsChecked="{Binding IsObjectOnlyApply}" FontSize="10" FontWeight="Black" FontFamily="Roboto" Background="Transparent" Foreground="#ffffff" GroupName="MCSites" Style="{StaticResource RadioSelector}" Width="20" Height="20" />
+                        <Label Padding="3,5,0,5" Content="Object Only" FontSize="12" FontWeight="Medium" FontFamily="Roboto" Background="Transparent" Foreground="#ffffff"  />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Margin="0,15,0,0">
+                    <TextBlock Text="White Balance" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto" Margin="0,0,0,5" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsWhiteBalanceApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" IsEnabled="{Binding IsWhiteBalanceApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldWhiteBalance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="30" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" x:Name="sldWhiteBalance"  
+                                Maximum="100" Minimum="-100" VerticalAlignment="Center" Value="{Binding WhiteBalance}" IsEnabled="{Binding IsWhiteBalanceApply}" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Text="Contrast" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto" Margin="0,0,0,5" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsContrastApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" IsEnabled="{Binding IsContrastApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldContrast, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="30" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" x:Name="sldContrast"  
+                                Maximum="100" Minimum="-100" VerticalAlignment="Center" Value="{Binding Contrast}" IsEnabled="{Binding IsContrastApply}" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Text="Brightness" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto" Margin="0,0,0,5" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="60">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsBrightnessApply}" Style="{StaticResource ChkboxSelector_new}" Width="21" />
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" IsEnabled="{Binding IsBrightnessApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="30" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" Name="sldBrightness"  
+                                Maximum="100" Minimum="-100" VerticalAlignment="Center" Value="{Binding Brightness}" IsEnabled="{Binding IsBrightnessApply}" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Text="Saturation" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto" Margin="0,0,0,5" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsSaturationApply}"  Style="{StaticResource ChkboxSelector_new}" Width="21"/>
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0,0,0,0" IsEnabled="{Binding IsSaturationApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldSaturation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="30" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" Name="sldSaturation"  
+                                Maximum="100" Minimum="-100" VerticalAlignment="Center" Value="{Binding Saturation}" IsEnabled="{Binding IsSaturationApply}" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Text="White Clipping" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto" Margin="0,0,0,5" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsWhiteClippingApply}"  Style="{StaticResource ChkboxSelector_new}" Width="21"/>
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0,0,0,0" IsEnabled="{Binding IsWhiteClippingApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldWhiteClipping, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="30" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Slider Grid.Column="1" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" Name="sldWhiteClipping"  
+                                Maximum="100" Minimum="-100" VerticalAlignment="Center" Value="{Binding WhiteClipping}" IsEnabled="{Binding IsWhiteClippingApply}" />
+                    </Grid>
+                </StackPanel>
+
+                <Button Content="Apply All Frames " Background="#535657" HorizontalAlignment="Center" Width="230" Height="34" Margin="0,20,0,10"
+                        Command="{Binding ApplyAllFrames}" Style="{StaticResource Select_Folder}" >
+
+                </Button>
+
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

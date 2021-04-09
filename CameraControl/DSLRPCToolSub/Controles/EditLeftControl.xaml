@@ -1,0 +1,268 @@
+﻿<UserControl x:Class="DSLR_Tool_PC.Controles.EditLeftControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DSLRPCToolSub/Theme/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries> 
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <UniformGrid Columns="2"   Margin="2,0,2,0">
+            <FrameworkElement x:Name="c1"/>
+            <!-- no need to add the other three -->
+        </UniformGrid>
+        <TabControl Background="#2e2f30" Width="Auto">
+            <TabItem x:Name="tab_history" FontFamily="roboto" Grid.Column="0"  Header="History" Height="35" FontSize="12" Width="{Binding ElementName=c1, Path=ActualWidth}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="220"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TabControl Background="#2e2f30" >
+                        <TabControl.Resources>
+                            <Style TargetType="{x:Type TabItem}">
+
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TabItem">
+                                            <Border Name="Border" BorderThickness="0,0,0,0" BorderBrush="#7f8486" Margin="0,0">
+                                                <ContentPresenter x:Name="ContentSite" 
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="#007aff" />
+                                                    <Setter Property="TextElement.Foreground" Value="#007aff"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="False">
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="#7f8486" />
+                                                    <Setter Property="TextElement.Foreground" Value="#7f8486"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TabControl.Resources>
+                        <TabControl Background="#2e2f30" >
+                            <TabItem MinHeight="23" x:Name="tab_history_VG" >
+                                <TabItem.Header>
+                                    <materialDesign:PackIcon Kind="ViewGrid" Width="20" Height="20" Margin="0,0,0,0" />
+                                </TabItem.Header>
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions >
+                                        <RowDefinition Height="1" ></RowDefinition>
+                                        <RowDefinition ></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Width="260" BorderThickness="1" Background="#2e2f30" Margin="-10,0,-10,0" Grid.ColumnSpan="2" BorderBrush="#444647">
+
+                                    </Border>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" >
+                                        <ListBox VirtualizingStackPanel.IsVirtualizing="True" Name="ImageLIstBox" 
+                                                   BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" >
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                                                        <!--<Image Margin="-15,5,0,3" x:Name="ImgViewGrid" Source="{Binding Path}" MaxHeight="100" MaxWidth="200" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>-->
+                                                        <Image Margin="4,10,0,0" x:Name="ImgViewGrid" Source="{Binding Path}" Height="120" Width="213" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>
+                                                        <TextBlock Margin="8,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding FileName}" />
+                                                        <TextBlock Margin="8,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="120" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Top"/>
+                                        </ListBox>
+                                    </ScrollViewer>
+                                </Grid>
+                            </TabItem>
+                            <TabItem MinHeight="23" x:Name="tab_history_VL"  >
+                                <TabItem.Header >
+                                    <materialDesign:PackIcon Kind="ViewList" Width="20" Height="20" Margin="-10,0,0,0" />
+                                </TabItem.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions >
+                                        <RowDefinition Height="1" ></RowDefinition>
+                                        <RowDefinition ></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Width="260" BorderThickness="1" Background="#2e2f30" Margin="-10,0,-10,0" Grid.ColumnSpan="2" BorderBrush="#444647">
+
+                                    </Border>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2">
+                                        <ListBox  VirtualizingStackPanel.IsVirtualizing="True"  Name="ImageListBox" 
+                                                   BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" >
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="220">
+                                                        <!--<Image x:Name="Img123" Source="{Binding Path}" MaxHeight="45" MaxWidth="80" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>-->
+                                                        <Image Margin="-10,10,0,0" x:Name="Img123" Source="{Binding Path}" Height="50" Width="90" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>
+                                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                                            <TextBlock Margin="15,15,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="85" TextTrimming="WordEllipsis" VerticalAlignment="Top"  Foreground="#ffffff" Text="{Binding FileName}" />
+                                                            <TextBlock Margin="15,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="80" TextTrimming="WordEllipsis" TextWrapping="Wrap" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Top"/>
+                                        </ListBox>
+                                    </ScrollViewer>
+                                </Grid>
+                            </TabItem>
+                            <TabItem >
+                                <TabItem.Header>
+                                    <StackPanel Orientation="Horizontal" Margin="95,0,0,0">
+                                        <RadioButton x:Name="rbHAsc" Background="Transparent" GroupName="ImageOrder" Style="{StaticResource rbImageAscOrder}" IsChecked="True"  Margin="0,0,10,0" />
+                                        <RadioButton x:Name="rbHDec" Background="Transparent" GroupName="ImageOrder" Style="{StaticResource rbImageDescOrder}" Checked="rbDec_Checked" Unchecked="rbDec_Unchecked" />
+                                    </StackPanel>
+                                </TabItem.Header>
+                            </TabItem>
+                        </TabControl>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+
+            <TabItem x:Name="tab_folder" FontFamily="roboto" Grid.Column="1" Header="Folder" FontSize="12" Width="{Binding ElementName=c1, Path=ActualWidth}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="220"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TabControl Background="#2e2f30" >
+                        <TabControl.Resources>
+                            <Style TargetType="{x:Type TabItem}">
+
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TabItem">
+                                            <Border Name="Border" BorderThickness="0,0,0,0" BorderBrush="#7f8486" Margin="0,0">
+                                                <ContentPresenter x:Name="ContentSite" 
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="#007aff" />
+                                                    <Setter Property="TextElement.Foreground" Value="#007aff"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="False">
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="#7f8486" />
+                                                    <Setter Property="TextElement.Foreground" Value="#7f8486"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TabControl.Resources>
+                        <TabControl Background="#2e2f30" >
+
+                            <TabItem MinHeight="23"  x:Name="tab_folder_VG" >
+                                <TabItem.Header>
+                                    <materialDesign:PackIcon Kind="ViewGrid" Width="20" Height="20" Margin="0,0,0,0" />
+                                </TabItem.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions >
+                                        <RowDefinition Height="36" ></RowDefinition>
+                                        <RowDefinition ></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Width="260" BorderThickness="1" Background="#2e2f30" Margin="-10,0,-10,0" Grid.ColumnSpan="2" BorderBrush="#444647">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                            <Button Margin="13,5,10,5" x:Name="btn_Browse" Content="Folder Select" Width="85" Height="24" Style="{StaticResource Select_Folder}" 
+                                                Click="btn_Folderbrowse_Click"/>
+                                            <TextBlock x:Name="tbFolderName" Width="135" Height="14" FontSize="12" FontFamily="roboto" FontWeight="Medium" Foreground="{StaticResource steel-greyBrush}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" >
+                                        <ListBox VirtualizingStackPanel.IsVirtualizing="True" Name="ImageLIstBox_Folder"  
+                                                      BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" >
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                                                        <Image Margin="0,10,0,0" x:Name="ImgViewGrid" Source="{Binding Path}" Height="120" Width="211" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>
+                                                        <TextBlock Margin="0,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding FileName}" />
+                                                        <TextBlock Margin="0,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="120" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
+                                                    </StackPanel> 
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Top"/>
+                                        </ListBox>
+                                    </ScrollViewer>
+                                </Grid>
+                            </TabItem>
+                            <TabItem MinHeight="23"  x:Name="tab_folder_VL" > 
+                                <TabItem.Header>
+                                    <materialDesign:PackIcon Kind="ViewList" Width="20" Height="20" Margin="-10,0,0,0" />
+                                </TabItem.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="14*"/>
+                                        <ColumnDefinition Width="193*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions >
+                                        <RowDefinition Height="36" ></RowDefinition>
+                                        <RowDefinition ></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Width="260" BorderThickness="1" Background="#2e2f30" Margin="-10,0,-10,0" Grid.ColumnSpan="2" BorderBrush="#444647">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                            <Button Margin="13,5,10,5" x:Name="btn_Browse_thmb" Content="Folder Select" Width="85" Height="24" Style="{StaticResource Select_Folder}" 
+                                                Click="btn_Folderbrowse_Click"/>
+                                            <TextBlock x:Name="tbFolderName_thmb" Width="135" Height="14" FontSize="12" FontFamily="roboto" FontWeight="Medium" Foreground="{StaticResource steel-greyBrush}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2">
+                                        <ListBox VirtualizingStackPanel.IsVirtualizing="True"  Name="ImageListBox_Folder" BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" >
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                                        <Image Margin="0,10,0,0" x:Name="Img123" Source="{Binding Path}" Height="50" Width="89" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>
+                                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                                            <TextBlock Margin="15,15,7,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="85" TextTrimming="WordEllipsis" VerticalAlignment="Top"  Foreground="#ffffff" Text="{Binding FileName}" />
+                                                            <TextBlock Margin="15,5,7,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="80" TextTrimming="WordEllipsis" TextWrapping="Wrap" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Top"/>
+                                        </ListBox>
+                                    </ScrollViewer>
+                                </Grid>
+                            </TabItem>
+                            <TabItem >
+                                <TabItem.Header>
+                                    <StackPanel Orientation="Horizontal" Margin="95,0,0,0">
+                                        <RadioButton x:Name="rbAsc" Background="Transparent" GroupName="ImageOrder" Style="{StaticResource rbImageAscOrder}" IsChecked="True"  Margin="0,0,10,0" />
+                                        <RadioButton x:Name="rbDec" Background="Transparent" GroupName="ImageOrder" Style="{StaticResource rbImageDescOrder}" Checked="rbDec_Checked" Unchecked="rbDec_Unchecked" />
+                                    </StackPanel>
+                                </TabItem.Header>
+                            </TabItem>
+                        </TabControl>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

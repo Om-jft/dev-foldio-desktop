@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="DSLR_Tool_PC.Controles.LevelGraph"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DSLR_Tool_PC.Controles"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"           
+             mc:Ignorable="d"           
+              >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+                <ResourceDictionary Source="/DSLRPCToolSub/Theme/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+    <Grid >
+        <materialDesign:Card Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="0" Background="#2e2f30">
+            <StackPanel Margin="15">
+                <TextBlock Margin="0 0 0 10" Text="Level Graph" Style="{StaticResource Sub_Heading_Title}"/>
+
+                <Border Background="{StaticResource blackBrush}" BorderThickness="1" BorderBrush="#535657" Padding="0 5 0 0">
+                    <Grid Height="60" Width="230">
+                        <Polygon Points="{Binding L}" Stretch="Fill" Fill="LightGray" Opacity="0.5"/>
+                        <Polygon Points="{Binding R}" Stretch="Fill" Stroke="Red" Opacity="0.75" />
+                        <Polygon Points="{Binding G}" Stretch="Fill" Stroke="LightGreen"  Opacity="0.75"/>
+                        <Polygon Points="{Binding B}" Stretch="Fill" Stroke="Blue" Opacity="0.75"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

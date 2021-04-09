@@ -1,0 +1,1401 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CD20011B-67C3-45A4-B69D-C7A9E8481550}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CameraControl</RootNamespace>
+    <AssemblyName>CameraControl</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>C:\CamControl\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Capture.Workflow|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Capture.Workflow\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;EAGLE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Capture.Workflow|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Capture.Workflow\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;EAGLE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Capture.Workflow|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Capture.Workflow\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;EAGLE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>3D6118D45CEDDA3683D354DB2DC74826E7076BE5</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>CameraControl_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accord, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.3.8.2-alpha\lib\net46\Accord.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.Imaging, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Imaging.3.8.2-alpha\lib\net46\Accord.Imaging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.MachineLearning, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.MachineLearning.3.8.2-alpha\lib\net46\Accord.MachineLearning.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.Math, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Math.3.8.2-alpha\lib\net46\Accord.Math.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.Math.Core, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Math.3.8.2-alpha\lib\net46\Accord.Math.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.Statistics, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Statistics.3.8.2-alpha\lib\net46\Accord.Statistics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.Video, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Video.3.8.2-alpha\lib\net46\Accord.Video.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Accord.Vision, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Vision.3.8.2-alpha\lib\net46\Accord.Vision.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AForge.Imaging.Formats">
+      <HintPath>..\refs\AForge.Imaging.Formats.dll</HintPath>
+    </Reference>
+    <Reference Include="BumpKit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\BumpKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="De.TorstenMandelkow.MetroChart">
+      <HintPath>..\packages\De.TorstenMandelkow.MetroChart.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.13.4.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.13.4\lib\net40\DotNetZip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DropNet">
+      <HintPath>..\packages\DropNet.1.10.23.0\lib\net40\DropNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Eagle, Version=1.0.7213.50727, Culture=neutral, PublicKeyToken=29c6297630be05eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\Eagle.CLRv4.Core.1.0.7213.50727\lib\net40\Eagle.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Facebook.7.0.10-beta\lib\net45\Facebook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.0.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.0-alpha\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.4.0.0, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.0-alpha\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.0.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.4.0-alpha\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Gif.Components">
+      <HintPath>..\packages\Gif.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="Gma.QrCodeNet.Encoding">
+      <HintPath>..\packages\Gma.QrCodeNet.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net46\GongSolutions.WPF.DragDrop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Griffin.Networking">
+      <HintPath>..\packages\Griffin.Networking.0.5.7\lib\net40\Griffin.Networking.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Griffin.Networking.Protocol.Http">
+      <HintPath>..\packages\Griffin.Networking.Protocol.Http.0.5.2\lib\net40\Griffin.Networking.Protocol.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Griffin.WebServer">
+      <HintPath>..\packages\Griffin.WebServer.0.5.0\lib\net40\Griffin.WebServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.0.0\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.PortableDeviceApiLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Interop.PortableDeviceApiLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.PortableDeviceTypesLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Interop.PortableDeviceTypesLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.VHMediaCOMLib">
+      <HintPath>..\packages\XSplit\Interop.VHMediaCOMLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
+    <Reference Include="Kaliko.ImageLibrary, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageLibrary.3.0.2\lib\net45\Kaliko.ImageLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LibMJPEGServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LibMJPEGServer.1.0.2\lib\net452\LibMJPEGServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LibThreadedSockets, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LibThreadedSockets.1.0.3\lib\net452\LibThreadedSockets.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Magick.NET-Q8-AnyCPU">
+      <HintPath>..\packages\Magick.NET-Q8-AnyCPU.7.21.1\lib\net40\Magick.NET-Q8-AnyCPU.dll</HintPath>
+    </Reference>
+    <Reference Include="Magick.NET.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magick.NET.Core.4.1.0\lib\net40\Magick.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Magick.NET.SystemDrawing, Version=2.0.3.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magick.NET.SystemDrawing.2.0.3\lib\net40\Magick.NET.SystemDrawing.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.MahApps, Version=0.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.MahApps.0.0.11\lib\net45\MaterialDesignThemes.MahApps.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.2.1016, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.2.3.2-ci1016\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MeasurementProtocolClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MeasurementProtocolClient.1.0.0.0\lib\net40\MeasurementProtocolClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Quartz, Version=3.0.7.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.3.0.7\lib\net452\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReachFramework" />
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.FtpClient, Version=1.0.5824.34026, Culture=neutral, PublicKeyToken=fa4be07daa57c2b7, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FtpClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Runtime.InteropServices.WindowsRuntime" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.WindowsRuntime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5\System.Runtime.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WebEye.Controls.Wpf.WebCameraControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebEye.Controls.Wpf.WebCameraControl.1.0.1\lib\net40\WebEye.Controls.Wpf.WebCameraControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebEye.StreamPlayerControl">
+      <HintPath>..\packages\WebEye.StreamPlayerControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Windows">
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WixSharp">
+      <HintPath>..\packages\WixSharp.bin.1.0.41.0\lib\WixSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WriteableBitmapEx.1.6.3\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="zxing">
+      <HintPath>..\packages\ZXing.Net.0.16.5\lib\net45\zxing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="zxing.presentation">
+      <HintPath>..\packages\ZXing.Net.0.16.5\lib\net45\zxing.presentation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Classes\CommandShortcutExtensioncs.cs" />
+    <Compile Include="Classes\HorizontalScrollBehavior.cs" />
+    <Compile Include="Classes\VisualTreeHelpers.cs" />
+    <Compile Include="Classes\WpfCommands.cs" />
+    <Compile Include="CommandProcessor.cs" />
+    <Compile Include="Controls\AnimationHelper.cs" />
+    <Compile Include="Controls\CameraItem.xaml.cs">
+      <DependentUpon>CameraItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CameraToImageSourceConverter .cs" />
+    <Compile Include="Controls\Controler.xaml.cs">
+      <DependentUpon>Controler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ControlerSimple.xaml.cs">
+      <DependentUpon>ControlerSimple.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImageEx.cs" />
+    <Compile Include="Controls\ExposureStatusControl.xaml.cs">
+      <DependentUpon>ExposureStatusControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IntToString.cs" />
+    <Compile Include="Controls\LiveViewControlerSimple.xaml.cs" />
+    <Compile Include="Controls\TemplateNameToIconConverter.cs" />
+    <Compile Include="Controls\TimeControl.xaml.cs">
+      <DependentUpon>TimeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VUMeterControl.xaml.cs">
+      <DependentUpon>VUMeterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Classes\AsyncOperationExtensions.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\BTCmd.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\DnaBluetoothLEAdvertisementWatcher.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\DnaBluetoothLEDevice.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\HorizontalScrollBehavior.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\ObservableRangeCollection.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\StaticClass.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\VisualTreeHelpers.cs" />
+    <Compile Include="DSLRPCToolSub\Controles\BatteryControler.xaml.cs">
+      <DependentUpon>BatteryControler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\BTDeviceSearch.xaml.cs">
+      <DependentUpon>BTDeviceSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\CameraControler.xaml.cs">
+      <DependentUpon>CameraControler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\CameraGridController.xaml.cs">
+      <DependentUpon>CameraGridController.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\CameraToImageSourceConverter.cs" />
+    <Compile Include="DSLRPCToolSub\Controles\CapturePart.xaml.cs">
+      <DependentUpon>CapturePart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\EditBottomControl.xaml.cs">
+      <DependentUpon>EditBottomControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\LVControlerSimple.xaml.cs">
+      <DependentUpon>LVControlerSimple.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\LVControler.xaml.cs">
+      <DependentUpon>LVControler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\EditLeftControl.xaml.cs">
+      <DependentUpon>EditLeftControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\EmptyToIntConverter.cs" />
+    <Compile Include="DSLRPCToolSub\Controles\ExportGIF.xaml.cs">
+      <DependentUpon>ExportGIF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\ExportMP4.xaml.cs">
+      <DependentUpon>ExportMP4.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\ExportPopup.xaml.cs">
+      <DependentUpon>ExportPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\ExportZIP.xaml.cs">
+      <DependentUpon>ExportZIP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\ExposureStatusControl.xaml.cs">
+      <DependentUpon>ExposureStatusControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\LevelGraph.xaml.cs">
+      <DependentUpon>LevelGraph.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\Navigation.xaml.cs">
+      <DependentUpon>Navigation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\PhotoEdit.xaml.cs">
+      <DependentUpon>PhotoEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\TurnTableControl.xaml.cs">
+      <DependentUpon>TurnTableControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\Watermark\MoveThumb.cs" />
+    <Compile Include="DSLRPCToolSub\Controles\Watermark\ResizeThumb.cs" />
+    <Compile Include="DSLRPCToolSub\Controles\Watermark\WatermarkImage.xaml.cs">
+      <DependentUpon>WatermarkImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\Watermark\WatermarkSettings.xaml.cs">
+      <DependentUpon>WatermarkSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\MainWindowAdvanced.xaml.cs">
+      <DependentUpon>MainWindowAdvanced.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\MainWindowNew.xaml.cs">
+      <DependentUpon>MainWindowNew.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\ViewModels\BaseExportModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\BaseFieldClass.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\CapturePhotoViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\EditBottomViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\EditLeftControlViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\ExportGIFModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\ExportMP4ViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\ExportZipModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\ImageDetails.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\LevelGraphViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\LVViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\ObservableDictionary.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\PathUpdate.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\PhotoEditModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\TurnTableViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\Watermark.cs" />
+    <Compile Include="Layouts\LayoutGrid.xaml.cs">
+      <DependentUpon>LayoutGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Layouts\LayoutBase.cs" />
+    <Compile Include="Layouts\LayoutGridBottom.xaml.cs">
+      <DependentUpon>LayoutGridBottom.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Layouts\LayoutGridRight.xaml.cs">
+      <DependentUpon>LayoutGridRight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Layouts\LayoutNormal.xaml.cs">
+      <DependentUpon>LayoutNormal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Layouts\LayoutTypeEnum.cs" />
+    <Compile Include="Panels\DirectorySelectorControl.xaml.cs">
+      <DependentUpon>DirectorySelectorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panels\ImagePropertiesControl.xaml.cs">
+      <DependentUpon>ImagePropertiesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panels\MetadataControl.xaml.cs">
+      <DependentUpon>MetadataControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panels\SelectionControl.xaml.cs">
+      <DependentUpon>SelectionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panels\SessionControl.xaml.cs">
+      <DependentUpon>SessionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="StartUpWindow.xaml.cs">
+      <DependentUpon>StartUpWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\AstroLiveViewViewModel.cs" />
+    <Compile Include="ViewModel\AutoExportPluginEditViewModel.cs" />
+    <Compile Include="ViewModel\BarcodeViewModel.cs" />
+    <Compile Include="ViewModel\BracketingViewModel.cs" />
+    <Compile Include="ViewModel\CameraPropertyViewModel.cs" />
+    <Compile Include="ViewModel\LayoutViewModel.cs" />
+    <Compile Include="ViewModel\LiveViewVideoSource.cs" />
+    <Compile Include="ViewModel\LiveViewViewModel.cs" />
+    <Compile Include="ViewModel\MainMenuViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\MJpegServer.cs" />
+    <Compile Include="ViewModel\MultipleLiveViewViewModel.cs" />
+    <Compile Include="ViewModel\PrintItemViewModel.cs" />
+    <Compile Include="ViewModel\PrintViewModel.cs" />
+    <Compile Include="ViewModel\SimpleLiveViewViewModel.cs" />
+    <Compile Include="ViewModel\StatisticsViewModel.cs" />
+    <Compile Include="ViewModel\TimelapseViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="windows\AboutWnd.xaml.cs">
+      <DependentUpon>AboutWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\AstroLiveViewWnd.xaml.cs">
+      <DependentUpon>AstroLiveViewWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\AutoExportPluginEdit.xaml.cs">
+      <DependentUpon>AutoExportPluginEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\BarcodeWnd.xaml.cs">
+      <DependentUpon>BarcodeWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\BraketingWnd.xaml.cs">
+      <DependentUpon>BraketingWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\BrowseWnd.xaml.cs">
+      <DependentUpon>BrowseWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\BulbWnd.xaml.cs">
+      <DependentUpon>BulbWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\CameraPropertyWnd.xaml.cs">
+      <DependentUpon>CameraPropertyWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\EditSession.xaml.cs">
+      <DependentUpon>EditSession.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\EditTagWnd.xaml.cs">
+      <DependentUpon>EditTagWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\DownloadPhotosWnd.xaml.cs">
+      <DependentUpon>DownloadPhotosWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\ErrorReportWnd.xaml.cs">
+      <DependentUpon>ErrorReportWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\FileNameTemplateEditorWnd.xaml.cs">
+      <DependentUpon>FileNameTemplateEditorWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\FullScreenWnd.xaml.cs">
+      <DependentUpon>FullScreenWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\GetIpWnd.xaml.cs">
+      <DependentUpon>GetIpWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\LiveViewFullScreenWnd.xaml.cs">
+      <DependentUpon>LiveViewFullScreenWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\LiveViewManager.cs" />
+    <Compile Include="windows\LiveViewWnd.xaml.cs">
+      <DependentUpon>LiveViewWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\MultipleCameraWnd.xaml.cs">
+      <DependentUpon>MultipleCameraWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\MultipleLiveView.xaml.cs">
+      <DependentUpon>MultipleLiveView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\NewVersionWnd.xaml.cs">
+      <DependentUpon>NewVersionWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\PresetEditWnd.xaml.cs">
+      <DependentUpon>PresetEditWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\PreviewWnd.xaml.cs">
+      <DependentUpon>PreviewWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\PrintWnd.xaml.cs">
+      <DependentUpon>PrintWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\PropertyWnd.xaml.cs">
+      <DependentUpon>PropertyWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\QrCodeWnd.xaml.cs">
+      <DependentUpon>QrCodeWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\SavePresetWnd.xaml.cs">
+      <DependentUpon>SavePresetWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\ScriptCommandEdit.xaml.cs">
+      <DependentUpon>ScriptCommandEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\ScriptWnd.xaml.cs">
+      <DependentUpon>ScriptWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\SelectorWnd.xaml.cs">
+      <DependentUpon>SelectorWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\SettingsWnd.xaml.cs">
+      <DependentUpon>SettingsWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\StatisticsWnd.xaml.cs">
+      <DependentUpon>StatisticsWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\TagSelectorWnd.xaml.cs">
+      <DependentUpon>TagSelectorWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\TimeLapseWnd.xaml.cs">
+      <DependentUpon>TimeLapseWnd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\Welcome.xaml.cs">
+      <DependentUpon>Welcome.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XSplit\BroadcasterPlugin.cs" />
+    <Compile Include="XSplit\TimedBroadcasterPlugin.cs" />
+    <Page Include="Controls\CameraItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Controler.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ControlerSimple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ExposureStatusControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\LiveViewControlerSimple.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TimeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VUMeterControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\BatteryControler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\BTDeviceSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\CameraControler.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\CameraGridController.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\CapturePart.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\EditBottomControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\LVControlerSimple.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\LVControler.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\EditLeftControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\ExportGIF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\ExportMP4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\ExportPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\ExportZIP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\ExposureStatusControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\LevelGraph.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\Navigation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\PhotoEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\TurnTableControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\Watermark\WatermarkImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\Watermark\WatermarkSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\MainWindowAdvanced.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DSLRPCToolSub\MainWindowNew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="DSLRPCToolSub\Theme\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Layouts\LayoutBaseResourceImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Layouts\LayoutBaseResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Layouts\LayoutGridBottom.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Panels\DirectorySelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\AstroAccent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\AstroTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\IconsNonShared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Layouts\LayoutGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Layouts\LayoutGridRight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Layouts\LayoutNormal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Panels\ImagePropertiesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panels\MetadataControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panels\SelectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panels\SessionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\MoreIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StartUpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ExpanderEx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\AboutWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\AstroLiveViewWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\AutoExportPluginEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\BarcodeWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\BraketingWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\BrowseWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\BulbWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\CameraPropertyWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\EditSession.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="windows\EditTagWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\DownloadPhotosWnd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="windows\ErrorReportWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\FileNameTemplateEditorWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\FullScreenWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\GetIpWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\LiveViewFullScreenWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\LiveViewWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\MultipleCameraWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\MultipleLiveView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\NewVersionWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\PresetEditWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\PreviewWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\PrintWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\PropertyWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\QrCodeWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\SavePresetWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\ScriptCommandEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\ScriptWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\SelectorWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\SettingsWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\StatisticsWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\TagSelectorWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\TimeLapseWnd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\Welcome.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 2 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 27 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Path Copy 7.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 27 Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Path Copy 9.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Asset 11 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Asset 13 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Combined Shape - Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Combined Shape.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Asset 11 Copy 3.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Asset 13 Copy 3.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Combined Shape Copy 3%281%29.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Combined Shape Copy 3.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Asset 11 Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Asset 13 Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Combined Shape Copy%281%29.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Combined Shape Copy.png" />
+    <Resource Include="DSLRPCToolSub\NoImage.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\bg_1.PNG" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\bg_2.PNG" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\bg_3.PNG" />
+    <Resource Include="Images\bg_31.PNG" />
+    <Resource Include="Images\bg_32.PNG" />
+    <Resource Include="Images\bg_33.PNG" />
+    <Resource Include="Images\bg_1.PNG" />
+    <Resource Include="Images\bg_2.PNG" />
+    <Resource Include="Images\bg_3.PNG" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 19 Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 19 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 15.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 19.png" />
+    <Content Include="pyFiles\model.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Content Include="pyFiles\DownloadInstallPython.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\Entypo.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Camera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Properties.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Timelapse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Fullscreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CameraControl.Core\CameraControl.Core.csproj">
+      <Project>{741A8DDA-4604-4CF4-8DAA-1F98A2767896}</Project>
+      <Name>CameraControl.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CameraControl.Devices\CameraControl.Devices.csproj">
+      <Project>{E8572D8B-C987-4D20-BD88-1F8925A64A82}</Project>
+      <Name>CameraControl.Devices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Canon.Eos.Framework\Canon.Eos.Framework.csproj">
+      <Project>{f809dbb6-e0e8-47a8-92ed-c24575576a5d}</Project>
+      <Name>Canon.Eos.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PortableDeviceLib\PortableDeviceLib.csproj">
+      <Project>{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}</Project>
+      <Name>PortableDeviceLib</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\About.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WIA">
+      <Guid>{94A0E92D-43C0-494E-AC29-FD45948A5221}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\unlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\diskdrive.png" />
+    <Resource Include="Images\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\NoImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo_big.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Flickr-Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Two.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\WindowsIcons-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Entypo-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Asset 8 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-11-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-13-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-210-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-210-copy-3.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-260-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-270-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\asset-280-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Combined Shape Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\combined-shape-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\group-2-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\group-26-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\group-33-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\group-35-copy %282%29.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\group-9.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\iconmonstr-magnifier-7-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\rectangle-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-11-copy-3.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-13-copy-3.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-210-copy-4.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-210-copy-5.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-260-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-270-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-280-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\asset-8-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\combined-shape-copy-3 %282%29.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\combined-shape-copy-4.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 10.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 13.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 6.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\group-19-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\group-2-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\group-26-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group-33-Copy2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\group-35-copy-2 %282%29.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\group-35-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\group-8-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\iconmonstr-magnifier-7-copy-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\rectangle-copy-4.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\360-device-white%402x.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\360-device-white%403x.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\360-device-white.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-11-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-13-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-210-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-210.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-260.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-270.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\asset-280.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\combineda.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\combinedb.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\combinedc.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 11.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 14.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 15.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 17.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 18.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 19.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 20 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 20.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 27.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 5.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-19.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-22.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-26.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group-33-Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-35.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-8.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\iconmonstr-magnifier-7-copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\minus.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\oval.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Path Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\plus.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\rectangle.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\BTInaccess.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\B1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\L1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 12.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 44.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 18 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 4 Copy.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 18 Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 43 Copy 4.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 43 Copy 5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 35 Copy 3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 12.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 15.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 13 Copy 2.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 13 Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Group 13 Copy 2.png" />
+    <Resource Include="Images\Group 13 Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 35 minus.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\click\Group 35 plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\group-39.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\shutter1.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\shutter2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="pyFiles\python-3.6.2.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyFiles\remove_bg.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Group 38.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 38 Copy.png" />
+    <Content Include="pyFiles\SaveAsImage.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pyFiles\whiteClipping.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)PostBuild.Bat" "$(SolutionDir)" $(ConfigurationName)</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <UsingTask AssemblyFile="packages\WixSharp.bin.1.0.17.0\build\SetEnvVar.dll" TaskName="SetEnvVar" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Accord.3.8.2-alpha\build\Accord.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Accord.3.8.2-alpha\build\Accord.targets'))" />
+    <Error Condition="!Exists('..\packages\Magick.NET-Q8-x86.7.21.1\build\net40\Magick.NET-Q8-x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Magick.NET-Q8-x86.7.21.1\build\net40\Magick.NET-Q8-x86.targets'))" />
+  </Target>
+  <Import Project="..\packages\Accord.3.8.2-alpha\build\Accord.targets" Condition="Exists('..\packages\Accord.3.8.2-alpha\build\Accord.targets')" />
+  <Import Project="..\packages\Magick.NET-Q8-x86.7.21.1\build\net40\Magick.NET-Q8-x86.targets" Condition="Exists('..\packages\Magick.NET-Q8-x86.7.21.1\build\net40\Magick.NET-Q8-x86.targets')" />
+</Project>

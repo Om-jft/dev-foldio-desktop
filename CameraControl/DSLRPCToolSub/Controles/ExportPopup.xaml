@@ -1,0 +1,99 @@
+﻿<Window x:Class="DSLR_Tool_PC.Controles.ExportPopup"
+        ResizeMode="NoResize"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DSLR_Tool_PC.Controles"
+        mc:Ignorable="d" Height="463" Width="360" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowStyle="None" 
+        AllowsTransparency="True" Background="Transparent" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+                <ResourceDictionary Source="/DSLRPCToolSub/Theme/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border BorderBrush="#444647" BorderThickness="1" CornerRadius="5" Background="#2e2f30">
+        <Grid Background="#2e2f30">
+            <Grid.RowDefinitions >
+                <RowDefinition Height="25" ></RowDefinition>
+                <RowDefinition ></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="218*"/>
+                <ColumnDefinition Width="175*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal"  HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label Width="320" Margin="15,0,0,0" Content="Export" FontFamily="roboto" Foreground="#7f8486" FontSize="13" FontWeight="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  />
+                <Button x:Name="btn_Close" Content="X" Margin="-15,0,0,0" Width="40" Height="25" BorderThickness="0" FontFamily="roboto" Background="Transparent" Foreground="#7f8486" FontSize="13" FontWeight="Bold"  HorizontalContentAlignment="Center" Click="btn_Close_Click" ></Button>
+            </StackPanel>
+            <TabControl Grid.Row="1" x:Name="TabExport" Background="#2e2f30" SelectionChanged="TabExport_SelectionChanged" Grid.ColumnSpan="2" Margin="0" >
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="TextElement.Foreground" Value="#7f8486"/>
+                        <Setter Property="Control.FontFamily" Value="Roboto" />
+                        <Setter Property="Control.FontSize" Value="13" />
+                        <Setter Property="Control.FontWeight" Value="700" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Border" BorderThickness="0,0,0,1"
+                                        BorderBrush="#7f8486" Margin="0,0">
+                                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"  
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border"
+                                                Property="BorderBrush"
+                                                Value="#007aff" />
+                                            <Setter Property="TextElement.Foreground" Value="#007aff"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="False">
+                                            <Setter TargetName="Border" Property="BorderBrush" Value="#7f8486" />
+                                            <Setter Property="TextElement.Foreground" Value="#7f8486"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem BorderThickness="0,0,0,0" Name="GifTab"  FontFamily="roboto" 
+                     Height="35" Width="118" 
+                     Header="GIF" HorizontalAlignment="Center" >
+                    <local:ExportGIF Margin="0,15,0,0" Width="330"></local:ExportGIF>
+                </TabItem>
+                <TabItem  Name="ZipTab"  FontFamily="roboto" 
+                     Height="35" Width="118" 
+                     Header="Image" HorizontalAlignment="Center" >
+
+                    <local:ExportZIP Margin="0,15,0,0" Width="330"></local:ExportZIP>
+
+                </TabItem>
+                <TabItem  Name="MP4Tab"  FontFamily="roboto" 
+                     Height="35" Width="119" 
+                     Header="MP4" HorizontalAlignment="Center" >
+                    
+                    <local:ExportMP4 Margin="0,15,0,0" Width="330"></local:ExportMP4>
+                </TabItem>
+                <!--<TabItem  Name="HTML5Tab"  FontFamily="roboto" 
+                     Height="35" Width="89" 
+                     Header="Html5" >
+
+                </TabItem>-->
+
+            </TabControl>
+
+        </Grid>
+    </Border>
+</Window>
