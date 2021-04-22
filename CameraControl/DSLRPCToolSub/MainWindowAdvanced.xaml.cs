@@ -34,6 +34,8 @@ using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
 using ImageMagick;
 using System;
+using FileInfo = System.IO.FileInfo;
+using System.Threading.Tasks;
 
 namespace CameraControl
 {
@@ -43,6 +45,7 @@ namespace CameraControl
     public partial class MainWindowAdvanced : IMainWindowPlugin, INotifyPropertyChanged
     {
         public string DisplayName { get; set; }
+        private int _ListBoxSelectedIndex = -1;
 
         private object _locker = new object();
         private FileItem _selectedItem = null;
@@ -616,6 +619,7 @@ namespace CameraControl
                         {
                             var wnd = new Welcome();
                             wnd.ShowDialog();
+                            free_Timer();
                         }
                         catch
                         {
@@ -1943,8 +1947,8 @@ namespace CameraControl
                     tbFolderName_thmb.Text = dialog.SelectedPath;
                     BrowseFolderImages(tbFolderName.Text);
 
-                    __Pathupdate.PathImg = "";
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
+                    //__Pathupdate.PathImg = "";
+                   // ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
                     selectedpath = dialog.SelectedPath;
                 }
             }
@@ -2028,8 +2032,62 @@ namespace CameraControl
         }
         private void BrowseFolderImages(string _folderPath)
         {
+            //try
+            //{
+            //    images_Folder = new List<ImageDetails>();
+
+            //    string root = System.IO.Path.GetDirectoryName(_folderPath);
+            //    string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
+
+            //    var files = Directory.GetFiles(_folderPath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
+
+            //    string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+            //    if (!Directory.Exists(tempfolder))
+            //        Directory.CreateDirectory(tempfolder);
+
+            //    foreach (var f in files)
+            //    {
+            //        var file = Path.Combine(tempfolder, Path.GetFileName(f));
+            //        StaticClass.GenerateSmallThumb(f, file);
+
+            //        ImageDetails id = new ImageDetails()
+            //        {
+            //            Path_Orginal = f,
+            //            Path = file,
+            //            FileName = System.IO.Path.GetFileName(file),
+            //            Extension = System.IO.Path.GetExtension(file),
+            //            DateModified = (System.IO.File.GetCreationTime(file)).ToString("yyyy-MM-dd"),
+            //            CreationDateTime = System.IO.File.GetCreationTimeUtc(file),
+            //            TimeModified = System.IO.File.GetCreationTime(file).ToString("HH:mm:ss:ffffff")
+            //        };
+            //        images_Folder.Add(id);
+            //        Thread.Sleep(10);
+            //    }
+
+            //    images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
+
+            //    ImageListBox_Folder.Items.Clear();
+            //    ImageLIstBox_Folder.Items.Clear();
+            //    ListBoxSnapshots.Items.Clear();
+            //    foreach (var img in images_Folder)
+            //    {
+            //        ImageLIstBox_Folder.Items.Add(img);
+            //        ImageListBox_Folder.Items.Add(img);
+            //        ListBoxSnapshots.Items.Add(img);
+            //    }
+            //    // int ind = ImageLIstBox_Folder.Items.IndexOf(_item);
+            //    ListBoxSnapshots.SelectedIndex = 0;
+            //    //ListBoxSnapshots_SelectionChanged(null, null);
+
+
+            //}
+
+            //catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
+
+
             try
             {
+                _ListBoxSelectedIndex = -1;
                 images_Folder = new List<ImageDetails>();
 
                 string root = System.IO.Path.GetDirectoryName(_folderPath);
@@ -2061,23 +2119,27 @@ namespace CameraControl
                 }
 
                 images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
-
                 ImageListBox_Folder.Items.Clear();
                 ImageLIstBox_Folder.Items.Clear();
                 ListBoxSnapshots.Items.Clear();
+
+                bool selectedImage = false;
+                ImageDetails imrLocal = new ImageDetails();
                 foreach (var img in images_Folder)
                 {
+                    if (!selectedImage)
+                    {
+                        imrLocal = img;
+                        selectedImage = true;
+                    }
                     ImageLIstBox_Folder.Items.Add(img);
                     ImageListBox_Folder.Items.Add(img);
                     ListBoxSnapshots.Items.Add(img);
                 }
-                // int ind = ImageLIstBox_Folder.Items.IndexOf(_item);
-                ListBoxSnapshots.SelectedIndex = 0;
-                //ListBoxSnapshots_SelectionChanged(null, null);
 
-
+                LoadFolderSelectedItem(imrLocal);
+                UpdateImageData();
             }
-
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
         private void ImgViewGrid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -2097,7 +2159,7 @@ namespace CameraControl
             //    ListBoxSnapshots.ScrollIntoView(Item);
             //}
         }
-        private int _ListBoxSelectedIndex = -1;
+        
         private void LoadFolderSelectedItem(ImageDetails _item)
         {
             if (_item != null)
@@ -2938,6 +3000,40 @@ namespace CameraControl
 
         int __SelectedModeTabIndex = -1;
         TurnTableViewModel _ttVM = TurnTableViewModel.GetInstance();
+
+        private void free_Timer()
+        {
+            FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+            DateTime creationDate = fileInfo.CreationTime;
+            DateTime today = DateTime.Now;
+
+            var daysUsed = today.Subtract(creationDate);
+            int Usedfordays = daysUsed.Days;
+            
+            if (Usedfordays > 30)
+            {
+                trial_Over();
+            }
+           //Task.Delay(10000).ContinueWith(t => trial_Over());
+        }
+
+        private void trial_Over()
+        {
+            buyPremium.Visibility = Visibility.Visible;
+            CaptureTab.IsEnabled = false;
+            EditTab.IsEnabled = false;
+            CaptureRightTab.IsEnabled = false;
+            grd_downbutton.IsEnabled = false;
+            ModeTabControl.IsEnabled = false;
+
+        }
+
+        private void purchaseButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://orangemonkie.com/");
+        }
+
+
         private void button3_Click(object sender, RoutedEventArgs e)
         {
             if (DSLR_Tool_PC.StaticClass.CapturedImageCount != 0) { return; }

@@ -681,7 +681,7 @@
                         </Style>
                     </TabControl.Resources>
 
-                    <TabItem x:Name="CaptureTab"  FontFamily="roboto" Height="50px" Width="150px" Header="Capture" >
+                    <TabItem x:Name="CaptureTab" IsEnabled="True" FontFamily="roboto" Height="50px" Width="150px" Header="Capture" >
                         <Grid Background="#2e2f30" Margin="-3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" MinWidth="260"/>
@@ -693,7 +693,7 @@
                                 <FrameworkElement x:Name="c1"/>
                                 <!-- no need to add the other three -->
                             </UniformGrid>
-                            <TabControl x:Name="ModeTabControl" Grid.Column="0" Background="#2e2f30" BorderThickness="0" SelectionChanged="TabControl_SelectionChanged" Width="260">
+                            <TabControl x:Name="ModeTabControl" IsEnabled="True" Grid.Column="0" Background="#2e2f30" BorderThickness="0" SelectionChanged="TabControl_SelectionChanged" Width="260">
                                 <TabItem x:Name="tab_360" FontFamily="roboto" Header="360" Height="40" FontSize="13" Width="{Binding ElementName=c1, Path=ActualWidth}">
                                     <DockPanel LastChildFill="True">
                                         <TextBlock DockPanel.Dock="Top" Text="Camera Parameter" Margin="8" Style="{StaticResource Sub_Heading_Title}"></TextBlock>
@@ -847,7 +847,13 @@
                                     <Image x:Name="_NoImage" Grid.Row="0" Grid.Column="0" Visibility="Visible" Source="NoImage.png" Stretch="UniformToFill" />
                                 </Grid>
 
-                                <Grid x:Name="grd_downbutton" Grid.Row="2" Background="#131415" >
+                                <Grid x:Name="buyPremium" Panel.ZIndex="5" Visibility="Collapsed" Grid.Column="0" Grid.ColumnSpan="3"  Grid.RowSpan="3" Focusable="True">
+                                    <TextBlock Foreground="#00000000" Margin="10">Please Purchase.</TextBlock>
+                                    <TextBlock TextAlignment="Center"  Foreground="#ffffff" Margin="200,267,199.6,199.8">Your trail period of 30 days is over. Please Purchase.</TextBlock>
+                                    <Button Name="purchaseButton" Click="purchaseButton_Click" Width="150">Purchase Premium</Button>
+                                </Grid>
+                                
+                                <Grid x:Name="grd_downbutton" IsEnabled="True" Grid.Row="2" Background="#131415" >
                                     <StackPanel Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Button ToolTip="{T:TranslateExtension CapturePhotoToolTip}"  Width="80" Height="80" Name="button3" Margin="4" BorderThickness="0" BorderBrush="Transparent" 
                                             IsEnabled="{Binding Source={x:Static Member=Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice.IsConnected}" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.Value="{Binding Source={x:Static Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice.TransferProgress}" 
@@ -872,7 +878,7 @@
                             </Grid>
 
                             <Border Grid.Column="2" Background="#2e2f30"  BorderThickness="1" BorderBrush="#535657">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer x:Name="CaptureRightTab" IsEnabled="True" VerticalScrollBarVisibility="Auto">
                                     <ScrollViewer.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -891,7 +897,7 @@
                         </Grid>
                     </TabItem>
 
-                    <TabItem Name="EditTab" FontFamily="roboto" Header="Edit" Width="150px" >
+                    <TabItem Name="EditTab" IsEnabled="True" FontFamily="roboto" Header="Edit" Width="150px" >
                         <Grid Background="#2e2f30" Margin="-3,-3,-3,-3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" MinWidth="260"/>
