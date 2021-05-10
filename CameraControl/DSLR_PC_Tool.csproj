@@ -31,7 +31,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>6</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.1.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -44,7 +44,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
@@ -63,8 +63,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -159,6 +158,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accord, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
@@ -454,6 +456,7 @@
     <Compile Include="DSLRPCToolSub\Classes\DnaBluetoothLEDevice.cs" />
     <Compile Include="DSLRPCToolSub\Classes\HorizontalScrollBehavior.cs" />
     <Compile Include="DSLRPCToolSub\Classes\ObservableRangeCollection.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\ProgressReport.cs" />
     <Compile Include="DSLRPCToolSub\Classes\StaticClass.cs" />
     <Compile Include="DSLRPCToolSub\Classes\VisualTreeHelpers.cs" />
     <Compile Include="DSLRPCToolSub\Controles\BatteryControler.xaml.cs">
@@ -474,6 +477,9 @@
     </Compile>
     <Compile Include="DSLRPCToolSub\Controles\EditBottomControl.xaml.cs">
       <DependentUpon>EditBottomControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\LoaderControl.xaml.cs">
+      <DependentUpon>LoaderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DSLRPCToolSub\Controles\LVControlerSimple.xaml.cs">
       <DependentUpon>LVControlerSimple.xaml</DependentUpon>
@@ -508,6 +514,9 @@
     </Compile>
     <Compile Include="DSLRPCToolSub\Controles\PhotoEdit.xaml.cs">
       <DependentUpon>PhotoEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSLRPCToolSub\Controles\ProgressWindow.xaml.cs">
+      <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DSLRPCToolSub\Controles\TurnTableControl.xaml.cs">
       <DependentUpon>TurnTableControl.xaml</DependentUpon>
@@ -750,6 +759,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DSLRPCToolSub\Controles\LoaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DSLRPCToolSub\Controles\LVControlerSimple.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -793,6 +806,10 @@
     <Page Include="DSLRPCToolSub\Controles\PhotoEdit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DSLRPCToolSub\Controles\ProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DSLRPCToolSub\Controles\TurnTableControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1095,9 +1112,11 @@
     <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 19 Copy.png" />
     <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 15.png" />
     <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 19.png" />
+    <Resource Include="icon.ico" />
     <Content Include="pyFiles\model.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

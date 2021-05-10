@@ -1,5 +1,4 @@
-﻿
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using DSLR_Tool_PC.ViewModels;
 using System.Text.RegularExpressions;
 using CameraControl;
@@ -43,14 +42,12 @@ namespace DSLR_Tool_PC.Controles
                 //myBlurEffect.Radius = sldBackground.Value;
                 //myBlurEffect.KernelType = KernelType.Box;
                 //Bitmap capcha = new Bitmap(window.EditFramePicEdit.Source.ToString());
-                
-
             }
-
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
 
-
-
+        }
     }
 }
