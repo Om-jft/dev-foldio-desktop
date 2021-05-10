@@ -3167,7 +3167,7 @@ namespace CameraControl
             string _installDetectorFile = Path.Combine(Settings.ApplicationFolder, "VerifyInstall.txt");
             FileInfo fileInfo = new FileInfo(_installDetectorFile);
 
-            FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+             //fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
 
             DateTime creationDate = fileInfo.CreationTime;
             DateTime today = DateTime.Now;
