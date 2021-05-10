@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSLR_PC_Tool", "CameraContr
 	ProjectSection(ProjectDependencies) = postProject
 		{F9CF3A51-3A4C-454C-A6A6-23E84E73D839} = {F9CF3A51-3A4C-454C-A6A6-23E84E73D839}
 		{F809DBB6-E0E8-47A8-92ED-C24575576A5D} = {F809DBB6-E0E8-47A8-92ED-C24575576A5D}
+		{CD8324DA-7E2F-47BB-991F-C2B7D40BDF36} = {CD8324DA-7E2F-47BB-991F-C2B7D40BDF36}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableDeviceLib", "PortableDeviceLib\PortableDeviceLib.csproj", "{E9F048C1-C6A0-4CCD-BE57-4E76A7F8B32D}"
@@ -30,6 +31,9 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Foldio Setup", "Foldio Setup\Foldio Setup.vdproj", "{7878ED39-819D-485A-8E87-0109B0B8EF76}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Foldio-Desktop-Setup", "Foldio-Desktop-Setup\Foldio-Desktop-Setup.vdproj", "{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}"
+ main
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -305,6 +309,24 @@ Global
 		{7878ED39-819D-485A-8E87-0109B0B8EF76}.Release|Mixed Platforms.ActiveCfg = Release
 		{7878ED39-819D-485A-8E87-0109B0B8EF76}.Release|x64.ActiveCfg = Release
 		{7878ED39-819D-485A-8E87-0109B0B8EF76}.Release|x86.ActiveCfg = Release
+
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|Any CPU.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|Mixed Platforms.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|x64.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|x86.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Capture.Workflow|Any CPU.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Capture.Workflow|Mixed Platforms.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Capture.Workflow|x64.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Capture.Workflow|x86.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Debug|Any CPU.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Debug|x64.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Debug|x86.ActiveCfg = Debug
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|Any CPU.ActiveCfg = Release
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|Mixed Platforms.ActiveCfg = Release
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|x64.ActiveCfg = Release
+		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|x86.ActiveCfg = Release
+ main
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

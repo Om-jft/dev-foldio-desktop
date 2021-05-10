@@ -15,6 +15,7 @@ using ImageMagick;
 using CameraControl.Core.Classes;
 using DSLR_Tool_PC.Controles;
 using CameraControl.Devices;
+using CameraControl;
 
 namespace DSLR_Tool_PC.ViewModels
 {
@@ -34,6 +35,13 @@ namespace DSLR_Tool_PC.ViewModels
         private bool _rotationstatus = false;
         private string _uripathimgGIFPreview = "";
 
+        MainWindowAdvanced __mainWindowAdvanced = null;
+        public void ExecuteInti(object __this)
+        {
+            //__editLeftControl = (EditLeftControl)__this;
+            __mainWindowAdvanced = (MainWindowAdvanced)__this;
+            //photoEdit = (PhotoEdit)__this;
+        }
 
         public RelayCommand PlayCommand { get; set; }
         public RelayCommand PreviousCommand { get; set; }
@@ -115,8 +123,11 @@ namespace DSLR_Tool_PC.ViewModels
 
                 __SaveFilePath = _saveFileDialog.SelectedPath.ToString();
                 IsEnableButton = false;
-
+                __mainWindowAdvanced.ChangesProgress.Value = 0;
+                __mainWindowAdvanced.ProgressLabel.Text = "Exporting to MP4...";
                 _backgroundWorker.RunWorkerAsync();
+                __mainWindowAdvanced.ShowProgress();
+                __Parent_window.Hide();
             }
             catch (Exception ex) { Log.Debug("", ex); }
         }
@@ -424,6 +435,8 @@ namespace DSLR_Tool_PC.ViewModels
             //RaisePropertyChanged(() => IsBusy);
             //RaisePropertyChanged(() => IsFree);
             __Parent_window.Close();
+            __mainWindowAdvanced.HideProgress();
+            IsEnableButton = true;
         }
 
 

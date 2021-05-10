@@ -11,16 +11,29 @@ using System.Drawing.Imaging;
 using System.Windows;
 using CameraControl.Devices;
 using CameraControl.Core.Classes;
+using CameraControl;
+using System.ComponentModel;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+
 
 namespace DSLR_Tool_PC.ViewModels
 {
-    public class ExportZipModel : BaseFieldClass
+    public partial class ExportZipModel : BaseFieldClass
     {
         public Window __Parent_window = null;
         public int ratiowidthzip = 0;
         public int ratioheightzip = 0;
         private ObservableRangeCollection<ImageDetails> _imagesZip = new ObservableRangeCollection<ImageDetails>();
         private readonly HashSet<string> _fileExtensions = new HashSet<string>();
+
+        MainWindowAdvanced __mainWindowAdvanced = null;
+        public void ExecuteInti(object __this)
+        {
+            //__editLeftControl = (EditLeftControl)__this;
+            __mainWindowAdvanced = (MainWindowAdvanced)__this;
+            //photoEdit = (PhotoEdit)__this;
+        }
 
         private static ExportZipModel uni_class_inst = null;
         private ImageDetails _selectedImageZip;
@@ -30,7 +43,16 @@ namespace DSLR_Tool_PC.ViewModels
         private int _zipimagecount = 0;
         private ObservableRangeCollection<string> _fileszip = new ObservableRangeCollection<string>();
         private bool _imgfilmchecked = false;
+        private bool successful = false;
+        private System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
+        private string tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
+        private string zipPath = null;
 
+        private static bool bgInitializer = false;
+
+        BackgroundWorker bgWorker = new BackgroundWorker();
+        private int count = 0;
+        private int total = 0;
         #region Properties
 
         public bool ImageFilm
@@ -177,7 +199,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             if (uni_class_inst == null)
                 uni_class_inst = new ExportZipModel();
-
+           
             return uni_class_inst;
         }
 
@@ -201,6 +223,17 @@ namespace DSLR_Tool_PC.ViewModels
 
             ExportWidthZip = ratiowidthzip;
             ExportHeightZip = ratioheightzip;
+
+            if (!bgInitializer)
+            {
+                bgWorker.DoWork += BgWorker_DoWork;
+                bgWorker.ProgressChanged += BgWorker_ProgressChanged;
+                bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
+
+                bgWorker.WorkerSupportsCancellation = true;
+                bgWorker.WorkerReportsProgress = true;
+                bgInitializer = true;
+            }
         }
 
         private void CollectImages()
@@ -246,75 +279,8 @@ namespace DSLR_Tool_PC.ViewModels
             ZipImageCount = ImagesZip.Count(str => str.IsZIPSelected == true);
         }
 
-        public void ProduceZIP()
+        private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            try
-            {
-
-            
-            if (ZipImageCount <= 0) { return; } 
-            System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
-            _saveFileDialog.ShowDialog();
-            if (_saveFileDialog.SelectedPath == "") { return; }
-
-            bool successful = false;
-
-            string tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
-            try { if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); } }
-            catch (Exception) { return; }
-
-            string zipPath = _saveFileDialog.SelectedPath;//Path.Combine(FolderNameZip.ToString(), "ZIPFiles");
-            if (!Directory.Exists(zipPath)) { Directory.CreateDirectory(zipPath); }
-
-            if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
-
-            string _ZipFileName = "zp_" + DateTime.Now.Ticks.ToString() + ".zip";
-            zipPath = Path.Combine(zipPath, _ZipFileName);
-
-            foreach (var img in ImagesZip) //todaysFiles is list of file names (with full path) to be zipped
-            {
-                if (img.IsZIPSelected == true)
-                {
-                    Bitmap image = new Bitmap(img.Path);
-                    Bitmap newImage = new Bitmap((int)ExportWidthZip, (int)ExportHeightZip, PixelFormat.Format24bppRgb);
-
-                    string tempPath = Path.Combine(tempPathFolder, img.FileName);
-
-                    // Draws the image in the specified size with quality mode set to HighQuality
-                    using (Graphics graphics = Graphics.FromImage(newImage))
-                    {
-                        graphics.CompositingQuality = CompositingQuality.HighQuality;
-                        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        graphics.SmoothingMode = SmoothingMode.HighQuality;
-                        graphics.DrawImage(image, 0, 0, (int)ExportWidthZip, (int)ExportHeightZip);
-                        graphics.Dispose();
-                    }
-                    using (var ms = new MemoryStream())
-                    {
-                        using (FileStream fs = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
-                        {
-                            if (SelectedFileExtension.ToUpper() == "BMP") { newImage.Save(ms, ImageFormat.Bmp); }
-                            else if (SelectedFileExtension.ToUpper() == "PNG") { newImage.Save(ms, ImageFormat.Png); }
-                            else { newImage.Save(ms, ImageFormat.Jpeg); }
-
-                            byte[] bytes = ms.ToArray();
-                            fs.Write(bytes, 0, bytes.Length);
-                            fs.Dispose();
-                        }
-                        ms.Dispose();
-                    }
-
-                    using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
-                    {
-                        string _fileName = Path.GetFileNameWithoutExtension(img.FileName) + "." + SelectedFileExtension; ;
-                        archive.CreateEntryFromFile(tempPath, _fileName);
-                        successful = true;
-                    }
-                    image.Dispose();
-                    newImage.Dispose();
-                    GC.Collect();
-                }
-            }
             if (ImageFilm == true)
             {
                 if (SelectedFileExtension == "" || SelectedFileExtension == null) { SelectedFileExtension = "Jpg"; }
@@ -329,8 +295,103 @@ namespace DSLR_Tool_PC.ViewModels
                 MessageBox.Show("Saved Successfully at location " + Environment.NewLine + zipPath, "ExportZIP", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
-            if (tempPathFolder != "")
-                Directory.Delete(tempPathFolder, true);
+            //if (tempPathFolder != "")
+            //    Directory.Delete(tempPathFolder, true);
+            __mainWindowAdvanced.HideProgress();
+            count = 0;
+            
+        }
+
+        private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            __mainWindowAdvanced.ChangesProgress.Value = (count * 100) / total;
+            __mainWindowAdvanced.ProgressLabel.Text = string.Format("Saving frame " + e.ProgressPercentage + " of " + total);
+        }
+
+        private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                
+                try { if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); } }
+                catch (Exception) { return; }
+                
+                zipPath = _saveFileDialog.SelectedPath;//Path.Combine(FolderNameZip.ToString(), "ZIPFiles");
+                if (!Directory.Exists(zipPath)) { Directory.CreateDirectory(zipPath); }
+
+                if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
+
+                string _ZipFileName = "zp_" + DateTime.Now.Ticks.ToString() + ".zip";
+                zipPath = Path.Combine(zipPath, _ZipFileName);
+
+                total = ZipImageCount;
+
+                foreach (var img in ImagesZip) //todaysFiles is list of file names (with full path) to be zipped
+                {
+                    count++;
+                    bgWorker.ReportProgress(count);
+                    if (img.IsZIPSelected == true)
+                    {
+                        Bitmap image = new Bitmap(img.Path);
+                        Bitmap newImage = new Bitmap((int)ExportWidthZip, (int)ExportHeightZip, PixelFormat.Format24bppRgb);
+
+                        string tempPath = Path.Combine(tempPathFolder, img.FileName);
+
+                        // Draws the image in the specified size with quality mode set to HighQuality
+                        using (Graphics graphics = Graphics.FromImage(newImage))
+                        {
+                            graphics.CompositingQuality = CompositingQuality.HighQuality;
+                            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            graphics.SmoothingMode = SmoothingMode.HighQuality;
+                            graphics.DrawImage(image, 0, 0, (int)ExportWidthZip, (int)ExportHeightZip);
+                            graphics.Dispose();
+                        }
+                        using (var ms = new MemoryStream())
+                        {
+                            using (FileStream fs = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            {
+                                if (SelectedFileExtension.ToUpper() == "BMP") { newImage.Save(ms, ImageFormat.Bmp); }
+                                else if (SelectedFileExtension.ToUpper() == "PNG") { newImage.Save(ms, ImageFormat.Png); }
+                                else { newImage.Save(ms, ImageFormat.Jpeg); }
+
+                                byte[] bytes = ms.ToArray();
+                                fs.Write(bytes, 0, bytes.Length);
+                                fs.Dispose();
+                            }
+                            ms.Dispose();
+                        }
+
+                        using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                        {
+                            string _fileName = Path.GetFileNameWithoutExtension(img.FileName) + "." + SelectedFileExtension; ;
+                            archive.CreateEntryFromFile(tempPath, _fileName);
+                            successful = true;
+                        }
+                        image.Dispose();
+                        newImage.Dispose();
+                        GC.Collect();
+                    }
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
+        public void ProduceZIP()
+        {
+            try
+            {
+
+                if (!bgWorker.IsBusy)
+                {
+                    if (ZipImageCount <= 0) { return; }
+
+                    _saveFileDialog.ShowDialog();
+                    if (_saveFileDialog.SelectedPath == "") { return; }
+                  
+                    __mainWindowAdvanced.ChangesProgress.Value = 0;
+                    __mainWindowAdvanced.ShowProgress();
+                    bgWorker.RunWorkerAsync();
+                }
 
             }
             catch (Exception ex) { Log.Debug("", ex); }

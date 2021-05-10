@@ -36,7 +36,7 @@
                     <Button x:Name="btnOpenFile" Content="Open File" Grid.Column="2" FontSize="12"  Width="70" Height="24" Style="{StaticResource OpenFileSelector}" 
                             Click="btnOpenFile_Click"/>
                 </Grid>
-
+            
                 <StackPanel>
                     <TextBlock Text="Opacity" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto"/>
                     <Grid>
@@ -44,13 +44,17 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="0 0 5 0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox Margin="0" Text="{Binding ElementName=mcSlider5, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" Width="30" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
-                                <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
-                            </StackPanel>
-                        </Border>
-                        <Slider Grid.Column="1" Value="{Binding ImageOpacity100}" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" Name="mcSlider5"  Maximum="100" Minimum="0" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Background="Transparent" IsChecked="{Binding IsOpacityApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
+                            <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="0 0 5 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Margin="0" Text="{Binding ElementName=mcSlider5, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" Width="25" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="#7f8486" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                    <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        
+                        <Slider Grid.Column="1" Value="{Binding ImageOpacity100}" Margin="0" Style="{StaticResource Horizontal_Slider}" IsSnapToTickEnabled="True" Name="mcSlider5"  Maximum="100" Minimum="0" VerticalAlignment="Center" IsEnabled="{Binding IsOpacityApply}"/>
                     </Grid>
                 </StackPanel>
 

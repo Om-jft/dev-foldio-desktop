@@ -29,6 +29,7 @@
 #region
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -48,6 +49,7 @@ using CameraControl.windows;
 using ImageMagick;
 using MahApps.Metro;
 using Application = System.Windows.Application;
+using FileInfo = System.IO.FileInfo;
 using MessageBox = System.Windows.MessageBox;
 
 #endregion
@@ -83,7 +85,7 @@ namespace CameraControl
 
             ThemeManager.AddAccent("Astro", new Uri("pack://application:,,,/CameraControl;component/Resources/AstroAccent.xaml"));
             ThemeManager.AddAppTheme("Black", new Uri("pack://application:,,,/CameraControl;component/Resources/AstroTheme.xaml"));
-
+            DependencyDDLCheck();
             ServiceProvider.Branding = Branding.LoadBranding();
             if (ServiceProvider.Branding.ShowStartupScreen)
             {
@@ -582,6 +584,65 @@ namespace CameraControl
                         Current.Shutdown();
                 }
             }
+        }
+
+        private void DependencyDDLCheck()
+        {
+           
+            try
+            {
+                if (File.Exists(Path.Combine(Settings.ApplicationFolder, "Dependency.dat")))
+                {
+                    List<string> lst = new List<string>();
+                    string[] stringArray = System.IO.File.ReadAllLines(Path.Combine(Settings.ApplicationFolder, "Dependency.dat"));
+                    foreach (string example in stringArray)
+                    {
+                        lst.Add(example.Trim().ToString());
+                    }
+                    DirectoryInfo d = new DirectoryInfo(Path.Combine(Settings.ApplicationFolder));
+                    FileInfo[] Files = d.GetFiles("*.*");
+                    List<string> str2 = new List<string>();
+                    foreach (FileInfo file in Files)
+                    {
+                        str2.Add(file.Name.ToString());
+                    }
+
+                    int flag = 0;
+                    foreach (string str in lst)
+                    {
+                        flag = 0;
+                        //lst.Find(str);
+                        foreach (string str3 in str2)
+                        {
+                            if (str.Equals(str3))
+                            {
+                                flag = 1;
+                                break;
+                            }
+                        }
+                        if (flag == 0)
+                        {
+                            MessageBox.Show("Dependency " + str + " not Found in installation directory. Repair application installation to continue.");
+                            break;
+                        }
+                    }
+                    if (flag != 1)
+                    {
+                        Application.Current.Shutdown();
+                        System.Windows.Forms.Application.Exit();
+                        
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Dependency not found. Repair application installation to continue.");
+                    Application.Current.Shutdown();
+                    System.Windows.Forms.Application.Exit();
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message.ToString());
+                Application.Current.Shutdown();
+                System.Windows.Forms.Application.Exit(); }
         }
     }
 }

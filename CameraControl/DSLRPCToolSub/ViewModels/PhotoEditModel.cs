@@ -14,6 +14,11 @@ using DSLR_Tool_PC.Controles;
 using CameraControl.Core;
 using CameraControl.Devices;
 using CameraControl;
+using CameraControl.DSLRPCToolSub.Controles;
+using System.ComponentModel;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+using CameraControl.DSLRPCToolSub.Classes;
 
 namespace DSLR_Tool_PC.ViewModels
 {
@@ -22,6 +27,11 @@ namespace DSLR_Tool_PC.ViewModels
         private readonly object _Sliderlockobj = new object();
         public RelayCommand ApplyAllFrames { get; set; }
 
+        BackgroundWorker bgWorker = new BackgroundWorker();
+        string _strApplPath = null;
+        int total = 0;
+        int count = 0;
+
         PathUpdate __PathUpdate = PathUpdate.getInstance();
         //EditLeftControl __editLeftControl = null;
         MainWindowAdvanced __mainWindowAdvanced = null;
@@ -29,19 +39,31 @@ namespace DSLR_Tool_PC.ViewModels
         {
             //__editLeftControl = (EditLeftControl)__this;
             __mainWindowAdvanced = (MainWindowAdvanced)__this;
+            //photoEdit = (PhotoEdit)__this;
         }
+
+        
 
         PhotoEditModel()
         {
             ApplyAllFrames = new RelayCommand(Start);
+            bgWorker.DoWork += BgWorker_DoWork;
+            bgWorker.ProgressChanged += BgWorker_ProgressChanged;
+            bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
 
+            bgWorker.WorkerSupportsCancellation = true;
+            bgWorker.WorkerReportsProgress = true;
             ResetAllControls();
         }
 
         private static PhotoEditModel _photoeditmodel_inst = null;
         public static PhotoEditModel GetInstance()
         {
-            if (_photoeditmodel_inst == null) { _photoeditmodel_inst = new PhotoEditModel(); }
+            if (_photoeditmodel_inst == null) 
+            {
+                _photoeditmodel_inst = new PhotoEditModel();
+               
+            }
             return _photoeditmodel_inst;
         }
 
@@ -221,6 +243,7 @@ namespace DSLR_Tool_PC.ViewModels
             set
             {
                 _isBackgroundFilterApply = value;
+                
                 NotifyPropertyChanged("IsBackgroundFilterApply");
                 if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
             }
@@ -247,105 +270,132 @@ namespace DSLR_Tool_PC.ViewModels
             }
         }
 
-
         public void FiltersCorrections(string sourcefile, string destfile)
         {
             if (sourcefile == "" || sourcefile == null) { return; }
             //if (destfile == "" || destfile == null) { return; }
-
-            Bitmap _finalBmp;
-            using (Bitmap bmp = new Bitmap(sourcefile))
-            {
-                if (IsBrightnessApply)
+            try {
+                Bitmap _finalBmp;
+                using (Bitmap bmp = new Bitmap(sourcefile))
                 {
-                    int TempBrightness = 0;
-                    if (Brightness > 0) { TempBrightness = Convert.ToInt32((-255) + (5.10 * Brightness)); }
-                    if (Brightness < 0) { TempBrightness = Convert.ToInt32((255) + (5.10 * Brightness)); }
-                    //The filter accepts 8 bpp grayscale and 24/32 bpp color images for processing, value [-255, +255] default 10
-                    if (TempBrightness >= -255 && TempBrightness != 0 && TempBrightness <= 255)
+
+                    if (IsBrightnessApply)
                     {
-                        try
+                        int TempBrightness = 0;
+                        if (Brightness > 0) { TempBrightness = Convert.ToInt32((2.55 * Brightness)); }
+
+                        if (Brightness < 0) { TempBrightness = Convert.ToInt32((2.55 * Brightness)); }
+                        //The filter accepts 8 bpp grayscale and 24/32 bpp color images for processing, value [-255, +255] default 10
+                        if (TempBrightness >= -255 && TempBrightness != 0 && TempBrightness <= 255)
                         {
-                            ContrastCorrection filter = new ContrastCorrection(TempBrightness);
-                            filter.ApplyInPlace(bmp);
+                            try
+                            {
+                                BrightnessCorrection filter = new BrightnessCorrection(TempBrightness);
+                                //ContrastCorrection filter = new ContrastCorrection(TempBrightness);
+                                filter.ApplyInPlace(bmp);
+                                _finalBmp = new Bitmap(bmp);
+                            }
+                            catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
                         }
-                        catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
+                    }
+
+                    if (IsContrastApply)
+                    {
+                        int TempContrast = 0;
+                        if (Contrast > 0) { TempContrast = Convert.ToInt32((1.27 * Contrast)); }
+                        if (Contrast < 0) { TempContrast = Convert.ToInt32((1.27 * Contrast)); }
+                        //The filter accepts 8 bpp grayscale and 24/32 bpp color images for processing, value [-127, +127] default 10
+                        if (TempContrast >= -127 && TempContrast != 0 && TempContrast <= 127)
+                        {
+                            try
+                            {
+                                ContrastCorrection filter = new ContrastCorrection(TempContrast);
+                                filter.ApplyInPlace(bmp);
+                                _finalBmp = new Bitmap(bmp);
+                                //_finalBmp =AdjustContrast(bmp,TempContrast);
+
+                            }
+                            catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
+                        }
+                    }
+
+                    if (IsSaturationApply)
+                    {
+                        float TempSaturation = 0;
+                        if (Saturation > 0) { TempSaturation = ((Saturation) + (-100)); }
+                        if (Saturation < 0) { TempSaturation = (100 + (Saturation)); }
+                        //The filter accepts 24 and 32 bpp color images for processing, value specified percentage [-1, +1] default 0.1
+                        if (TempSaturation >= -100f && TempSaturation != 0f && TempSaturation <= 100f)
+                        {
+                            try
+                            {
+
+                                SaturationCorrection filter = new SaturationCorrection(TempSaturation / 10);
+                                filter.ApplyInPlace(bmp);
+                                _finalBmp = new Bitmap(bmp);
+
+
+                            }
+                            catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
+                        }
+                    }
+                    if (_whiteBalance > 0 && _whiteBalance <= 100 && IsWhiteBalanceApply)
+                    {
+                        int TempWB= _whiteBalance * 2 + 55;
+                        _finalBmp = Convert_WhiteBalance(bmp, (TempWB * 100));
+                    }
+                    else if (_whiteBalance < 0 && _whiteBalance >= -100 && IsWhiteBalanceApply)
+                    {
+                        int TempWB = (_whiteBalance + 100) / 2;
+                        _finalBmp = Convert_WhiteBalance(bmp, (TempWB * 100));
+                    }
+                    else
+                    {
+                        _finalBmp = bmp;
+                    }
+
+
+                    if (WhiteClipping > 0 && WhiteClipping <= 100 && IsWhiteClippingApply)
+                    {
+                        _finalBmp = Apply_WhiteClipping(_finalBmp);
+                    }
+                    if (WhiteClipping < 0 && WhiteClipping >= -100 && IsWhiteClippingApply)
+                    {
+                        _finalBmp = Apply_WhiteClipping(_finalBmp);
+                    }
+
+                    //Bitmap bt = new Bitmap(sourcefile);
+                    if (BackgroundFilter > 1 && BackgroundFilter <= 100 && IsBackgroundFilterApply)
+                    {
+                        _finalBmp = Apply_BackgroundFilter(_finalBmp);
+                    }
+
+                    if (destfile == "" || destfile == null)
+                    {
+                        WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
+                        ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+
+                        //string xname = StaticClass.saveBitmap2File(_finalBmp,);
+                    }
+                    else
+                    {
+                        //if (File.Exists(destfile)) { File.Delete(destfile); }
+                        StaticClass.saveBitmap2File(_finalBmp, destfile);
                     }
                 }
-
-                if (IsContrastApply)
+                if (destfile != "" && destfile != null)
                 {
-                    int TempContrast = 0;
-                    if (Contrast > 0) { TempContrast = Convert.ToInt32((-127) + (2.54 * Contrast)); }
-                    if (Contrast < 0) { TempContrast = Convert.ToInt32((127) + (2.54 * Contrast)); }
-                    //The filter accepts 8 bpp grayscale and 24/32 bpp color images for processing, value [-127, +127] default 10
-                    if (TempContrast >= -127 && TempContrast != 0 && TempContrast <= 127)
-                    {
-                        try
-                        {
-                            ContrastCorrection filter = new ContrastCorrection(TempContrast);
-                            filter.ApplyInPlace(bmp);
-                        }
-                        catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
-                    }
+                    //if (File.Exists(sourcefile)) { File.Delete(sourcefile); }
+                    //StaticClass.saveBitmap2File(_finalBmp, destfile);
                 }
-
-                if (IsSaturationApply)
-                {
-                    float TempSaturation = 0;
-                    if (Saturation > 0) { TempSaturation = ((-100) + (2 * Saturation)); }
-                    if (Saturation < 0) { TempSaturation = ((100) + (2 * Saturation)); }
-                    //The filter accepts 24 and 32 bpp color images for processing, value specified percentage [-1, +1] default 0.1
-                    if (TempSaturation >= -100f && TempSaturation != 0f && TempSaturation <= 100f)
-                    {
-                        try
-                        {
-
-                            SaturationCorrection filter = new SaturationCorrection(TempSaturation / 100);
-                            filter.ApplyInPlace(bmp);
-
-                        }
-                        catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
-                    }
-                }
-
-                if (_whiteBalance > 0 && _whiteBalance <= 100 && IsWhiteBalanceApply)
-                {
-                    _finalBmp = Convert_WhiteBalance(bmp, (_whiteBalance * 100));
-                }
-                if (_whiteBalance < 0 && _whiteBalance >= -100 && IsWhiteBalanceApply)
-                {
-                    _finalBmp = Convert_WhiteBalance(bmp, (_whiteBalance * 100));
-                }
-                else { _finalBmp = bmp; }
-
-                if (WhiteClipping > 0 && WhiteClipping <= 100 && IsWhiteClippingApply)
-                {
-                    _finalBmp = Apply_WhiteClipping(_finalBmp);
-                }
-
-                if (BackgroundFilter > 0 && BackgroundFilter <= 100 && IsBackgroundFilterApply)
-                {
-                    _finalBmp = Apply_BackgroundFilter(_finalBmp);
-                }
-
-                if (destfile == "" || destfile == null)
-                {
-                    WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
-                }
+                //else
+                //{
+                //    WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
+                //    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+                //}
+                //}
             }
-            if (destfile != "" && destfile != null)
-            {
-                if (File.Exists(destfile)) { File.Delete(destfile); }
-                StaticClass.saveBitmap2File(_finalBmp, destfile);
-            }
-            //else
-            //{
-            //    WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
-            //    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
-            //}
-            //}
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
         }
 
         private Bitmap Apply_WhiteClipping(Bitmap _bmpImage)
@@ -358,7 +408,8 @@ namespace DSLR_Tool_PC.ViewModels
             _bmpImage.Save(tempFile_In, System.Drawing.Imaging.ImageFormat.Jpeg);
 
             int TempWhiteClipping = 0;
-            if (WhiteClipping > 0) { TempWhiteClipping = Convert.ToInt32(WhiteClipping * 2.55); }
+            if (WhiteClipping > 0) { TempWhiteClipping = Convert.ToInt32(WhiteClipping * 1.275); }
+            if (WhiteClipping < 0) { TempWhiteClipping = Convert.ToInt32(-WhiteClipping * 1.275); }
             StaticClass.WhiteClipping_usingPy(tempFile_In, tempFile_In, TempWhiteClipping, 0);
 
             Bitmap bmp = (Bitmap)Image.FromFile(tempFile_In);
@@ -382,13 +433,15 @@ namespace DSLR_Tool_PC.ViewModels
                 _bmpImage.Save(tempFile_In, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                 int TempBgFilter = 0;
-                if (BackgroundFilter > 0)
+                if (BackgroundFilter > 1)
                 {
                     if ((BackgroundFilter % 2) == 0) { TempBgFilter = BackgroundFilter + 1; } else { TempBgFilter = BackgroundFilter; }
-                }
-                StaticClass.RemoveBG_usingPy(tempFile_In, tempFile_In, TempBgFilter);
-                Log.Debug(tempFile_In);
+                    //MessageBox.Show(TempBgFilter.ToString());
+                    StaticClass.RemoveBG_usingPy(tempFile_In, tempFile_In, TempBgFilter);
+                    Log.Debug(tempFile_In);
 
+                    
+                }
                 Bitmap bmp = (Bitmap)Image.FromFile(tempFile_In);
                 _returnBmp = bmp;
 
@@ -401,7 +454,6 @@ namespace DSLR_Tool_PC.ViewModels
 
             return _returnBmp;
         }
-
 
         private void ResetAllControls()
         {
@@ -485,16 +537,101 @@ namespace DSLR_Tool_PC.ViewModels
             }
 
             Bitmap resultBitmap = new Bitmap(_sourcebmp.Width, _sourcebmp.Height);
-            BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
-                                                            ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             Marshal.Copy(_pixelBuffer, 0, resultData.Scan0, _pixelBuffer.Length);
             resultBitmap.UnlockBits(resultData);
-
-
             return resultBitmap;
         }
 
+        
+        private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            __mainWindowAdvanced.HideProgress();
+            System.Windows.MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
+            __mainWindowAdvanced.BrowseReload(_strApplPath);
+            //__PathUpdate.__SelectedImageDetails = null;
+            //__PathUpdate.PathImg = "";
+            //ServiceProvider.Settings.EditImageByte = null;
+            //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
+            ResetAllControls();
+            count = 0;
+            //photoEdit.ApplyAllFramesBtn.IsEnabled = true;
+
+        }
+
+        private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //this.lblCounter.Content = e.ProgressPercentage;
+            //this.progressbar.Value = e.ProgressPercentage;
+            __mainWindowAdvanced.ChangesProgress.Value = (count*100)/total;
+            __mainWindowAdvanced.ProgressLabel.Text = string.Format("Saving frame " + e.ProgressPercentage + " of " + total);
+        }
+
+        private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string _pathImag = __PathUpdate.PathImg;//.Substring(8);
+            if (_pathImag == null) { return; }
+            ImageDetails _imageDetails = __PathUpdate.__SelectedImageDetails;
+            if (_imageDetails == null) { return; }
+
+            DirectoryInfo _dirInfoApplPath = new DirectoryInfo(System.IO.Path.GetDirectoryName(_imageDetails.Path_Orginal));
+            string[] _pathImagFiles = Directory.GetFiles(_dirInfoApplPath.ToString());
+            
+            total = _pathImagFiles.Length;
+            //string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
+            try
+            {
+                foreach (var _imgfl in _pathImagFiles)
+                {
+                    count++;
+                    //string TargetPath = "";
+                    string _exFileName = System.IO.Path.GetFileName(_imgfl);
+                    //CopyBackUp(_imgfl, Path.Combine(__mainWindowAdvanced.OGFolder, _exFileName));
+                    bgWorker.ReportProgress(count);
+                    FiltersCorrections(_imgfl, Path.Combine(_strApplPath, _exFileName));
+                   
+                    //Thread.Sleep(3000);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
         private void Start()
+        {
+            
+
+            if (!bgWorker.IsBusy)
+            {
+                try
+                {
+                    FolderBrowserDialog folderDlg = new FolderBrowserDialog
+                    {
+                        ShowNewFolderButton = true
+                    };
+                    // Show the FolderBrowserDialog.  
+                    DialogResult result = folderDlg.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        _strApplPath = folderDlg.SelectedPath;
+                        //System.Windows.MessageBox.Show(_strApplPath);
+                        Environment.SpecialFolder root = folderDlg.RootFolder;
+                    }
+                    if (!Directory.Exists(_strApplPath))
+                        Directory.CreateDirectory(_strApplPath);
+                }
+                catch (Exception ey) { ey.ToString();
+                    return;
+                }
+                __mainWindowAdvanced.ChangesProgress.Value = 0;
+                __mainWindowAdvanced.ShowProgress();
+                bgWorker.RunWorkerAsync();
+                
+                //photoEdit.ApplyAllFramesBtn.IsEnabled = false;
+                
+            }
+        }
+        #region Depricated_Apply_All_Frame_code
+        private void Start_Test()
         {
             string _pathImag = __PathUpdate.PathImg;//.Substring(8);
             if (_pathImag == null) { return; }
@@ -504,30 +641,28 @@ namespace DSLR_Tool_PC.ViewModels
             DirectoryInfo _dirInfoApplPath = new DirectoryInfo(System.IO.Path.GetDirectoryName(_imageDetails.Path_Orginal));
             string[] _pathImagFiles = Directory.GetFiles(_dirInfoApplPath.ToString());
 
-            string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
-            if (!Directory.Exists(_strApplPath))
-                Directory.CreateDirectory(_strApplPath);
-
-            foreach (var _imgfl in _pathImagFiles)
+            //string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
+            try
             {
-                try
+                foreach (var _imgfl in _pathImagFiles)
                 {
-                    ////string TargetPath = "";
+                    //string TargetPath = "";
                     string _exFileName = System.IO.Path.GetFileName(_imgfl);
-                    CopyBackUp(_imgfl, Path.Combine(_strApplPath, _exFileName));
-                    FiltersCorrections(_imgfl, _imgfl);
+                    //CopyBackUp(_imgfl, Path.Combine(__mainWindowAdvanced.OGFolder, _exFileName));
+                    FiltersCorrections(_imgfl, Path.Combine(_strApplPath, _exFileName));
+
                 }
-                catch (Exception ex) { }
             }
-            MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
-            __mainWindowAdvanced.BrowseReload(_dirInfoApplPath.ToString());
-            __PathUpdate.__SelectedImageDetails = null;
-            __PathUpdate.PathImg = "";
-            ServiceProvider.Settings.EditImageByte = null;
-            ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
+            catch (Exception ex) { ex.ToString(); }
+            System.Windows.MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
+            __mainWindowAdvanced.BrowseReload(_strApplPath);
+            //__PathUpdate.__SelectedImageDetails = null;
+            //__PathUpdate.PathImg = "";
+            //ServiceProvider.Settings.EditImageByte = null;
+            //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
             ResetAllControls();
         }
-
+        #endregion
         private void EditFiltersApply()
         {
             FiltersCorrections(__PathUpdate.PathImg, "");
@@ -552,7 +687,7 @@ namespace DSLR_Tool_PC.ViewModels
             }
             catch (Exception ex)
             {
-                //Log.Error("Unable to make backup ", ex);
+                Log.Error("Unable to make backup ", ex);
                 return "";
             }
         }

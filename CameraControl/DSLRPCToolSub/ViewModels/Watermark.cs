@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CameraControl.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,6 +11,17 @@ namespace DSLR_Tool_PC.ViewModels
 {
     public class Watermark : BaseFieldClass
     {
+        private bool _isOpacityApply = false;
+        public bool IsOpacityApply
+        {
+            get { return _isOpacityApply; }
+            set
+            {
+                _isOpacityApply = value;
+                NotifyPropertyChanged("IsOpacityApply");
+                //if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+            }
+        }
         private static Watermark uni_class_inst = null;
         public static Watermark GetInstance()
         {
@@ -109,6 +121,8 @@ namespace DSLR_Tool_PC.ViewModels
             }
         }
 
+
+
         Visibility _IsVisible = Visibility.Collapsed;
         public Visibility IsVisible
         {
@@ -124,6 +138,7 @@ namespace DSLR_Tool_PC.ViewModels
             LocationX = 0;
             LocationY = 0;
             ImageOpacity100 = 100;
+
         }
     }
 }

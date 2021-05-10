@@ -88,55 +88,57 @@ namespace DSLR_Tool_PC
         //get python path from registry key
         public static string GetPythonPathFromRegistry()
         {
-            const string regKey = "Python";
-            string pythonPath = null;
-            try
-            {
-                RegistryKey registryKey = Registry.LocalMachine;
-                RegistryKey subKey = registryKey.OpenSubKey("SOFTWARE");
-                if (subKey == null)
-                    return null;
+            //const string regKey = "Python";
+            //string pythonPath = null;
+            //try
+            //{
+            //    RegistryKey registryKey = Registry.LocalMachine;
+            //    RegistryKey subKey = registryKey.OpenSubKey("SOFTWARE");
+            //    if (subKey == null)
+            //        return null;
 
-                RegistryKey esriKey = subKey.OpenSubKey("ESRI");
-                if (esriKey == null)
-                    return null;
+            //    RegistryKey esriKey = subKey.OpenSubKey("ESRI");
+            //    if (esriKey == null)
+            //        return null;
 
-                string[] subkeyNames = esriKey.GetSubKeyNames();//get all keys under "ESRI" key
-                int index = -1;
-                /*"Python" key contains arcgis version no in its name. So, the key name may be 
-                varied version to version. For ArcGIS10.0, key name is: "Python10.0". So, from
-                here I can get ArcGIS version also*/
-                for (int i = 0; i < subkeyNames.Length; i++)
-                {
-                    if (subkeyNames[i].Contains("Python"))
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-                if (index < 0)
-                    return null;
-                RegistryKey pythonKey = esriKey.OpenSubKey(subkeyNames[index]);
+            //    string[] subkeyNames = esriKey.GetSubKeyNames();//get all keys under "ESRI" key
+            //    int index = -1;
+            //    /*"Python" key contains arcgis version no in its name. So, the key name may be 
+            //    varied version to version. For ArcGIS10.0, key name is: "Python10.0". So, from
+            //    here I can get ArcGIS version also*/
+            //    for (int i = 0; i < subkeyNames.Length; i++)
+            //    {
+            //        if (subkeyNames[i].Contains("Python"))
+            //        {
+            //            index = i;
+            //            break;
+            //        }
+            //    }
+            //    if (index < 0)
+            //        return null;
+            //    RegistryKey pythonKey = esriKey.OpenSubKey(subkeyNames[index]);
 
-                string arcgisVersion = subkeyNames[index].Remove(0, 6); //remove "python" and get the version
-                var pythonValue = pythonKey.GetValue("Python") as string;
-                if (pythonValue != "True")//I guessed the true value for python says python is installed with ArcGIS.
-                    return "";
+            //    string arcgisVersion = subkeyNames[index].Remove(0, 6); //remove "python" and get the version
+            //    var pythonValue = pythonKey.GetValue("Python") as string;
+            //    if (pythonValue != "True")//I guessed the true value for python says python is installed with ArcGIS.
+            //        return "";
 
-                var pythonDirectory = pythonKey.GetValue("PythonDir") as string;
-                if (pythonDirectory != null && Directory.Exists(pythonDirectory))
-                {
-                    string pythonPathFromReg = pythonDirectory + "ArcGIS" + arcgisVersion + "\\python.exe";
-                    if (File.Exists(pythonPathFromReg))
-                        pythonPath = pythonPathFromReg;
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e + "\r\nReading registry " + regKey.ToUpper());
-                pythonPath = null;
-            }
-            return pythonPath;
+            //    var pythonDirectory = pythonKey.GetValue("PythonDir") as string;
+            //    if (pythonDirectory != null && Directory.Exists(pythonDirectory))
+            //    {
+            //        string pythonPathFromReg = pythonDirectory + "ArcGIS" + arcgisVersion + "\\python.exe";
+            //        if (File.Exists(pythonPathFromReg))
+            //            pythonPath = pythonPathFromReg;
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show(e + "\r\nReading registry " + regKey.ToUpper());
+            //    pythonPath = null;
+            //}
+            string _PyScriptFile = Path.Combine(Settings.ApplicationFolder, "python-3.9.4\\python.exe");
+            
+            return _PyScriptFile;
         }
 
         //get python path from environtment variable
@@ -169,37 +171,38 @@ namespace DSLR_Tool_PC
         private static bool RunPythonFile_cmdMode(string _arguments)
         {
             bool _returnValue = true;
-            int a = 1;
+            //int a = 1;
 
             //string s = GetPythonPathFromRegistry();
 
-            IDictionary environmentVariables = Environment.GetEnvironmentVariables();
-            string pathVariable = environmentVariables["Path"] as string;
-            if (pathVariable != null)
-            {
-                string[] allPaths = pathVariable.Split(';');
-                foreach (var path in allPaths)
-                {
-                    // var paths = @"C:\Windows\SysNative";
-                    string pythonPathFromEnv = Path.Combine(path, "python.exe");
-                    if (File.Exists(pythonPathFromEnv))
-                    {
-                        Log.Debug(pythonPathFromEnv);
-                        _returnValue = RunPythonFile_cmdMode(_arguments, pythonPathFromEnv);
-                        if (_returnValue == true) { break; }
-                    }
+            //IDictionary environmentVariables = Environment.GetEnvironmentVariables();
+            //string pathVariable = environmentVariables["Path"] as string;
+            //if (pathVariable != null)
+            //{
+            //    string[] allPaths = pathVariable.Split(';');
+            //    foreach (var path in allPaths)
+            //    {
+            //        // var paths = @"C:\Windows\SysNative";
+            //        //string pythonPathFromEnv = Path.Combine(path, "python.exe");
+            //        //if (File.Exists(pythonPathFromEnv))
+            //        //{
+            //        //    Log.Debug(pythonPathFromEnv);
+            //        //    _returnValue = RunPythonFile_cmdMode(_arguments, pythonPathFromEnv);
+            //        //    if (_returnValue == true) { break; }
+            //        //}
 
-                    //bool IsFileexist = File.Exists(pythonPathFromEnv) ? true : false;
-                    //if (IsFileexist)
-                    //{
-                    //    Log.Debug(pythonPathFromEnv);
-                    //    _returnValue = RunPythonFile_cmdMode(_arguments, pythonPathFromEnv);
-                    //    if (_returnValue == true) { break; }
-                    //}
+            //        //bool IsFileexist = File.Exists(pythonPathFromEnv) ? true : false;
+            //        //if (IsFileexist)
+            //        //{
+            //        //    Log.Debug(pythonPathFromEnv);
+            //        //    _returnValue = RunPythonFile_cmdMode(_arguments, pythonPathFromEnv);
+            //        //    if (_returnValue == true) { break; }
+            //        //}
 
-                }
-            }
-
+            //    }
+            //}
+            string _PyScriptFile = Path.Combine(Settings.ApplicationFolder, "python-3.9.4\\python.exe");
+            _returnValue = RunPythonFile_cmdMode(_arguments, _PyScriptFile);
             return _returnValue;
         }
 
@@ -276,7 +279,7 @@ namespace DSLR_Tool_PC
                 if (errors != "")
                 {
                     Log.Debug("Err:" + errors);
-                    ////MessageBox.Show(errors);
+                    //MessageBox.Show(errors);
                     //if (errors.Contains("Python was not found"))
                     //{
                     //    //var thread = new Thread(DownLoadAndInstallPython);
@@ -512,12 +515,13 @@ namespace DSLR_Tool_PC
             return parent;
         }
 
-        public static void saveBitmap2File(Bitmap b, string fileName)
+        public static string saveBitmap2File(Bitmap b, string fileName)
         {
             var formatFile = fileName;
             //formatFile = formatFile.Substring(formatFile.Length - 3);
             formatFile = System.IO.Path.GetExtension(formatFile).ToString().Replace(".", "").ToLower();
-
+            //var file = fileName.Substring(0, fileName.LastIndexOf("."));
+            //fileName = file + "1." + formatFile;
             switch (formatFile)
             {
                 case "bmp":
@@ -537,6 +541,20 @@ namespace DSLR_Tool_PC
                     b.Save(fileName, System.Drawing.Imaging.ImageFormat.Tiff);
                     break;
             }
+            return fileName;
+        }
+
+        public static System.Drawing.Bitmap BitmapFromWriteableBitmap(WriteableBitmap writeBmp)
+        {
+            System.Drawing.Bitmap bmp;
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create((BitmapSource)writeBmp));
+                enc.Save(outStream);
+                bmp = new System.Drawing.Bitmap(outStream);
+            }
+            return bmp;
         }
     }
 }
