@@ -618,6 +618,11 @@ namespace DSLR_Tool_PC.ViewModels
                     }
                     if (!Directory.Exists(_strApplPath))
                         Directory.CreateDirectory(_strApplPath);
+                    if (_strApplPath == __mainWindowAdvanced.OGFolder)
+                    {
+                        MessageBox.Show("Choose a different destination folder.");
+                        return;
+                    }
                 }
                 catch (Exception ey) { ey.ToString();
                     return;

@@ -70,6 +70,7 @@ namespace CameraControl
         PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
         ExportZipModel __exportZipModel = ExportZipModel.getInstance();
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
+        ExportGIFModel __gIFModel = ExportGIFModel.getInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
         //public double CameraGrid_height;
@@ -169,6 +170,8 @@ namespace CameraControl
             __photoEditModel.ExecuteInti(this);
             __exportZipModel.ExecuteInti(this);
             __exportMP4ViewModel.ExecuteInti(this);
+            __gIFModel.ExecuteInti(this);
+
 
         }
 
@@ -3164,7 +3167,7 @@ namespace CameraControl
             string _installDetectorFile = Path.Combine(Settings.ApplicationFolder, "VerifyInstall.txt");
             FileInfo fileInfo = new FileInfo(_installDetectorFile);
 
-            FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+             //fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
 
             DateTime creationDate = fileInfo.CreationTime;
             DateTime today = DateTime.Now;
@@ -3235,10 +3238,32 @@ namespace CameraControl
         public void ShowProgress()
         {
             ProgressPannel.Visibility = Visibility.Visible;
+            CaptureTab.IsEnabled = false;
+            EditTab.IsEnabled = false;
+            CaptureRightTab.IsEnabled = false;
+            grd_downbutton.IsEnabled = false;
+            ModeTabControl.IsEnabled = false;
+            tc_ImageSelection.IsEnabled = false;
+            leftEdit.IsEnabled = false;
+            grd_Edit_Bottom.IsEnabled = false;
+            grd_Edit_Canvasbg.IsEnabled = false;
+            grd_Edit_canvasUpper.IsEnabled = false;
+            grd_Edit_Bottom.IsEnabled = false;
         }
         public void HideProgress()
         {
             ProgressPannel.Visibility = Visibility.Collapsed;
+            CaptureTab.IsEnabled = true;
+            EditTab.IsEnabled = true;
+            CaptureRightTab.IsEnabled = true;
+            grd_downbutton.IsEnabled = true;
+            ModeTabControl.IsEnabled = true;
+            tc_ImageSelection.IsEnabled = true;
+            leftEdit.IsEnabled = true;
+            grd_Edit_Bottom.IsEnabled = true;
+            grd_Edit_Canvasbg.IsEnabled = true;
+            grd_Edit_canvasUpper.IsEnabled = true;
+            grd_Edit_Bottom.IsEnabled = true;
         }
     }
 }

@@ -12,19 +12,26 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using CameraControl.Devices;
 using CameraControl.Core.Classes;
+using CameraControl;
+using System.ComponentModel;
 
 namespace DSLR_Tool_PC.ViewModels
 {
     public class ExportGIFModel : BaseFieldClass
     {
         #region Public Variables
-
         public Window __Parent_window = null; 
         public List<ImageDetails> ImagesGif = new List<ImageDetails>();
         public int framedelaytimer = 100;
         public double ratiowidth = 0;
-
         public double ratioheight = 0;
+        MainWindowAdvanced __mainWindowAdvanced = null;
+        public void ExecuteInti(object __this)
+        {
+            //__editLeftControl = (EditLeftControl)__this;
+            __mainWindowAdvanced = (MainWindowAdvanced)__this;
+            //photoEdit = (PhotoEdit)__this;
+        }
         #endregion
 
         #region Private Variables
@@ -36,6 +43,11 @@ namespace DSLR_Tool_PC.ViewModels
         private bool _rotationstatus = false;
         private string _uripathimgGIFPreview = "";
         private bool SkipPreview = false;
+
+        private string tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
+        private System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
+        private int total=0;
+        private int count=0;
         #endregion
         #region Initializations
 
@@ -47,9 +59,68 @@ namespace DSLR_Tool_PC.ViewModels
             return uni_class_inst;
         }
 
+        BackgroundWorker bgWorker = new BackgroundWorker();
+
         ExportGIFModel()
         {
+            bgWorker.DoWork += BgWorker_DoWork;
+            bgWorker.ProgressChanged += BgWorker_ProgressChanged;
+            bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
+
+            bgWorker.WorkerSupportsCancellation = true;
+            bgWorker.WorkerReportsProgress = true;
             Task.Factory.StartNew(CallPreview);
+        }
+
+        private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            __mainWindowAdvanced.HideProgress();
+        }
+
+        private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            __mainWindowAdvanced.ChangesProgress.Value = e.ProgressPercentage;
+        }
+
+        private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            
+            
+
+            foreach (var img in ImagesGif) //todaysFiles is list of file names (with full path) to be zipped
+            {
+                count++;
+                bgWorker.ReportProgress(count);
+                string tempPath = Path.Combine(tempPathFolder, img.FileName);
+
+                Bitmap image = new Bitmap(img.Path);
+                Bitmap newImage = new Bitmap((int)ExportWidth, (int)ExportHeight, PixelFormat.Format24bppRgb);
+
+                // Draws the image in the specified size with quality mode set to HighQuality
+                using (Graphics graphics = Graphics.FromImage(newImage))
+                {
+                    graphics.CompositingQuality = CompositingQuality.HighSpeed;
+                    graphics.InterpolationMode = InterpolationMode.Low;
+                    graphics.SmoothingMode = SmoothingMode.Default;
+                    graphics.DrawImage(image, 0, 0, (int)ExportWidth, (int)ExportHeight);
+                    graphics.Dispose();
+                }
+                using (var ms = new MemoryStream())
+                {
+                    using (FileStream fs = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        newImage.Save(ms, ImageFormat.Jpeg);
+                        byte[] bytes = ms.ToArray();
+                        fs.Write(bytes, 0, bytes.Length);
+                        fs.Dispose();
+                    }
+                    ms.Dispose();
+                }
+                image.Dispose();
+                newImage.Dispose();
+                GC.Collect();
+            }
+            GenerateGif(tempPathFolder, _saveFileDialog.SelectedPath.ToString());
         }
 
         #endregion
@@ -321,55 +392,25 @@ namespace DSLR_Tool_PC.ViewModels
         {
             try
             {
-                System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
                 _saveFileDialog.ShowDialog();
                 if (_saveFileDialog.SelectedPath == "") { return; }
 
-                string tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
                 try { if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); } }
                 catch (Exception) { return; }
 
-                foreach (var img in ImagesGif) //todaysFiles is list of file names (with full path) to be zipped
-                {
-                    string tempPath = Path.Combine(tempPathFolder, img.FileName);
-
-                    Bitmap image = new Bitmap(img.Path);
-                    Bitmap newImage = new Bitmap((int)ExportWidth, (int)ExportHeight, PixelFormat.Format24bppRgb);
-
-                    // Draws the image in the specified size with quality mode set to HighQuality
-                    using (Graphics graphics = Graphics.FromImage(newImage))
-                    {
-                        graphics.CompositingQuality = CompositingQuality.HighSpeed;
-                        graphics.InterpolationMode = InterpolationMode.Low;
-                        graphics.SmoothingMode = SmoothingMode.Default;
-                        graphics.DrawImage(image, 0, 0, (int)ExportWidth, (int)ExportHeight);
-                        graphics.Dispose();
-                    }
-                    using (var ms = new MemoryStream())
-                    {
-                        using (FileStream fs = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
-                        {
-                            newImage.Save(ms, ImageFormat.Jpeg);
-                            byte[] bytes = ms.ToArray();
-                            fs.Write(bytes, 0, bytes.Length);
-                            fs.Dispose();
-                        }
-                        ms.Dispose();
-                    }
-                    image.Dispose();
-                    newImage.Dispose();
-                    GC.Collect();
-                }
-
-                GenerateGif(tempPathFolder, _saveFileDialog.SelectedPath.ToString());
+                total = ImagesGif.Count;
+                __mainWindowAdvanced.ProgressLabel.Text = "Exporting frames to GIF image...";
+                bgWorker.RunWorkerAsync();
+                __mainWindowAdvanced.ShowProgress();
+                __Parent_window.Hide();
                 //GenarateGIFs(tempPathFolder);
 
-                try
-                {
-                    if (tempPathFolder != "")
-                        Directory.Delete(tempPathFolder, true);
-                }
-                catch (Exception) { }
+                //try
+                //{
+                //    if (tempPathFolder != "")
+                //        Directory.Delete(tempPathFolder, true);
+                //}
+                //catch (Exception) { }
             }
             catch (Exception ex) { Log.Debug("", ex); }
             finally { __Parent_window.Close(); }
