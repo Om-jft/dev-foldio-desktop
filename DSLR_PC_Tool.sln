@@ -33,6 +33,7 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Foldio Setup", "Foldio Setup\Foldio Setup.vdproj", "{7878ED39-819D-485A-8E87-0109B0B8EF76}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Foldio-Desktop-Setup", "Foldio-Desktop-Setup\Foldio-Desktop-Setup.vdproj", "{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}"
+ main
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,6 +309,7 @@ Global
 		{7878ED39-819D-485A-8E87-0109B0B8EF76}.Release|Mixed Platforms.ActiveCfg = Release
 		{7878ED39-819D-485A-8E87-0109B0B8EF76}.Release|x64.ActiveCfg = Release
 		{7878ED39-819D-485A-8E87-0109B0B8EF76}.Release|x86.ActiveCfg = Release
+
 		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|Any CPU.ActiveCfg = Debug
 		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|Mixed Platforms.ActiveCfg = Debug
 		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.All|x64.ActiveCfg = Debug
@@ -324,6 +326,7 @@ Global
 		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|Mixed Platforms.ActiveCfg = Release
 		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|x64.ActiveCfg = Release
 		{DAB8B6F5-EEF1-483D-8D1D-A234E666091E}.Release|x86.ActiveCfg = Release
+ main
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
