@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow x:Class="CameraControl.MainWindowAdvanced" 
+<Controls:MetroWindow x:Class="CameraControl.MainWindowAdvanced" 
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     Title="OrangeMonkie" Height="799" Width="987" 
@@ -852,7 +852,6 @@
                                     <TextBlock TextAlignment="Center"  Foreground="#ffffff" Margin="200,267,199.6,199.8">Your trail period of 30 days is over. Please Purchase.</TextBlock>
                                     <Button Name="purchaseButton" Click="purchaseButton_Click" Width="150">Purchase Premium</Button>
                                 </Grid>
-
                                 <Grid x:Name="grd_downbutton" IsEnabled="True" Grid.Row="2" Background="#131415" >
                                     <StackPanel Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Button ToolTip="{T:TranslateExtension CapturePhotoToolTip}"  Width="80" Height="80" Name="button3" Margin="4" BorderThickness="0" BorderBrush="Transparent" 

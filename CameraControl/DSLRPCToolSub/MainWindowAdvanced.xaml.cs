@@ -38,6 +38,7 @@ using FileInfo = System.IO.FileInfo;
 using System.Threading.Tasks;
 using System.Drawing;
 
+
 namespace CameraControl
 {
     /// <summary>
@@ -2041,7 +2042,11 @@ namespace CameraControl
                     BrowseFolderImages(tbFolderName.Text);
 
                     //__Pathupdate.PathImg = "";
+
                     // ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
+
+                   // ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = null;
+
                     selectedpath = dialog.SelectedPath;
                 }
                 
@@ -2231,7 +2236,6 @@ namespace CameraControl
                     ImageListBox_Folder.Items.Add(img);
                     ListBoxSnapshots.Items.Add(img);
                 }
-              
 
                 LoadFolderSelectedItem(imrLocal);
                 UpdateImageData();
@@ -2317,7 +2321,6 @@ namespace CameraControl
             //    ListBoxSnapshots.ScrollIntoView(Item);
             //}
         }
-
         private void LoadFolderSelectedItem(ImageDetails _item)
         {
             if (_item != null)
@@ -3163,17 +3166,21 @@ namespace CameraControl
         {
             string _installDetectorFile = Path.Combine(Settings.ApplicationFolder, "VerifyInstall.txt");
             FileInfo fileInfo = new FileInfo(_installDetectorFile);
+
+            FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+
             DateTime creationDate = fileInfo.CreationTime;
             DateTime today = DateTime.Now;
 
             var daysUsed = today.Subtract(creationDate);
             int Usedfordays = daysUsed.Days;
-
             if (Usedfordays > 30)
             {
                 trial_Over();
             }
             //Task.Delay(10000).ContinueWith(t => trial_Over());
+
+           //Task.Delay(10000).ContinueWith(t => trial_Over());
         }
 
         private void trial_Over()
