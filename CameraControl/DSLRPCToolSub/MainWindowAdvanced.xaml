@@ -1363,7 +1363,7 @@
                                             <TranslateTransform/>
                                         </TransformGroup>
                                     </ScrollViewer.RenderTransform>
-                                    <StackPanel>
+                                    <StackPanel x:Name="leftEdit" IsEnabled="True">
                                         <local1:LevelGraph x:Name="EditLevelGraph" Background="#2e2f30"  />
                                         <Separator Height="1" Background="Black"/>
                                         <local1:Navigation/>
