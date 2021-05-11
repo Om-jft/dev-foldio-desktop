@@ -37,8 +37,7 @@ using System;
 using FileInfo = System.IO.FileInfo;
 using System.Threading.Tasks;
 using System.Drawing;
-using CameraControl.DSLRPCToolSub.ViewModels;
-using System.Windows.Threading;
+
 
 namespace CameraControl
 {
@@ -50,7 +49,7 @@ namespace CameraControl
         public string OGFolder = null;
         public string DisplayName { get; set; }
         private int _ListBoxSelectedIndex = -1;
-        ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
+
         private object _locker = new object();
         private FileItem _selectedItem = null;
         private Timer _selectiontimer = new Timer(4000);
@@ -1701,7 +1700,7 @@ namespace CameraControl
                 //if (File.Exists(xName)) { File.Delete(xName); }
                 string newSource = RecreateFiles(sourceDir, exFilename);
                 BrowseFolderImages(newSource, _imageDetails.FileName.ToString());
-                __exportPathUpdate.PathImg = newSource + "\\" + exFilename;
+
             }
             catch (Exception ex) { Log.Debug("ERotateLeft_Click", ex); }
         }
@@ -1757,7 +1756,6 @@ namespace CameraControl
                 //if (File.Exists(xName)) { File.Delete(xName); }
                 string newSource = RecreateFiles(sourceDir, exFilename);
                 BrowseFolderImages(newSource,  _imageDetails.FileName.ToString());
-                __exportPathUpdate.PathImg = newSource + "\\" + exFilename;
             }
             catch (Exception ex) { Log.Debug("ERotateRight_Click", ex); }
 
@@ -1818,7 +1816,7 @@ namespace CameraControl
                 //if (File.Exists(filename)) { File.Delete(filename); }
                 string newSource=RecreateFiles(sourceDir, exFilename);
                 BrowseFolderImages(newSource, exFilename);
-                __exportPathUpdate.PathImg = newSource + "\\"+exFilename;
+
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click", ex); }
             CropOut.Visibility = Visibility.Collapsed;
@@ -2245,8 +2243,9 @@ namespace CameraControl
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
 
-        public void BrowseFolderImages(string _folderPath, string imr)
+        private void BrowseFolderImages(string _folderPath, string imr)
         {
+
             try
             {
                 _ListBoxSelectedIndex = -1;
@@ -2265,6 +2264,7 @@ namespace CameraControl
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
                     StaticClass.GenerateSmallThumb(f, file);
+
                     ImageDetails id = new ImageDetails()
                     {
                         Path_Orginal = f,
@@ -2281,10 +2281,10 @@ namespace CameraControl
                 }
 
                 images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
-                //ImageListBox_Folder.BeginInit();
-                //ImageLIstBox_Folder.BeginInit();
-                //ImageLIstBox_Folder.Items.Clear();
-                //ListBoxSnapshots.Items.Clear();
+                ImageListBox_Folder.Items.Clear();
+                ImageLIstBox_Folder.Items.Clear();
+                ListBoxSnapshots.Items.Clear();
+
                 bool selectedImage = false;
                 ImageDetails imrLocal = new ImageDetails();
                 foreach (var img in images_Folder)
@@ -2298,12 +2298,12 @@ namespace CameraControl
                     ImageListBox_Folder.Items.Add(img);
                     ListBoxSnapshots.Items.Add(img);
                 }
+
                 LoadFolderSelectedItem(imrLocal);
                 UpdateImageData();
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
-
         private void ImgViewGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //Image clickedOnItem = (Image)StaticClass.GetParentDependencyObjectFromVisualTree((DependencyObject)e.MouseDevice.DirectlyOver, typeof(Image));
@@ -3167,7 +3167,7 @@ namespace CameraControl
             string _installDetectorFile = Path.Combine(Settings.ApplicationFolder, "VerifyInstall.txt");
             FileInfo fileInfo = new FileInfo(_installDetectorFile);
 
-             //fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+            FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
 
             DateTime creationDate = fileInfo.CreationTime;
             DateTime today = DateTime.Now;
@@ -3248,7 +3248,7 @@ namespace CameraControl
             grd_Edit_Bottom.IsEnabled = false;
             grd_Edit_Canvasbg.IsEnabled = false;
             grd_Edit_canvasUpper.IsEnabled = false;
-            
+            grd_Edit_Bottom.IsEnabled = false;
         }
         public void HideProgress()
         {
@@ -3263,8 +3263,7 @@ namespace CameraControl
             grd_Edit_Bottom.IsEnabled = true;
             grd_Edit_Canvasbg.IsEnabled = true;
             grd_Edit_canvasUpper.IsEnabled = true;
-            
+            grd_Edit_Bottom.IsEnabled = true;
         }
-
     }
 }

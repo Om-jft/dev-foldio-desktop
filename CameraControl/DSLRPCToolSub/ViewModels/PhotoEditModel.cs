@@ -19,17 +19,12 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 using CameraControl.DSLRPCToolSub.Classes;
-using CameraControl.DSLRPCToolSub.ViewModels;
-using System.Windows.Threading;
-using CameraControl.Classes;
 
 namespace DSLR_Tool_PC.ViewModels
 {
     public class PhotoEditModel : BaseFieldClass
     {
         private readonly object _Sliderlockobj = new object();
-        private static readonly Action EmptyDelegate = delegate { };
-
         public RelayCommand ApplyAllFrames { get; set; }
 
         BackgroundWorker bgWorker = new BackgroundWorker();
@@ -38,7 +33,6 @@ namespace DSLR_Tool_PC.ViewModels
         int count = 0;
 
         PathUpdate __PathUpdate = PathUpdate.getInstance();
-        ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         //EditLeftControl __editLeftControl = null;
         MainWindowAdvanced __mainWindowAdvanced = null;
         public void ExecuteInti(object __this)
@@ -48,9 +42,8 @@ namespace DSLR_Tool_PC.ViewModels
             //photoEdit = (PhotoEdit)__this;
         }
 
-        private string exPath = null;
-        private string newSource = null;
-        private string exName = null;
+        
+
         PhotoEditModel()
         {
             ApplyAllFrames = new RelayCommand(Start);
@@ -382,19 +375,7 @@ namespace DSLR_Tool_PC.ViewModels
                         WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
                         ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
 
-                        if (BackgroundFilter!=0||WhiteClipping!=0||_whiteBalance!=0||Saturation!=0||Contrast!=0||Brightness!=0)
-                        {
-                            string file = Path.Combine(Settings.ApplicationTempFolder+ "\\" + sourcefile.Substring(sourcefile.LastIndexOf("\\") + 1, sourcefile.Length - sourcefile.LastIndexOf("\\") - 1));
-                            string xname = StaticClass.saveBitmap2File(_finalBmp, file);
-                             exName = sourcefile.Substring(sourcefile.LastIndexOf("\\") + 1, sourcefile.Length - sourcefile.LastIndexOf("\\") - 1);
-                            exPath = sourcefile.Substring(0, sourcefile.LastIndexOf("\\"));
-
-                            newSource = __mainWindowAdvanced.RecreateFiles(exPath, exName);
-                            Thread.Sleep(500);
-                            __mainWindowAdvanced.BrowseFolderImages(newSource, exName);
-                            
-                        }
-
+                        //string xname = StaticClass.saveBitmap2File(_finalBmp,);
                     }
                     else
                     {
@@ -414,14 +395,8 @@ namespace DSLR_Tool_PC.ViewModels
                 //}
                 //}
             }
-            catch (Exception ex) { /*MessageBox.Show(ex.ToString());*/ }
-            finally
-            {
-                //if (Directory.Exists(exPath)&&exPath!=null) { Directory.Delete(exPath,true); }
-            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
         }
-
-        
 
         private Bitmap Apply_WhiteClipping(Bitmap _bmpImage)
         {
@@ -696,10 +671,7 @@ namespace DSLR_Tool_PC.ViewModels
         private void EditFiltersApply()
         {
             FiltersCorrections(__PathUpdate.PathImg, "");
-            //MessageBox.Show(__PathUpdate.PathImg.ToString());
             //ServiceProvider.Settings.EditImageByte = _applyfilterImage;
-            if (newSource != null && exName != null)
-                __exportPathUpdate.PathImg = newSource+"\\"+exName;
         }
 
         private string CopyBackUp(string source, string dest)
