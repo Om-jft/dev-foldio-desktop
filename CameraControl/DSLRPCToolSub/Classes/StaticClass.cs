@@ -522,6 +522,7 @@ namespace DSLR_Tool_PC
             formatFile = System.IO.Path.GetExtension(formatFile).ToString().Replace(".", "").ToLower();
             //var file = fileName.Substring(0, fileName.LastIndexOf("."));
             //fileName = file + "1." + formatFile;
+            if (File.Exists(fileName)) { File.Delete(fileName); }
             switch (formatFile)
             {
                 case "bmp":
