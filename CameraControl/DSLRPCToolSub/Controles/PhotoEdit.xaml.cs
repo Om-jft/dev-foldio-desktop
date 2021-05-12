@@ -33,16 +33,16 @@ namespace DSLR_Tool_PC.Controles
             var slidervalue = sldBackground.Value;
             //ImageLIstBox_Folder
 
-            foreach (MainWindowAdvanced window in Application.Current.Windows.OfType<MainWindowAdvanced>())
-            {
-                // window.ListBoxSnapshots.SelectedItem = window.ListBoxSnapshots.Items.GetItemAt(txtFrameValue - 1);
-                //Image img = window.EditFramePicEdit.i;
-                //Background _bg = new Background();
-                //BlurBitmapEffect myBlurEffect = new BlurBitmapEffect();
-                //myBlurEffect.Radius = sldBackground.Value;
-                //myBlurEffect.KernelType = KernelType.Box;
-                //Bitmap capcha = new Bitmap(window.EditFramePicEdit.Source.ToString());
-            }
+            //foreach (MainWindowAdvanced window in Application.Current.Windows.OfType<MainWindowAdvanced>())
+            //{
+            //    window.ListBoxSnapshots.SelectedItem = window.ListBoxSnapshots.Items.GetItemAt(txtFrameValue - 1);
+            //    Image img = window.EditFramePicEdit.i;
+            //    Background _bg = new Background();
+            //    BlurBitmapEffect myBlurEffect = new BlurBitmapEffect();
+            //    myBlurEffect.Radius = sldBackground.Value;
+            //    myBlurEffect.KernelType = KernelType.Box;
+            //    Bitmap capcha = new Bitmap(window.EditFramePicEdit.Source.ToString());
+            //}
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

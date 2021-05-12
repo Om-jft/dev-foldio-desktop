@@ -19,22 +19,28 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 using CameraControl.DSLRPCToolSub.Classes;
+using CameraControl.DSLRPCToolSub.ViewModels;
 
 namespace DSLR_Tool_PC.ViewModels
 {
     public class PhotoEditModel : BaseFieldClass
     {
         private readonly object _Sliderlockobj = new object();
+        
         public RelayCommand ApplyAllFrames { get; set; }
 
         BackgroundWorker bgWorker = new BackgroundWorker();
         string _strApplPath = null;
         int total = 0;
         int count = 0;
-
+        ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         PathUpdate __PathUpdate = PathUpdate.getInstance();
+        string exName = null;
+        string newsource = null;
         //EditLeftControl __editLeftControl = null;
         MainWindowAdvanced __mainWindowAdvanced = null;
+        public int filterFlag = 0;
+
         public void ExecuteInti(object __this)
         {
             //__editLeftControl = (EditLeftControl)__this;
@@ -138,7 +144,7 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 _isContrastApply = value;
                 NotifyPropertyChanged("IsContrastApply");
-                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply);}
             }
         }
 
@@ -150,7 +156,28 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 _contrast = value;
                 NotifyPropertyChanged("Contrast");
-                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null)
+                {
+                    Task.Factory.StartNew(EditFiltersApply);
+                }
+                //lock (_Sliderlockobj)
+                //    Monitor.PulseAll(_Sliderlockobj);
+                //Task.Run(() =>
+                //{
+                //    lock (_Sliderlockobj)
+                //        if (!Monitor.Wait(_Sliderlockobj,30,true))
+                //        {
+                //            if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null)
+                //            {
+                //                Task.Factory.StartNew(EditFiltersApply);
+                //                if (newsource != null && exName != null && filterFlag != __mainWindowAdvanced.EditFilterFlag)
+                //                {
+                //                    __mainWindowAdvanced.BrowseFolderImages(newsource, exName);
+                //                }
+                //            }
+                //        }
+                //});
+
             }
         }
 
@@ -204,7 +231,7 @@ namespace DSLR_Tool_PC.ViewModels
                 Task.Run(() =>
                 {
                     lock (_Sliderlockobj)
-                        if (!Monitor.Wait(_Sliderlockobj, 3))
+                        if (!Monitor.Wait(_Sliderlockobj, 50))
                         {
                             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
                         }
@@ -245,7 +272,10 @@ namespace DSLR_Tool_PC.ViewModels
                 _isBackgroundFilterApply = value;
                 
                 NotifyPropertyChanged("IsBackgroundFilterApply");
-                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) {
+                    //MessageBox.Show("In IsBackground Filter Apply.");
+                    //Task.Factory.StartNew(EditFiltersApply);
+                    }
             }
         }
 
@@ -262,8 +292,9 @@ namespace DSLR_Tool_PC.ViewModels
                 Task.Run(() =>
                 {
                     lock (_Sliderlockobj)
-                        if (!Monitor.Wait(_Sliderlockobj, 5))
+                        if (!Monitor.Wait(_Sliderlockobj, 500))
                         {
+                            //MessageBox.Show("Background Filter.");
                             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
                         }
                 });
@@ -376,6 +407,21 @@ namespace DSLR_Tool_PC.ViewModels
                         ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
 
                         //string xname = StaticClass.saveBitmap2File(_finalBmp,);
+                        if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
+                        {
+                            //MessageBox.Show(sourcefile.LastIndexOf("\\").ToString());
+                            exName = sourcefile.Substring(sourcefile.LastIndexOf("\\") + 1, sourcefile.Length - sourcefile.LastIndexOf("\\")-1);
+                            string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                            if (!Directory.Exists(tempfolder))
+                                Directory.CreateDirectory(tempfolder);
+                            string source = sourcefile.Substring(0,sourcefile.Length- exName.Length);
+                            StaticClass.saveBitmap2File(_finalBmp, tempfolder +"\\"+ exName);
+                            
+                            if (__mainWindowAdvanced.newSource != null) { source = __mainWindowAdvanced.newSource; }
+                            __mainWindowAdvanced.newSource = __mainWindowAdvanced.RecreateFiles(source, tempfolder, exName);
+                            __exportPathUpdate.PathImg = tempfolder +"\\"+ exName;
+                            filterFlag++;
+                        }
                     }
                     else
                     {
@@ -436,7 +482,7 @@ namespace DSLR_Tool_PC.ViewModels
                 if (BackgroundFilter > 1)
                 {
                     if ((BackgroundFilter % 2) == 0) { TempBgFilter = BackgroundFilter + 1; } else { TempBgFilter = BackgroundFilter; }
-                    //MessageBox.Show(TempBgFilter.ToString());
+                    MessageBox.Show(TempBgFilter.ToString());
                     StaticClass.RemoveBG_usingPy(tempFile_In, tempFile_In, TempBgFilter);
                     Log.Debug(tempFile_In);
 
@@ -598,8 +644,6 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void Start()
         {
-            
-
             if (!bgWorker.IsBusy)
             {
                 try
@@ -672,6 +716,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             FiltersCorrections(__PathUpdate.PathImg, "");
             //ServiceProvider.Settings.EditImageByte = _applyfilterImage;
+
         }
 
         private string CopyBackUp(string source, string dest)

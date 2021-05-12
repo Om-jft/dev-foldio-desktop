@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 using System.Drawing;
 using System.IO.Compression;
 using System.Collections.Concurrent;
-
+using CameraControl.DSLRPCToolSub.ViewModels;
 
 namespace DSLR_Tool_PC.Controles
 {
@@ -41,25 +41,25 @@ namespace DSLR_Tool_PC.Controles
             {
                 if (TabExport.SelectedIndex == 0)
                 {
-                    if (PathUpdate.getInstance().PathImg != null)
+                    if (ExportPathUpdate.getInstance().PathImg != null)
                     {
-                        ExportGIFModel.getInstance().URIPathImgGIF = PathUpdate.getInstance().PathImg;
+                        ExportGIFModel.getInstance().URIPathImgGIF = ExportPathUpdate.getInstance().PathImg;
                         ExportGIFModel.getInstance().__Parent_window = this;
                     }
                 }
                 else if (TabExport.SelectedIndex == 1)
                 {
-                    if (PathUpdate.getInstance().PathImg != null)
+                    if (ExportPathUpdate.getInstance().PathImg != null)
                     {
-                        ExportZipModel.getInstance().InitialImagePath = PathUpdate.getInstance().PathImg;
+                        ExportZipModel.getInstance().InitialImagePath = ExportPathUpdate.getInstance().PathImg;
                         ExportZipModel.getInstance().__Parent_window = this;
                     }
                 }
                 else if (TabExport.SelectedIndex == 2)
                 {
-                    if (PathUpdate.getInstance().PathImg != null)
+                    if (ExportPathUpdate.getInstance().PathImg != null)
                     {
-                        ExportMP4ViewModel.getInstance().URIPathImgGIF = PathUpdate.getInstance().PathImg;
+                        ExportMP4ViewModel.getInstance().URIPathImgGIF = ExportPathUpdate.getInstance().PathImg;
                         ExportMP4ViewModel.getInstance().__Parent_window = this;
                     }
                 }

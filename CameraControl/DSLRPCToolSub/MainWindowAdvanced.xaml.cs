@@ -37,7 +37,7 @@ using System;
 using FileInfo = System.IO.FileInfo;
 using System.Threading.Tasks;
 using System.Drawing;
-
+using CameraControl.DSLRPCToolSub.ViewModels;
 
 namespace CameraControl
 {
@@ -49,7 +49,7 @@ namespace CameraControl
         public string OGFolder = null;
         public string DisplayName { get; set; }
         private int _ListBoxSelectedIndex = -1;
-
+        public string newSource = null;
         private object _locker = new object();
         private FileItem _selectedItem = null;
         private Timer _selectiontimer = new Timer(4000);
@@ -57,7 +57,7 @@ namespace CameraControl
         private string selectedpath = string.Empty;
 
         private bool _sortCameraOreder = true;
-
+        
         public RelayCommand<AutoExportPluginConfig> ConfigurePluginCommand { get; set; }
         public RelayCommand<IAutoExportPlugin> AddPluginCommand { get; set; }
         public RelayCommand<CameraPreset> SelectPresetCommand { get; private set; }
@@ -65,12 +65,14 @@ namespace CameraControl
         public RelayCommand<CameraPreset> LoadInAllPresetCommand { get; private set; }
         public RelayCommand<CameraPreset> VerifyPresetCommand { get; private set; }
 
+        public int EditFilterFlag = 0;
         //Added Code
         PathUpdate __Pathupdate = PathUpdate.getInstance();
         PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
         ExportZipModel __exportZipModel = ExportZipModel.getInstance();
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
         ExportGIFModel __gIFModel = ExportGIFModel.getInstance();
+        ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
         //public double CameraGrid_height;
@@ -1694,12 +1696,20 @@ namespace CameraControl
                 string sourceDir = Path.GetDirectoryName(_imageDetails.Path).ToString();
                 string exFilename = _imageDetails.FileName.ToString();
                 if (_imageDetails == null) { return; }
-                string xName = (Path.Combine(Settings.ApplicationTempFolder + "\\" + _imageDetails.FileName.ToString()));
+
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
+
+                string xName = (tempfolder+ "\\" + _imageDetails.FileName.ToString());
                 b.RotateFlip(RotateFlipType.Rotate270FlipNone);
                 xName = StaticClass.saveBitmap2File(b, xName);
+
                 //if (File.Exists(xName)) { File.Delete(xName); }
-                string newSource = RecreateFiles(sourceDir, exFilename);
+                if (newSource != null) { sourceDir = newSource; }
+                 newSource = RecreateFiles(sourceDir,tempfolder, exFilename);
                 BrowseFolderImages(newSource, _imageDetails.FileName.ToString());
+                __exportPathUpdate.PathImg = newSource + "\\" + exFilename;
 
             }
             catch (Exception ex) { Log.Debug("ERotateLeft_Click", ex); }
@@ -1750,12 +1760,18 @@ namespace CameraControl
                 string sourceDir = Path.GetDirectoryName(_imageDetails.Path).ToString();
                 string exFilename = _imageDetails.FileName.ToString();
                 if (_imageDetails == null) { return; }
-                string xName = (Path.Combine(Settings.ApplicationTempFolder +"\\"+ _imageDetails.FileName.ToString()));
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
+
+                string xName = (tempfolder + "\\" + _imageDetails.FileName.ToString());
                 b.RotateFlip(RotateFlipType.Rotate90FlipNone);
                 xName = StaticClass.saveBitmap2File(b, xName);
                 //if (File.Exists(xName)) { File.Delete(xName); }
-                string newSource = RecreateFiles(sourceDir, exFilename);
-                BrowseFolderImages(newSource,  _imageDetails.FileName.ToString());
+                if (newSource != null) { sourceDir = newSource; }
+                newSource = RecreateFiles(sourceDir, tempfolder, exFilename);
+                BrowseFolderImages(newSource, _imageDetails.FileName.ToString());
+                __exportPathUpdate.PathImg = newSource + "\\" + exFilename;
             }
             catch (Exception ex) { Log.Debug("ERotateRight_Click", ex); }
 
@@ -1807,16 +1823,21 @@ namespace CameraControl
                 string sourceDir=Path.GetDirectoryName(_imageDetails.Path).ToString();
                 string exFilename = _imageDetails.FileName.ToString();
                 if (_imageDetails == null) { return; }
-                string xName = (Path.Combine(Settings.ApplicationTempFolder,"\\" + _imageDetails.FileName.ToString()));
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
+
+                string xName = (tempfolder + "\\" + _imageDetails.FileName.ToString());
                 ImageDetails img = new ImageDetails();
                 img.Path=StaticClass.saveBitmap2File(b, xName);
                 b.Dispose();
 
 
                 //if (File.Exists(filename)) { File.Delete(filename); }
-                string newSource=RecreateFiles(sourceDir, exFilename);
+                if (newSource != null) { sourceDir = newSource; }
+                newSource = RecreateFiles(sourceDir, tempfolder, exFilename);
                 BrowseFolderImages(newSource, exFilename);
-
+                __exportPathUpdate.PathImg = newSource + "\\" + exFilename;
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click", ex); }
             CropOut.Visibility = Visibility.Collapsed;
@@ -1824,11 +1845,8 @@ namespace CameraControl
         }
         #endregion
 
-        public string RecreateFiles(string source,string exFile)
+        public string RecreateFiles(string source,string tempfolder,string exFile)
         {
-            string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
-            if (!Directory.Exists(tempfolder))
-                Directory.CreateDirectory(tempfolder);
             string[] filePaths = Directory.GetFiles(source);
             foreach (var filename in filePaths)
             {
@@ -1836,14 +1854,15 @@ namespace CameraControl
                 int b = (filename.Length)-a;
                 string fl = filename.Substring(a,b);
                 if (fl == exFile) {
-                    string file = Settings.ApplicationTempFolder +"\\"+ fl;
+                    //string file = Settings.ApplicationTempFolder +"\\"+ fl;
 
-                    //Do your job with "file"  
-                    string str = tempfolder.ToString() + "\\" + fl;
-                    if (!File.Exists(str))
-                    {
-                        File.Copy(file, str);
-                    }
+                    ////Do your job with "file"  
+                    //string str = tempfolder.ToString() + "\\" + fl;
+                    //if (!File.Exists(str))
+                    //{
+                    //    File.Copy(file, str);
+                    //}
+                    continue;
                 } 
                 else
                 {
@@ -2131,6 +2150,7 @@ namespace CameraControl
         }
         private void BrowseFolderImages(string _folderPath)
         {
+            #region depricated code
             //try
             //{
             //    images_Folder = new List<ImageDetails>();
@@ -2183,7 +2203,7 @@ namespace CameraControl
 
             //catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
 
-
+            #endregion
             try
             {
                 _ListBoxSelectedIndex = -1;
@@ -2243,7 +2263,7 @@ namespace CameraControl
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
 
-        private void BrowseFolderImages(string _folderPath, string imr)
+        public void BrowseFolderImages(string _folderPath, string imr)
         {
 
             try
@@ -2298,7 +2318,7 @@ namespace CameraControl
                     ImageListBox_Folder.Items.Add(img);
                     ListBoxSnapshots.Items.Add(img);
                 }
-
+                EditFilterFlag++;
                 LoadFolderSelectedItem(imrLocal);
                 UpdateImageData();
             }
@@ -2714,6 +2734,7 @@ namespace CameraControl
                 __CropChangeFromButtons = true;
             }
         }
+        
         private void ratio3_Unchecked(object sender, RoutedEventArgs e)
         {
             if (CaptureTab.IsSelected)
@@ -2915,6 +2936,18 @@ namespace CameraControl
         private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //if (EditTab.IsSelected) { BrowseHistoryImages(); }
+            if (EditTab != null)
+            {
+                TabItem ti = MainTabControl.SelectedItem as TabItem;
+                if (ti.Header.ToString() == "Edit")
+                {
+                    this.MenuExport.IsEnabled = true;
+                }
+                else
+                {
+                    this.MenuExport.IsEnabled = false;
+                }
+            }
         }
 
         #region SidChanges
@@ -2986,6 +3019,17 @@ namespace CameraControl
             catch (Exception ex) { Log.Debug("", ex); }
         }
 
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SendKeys.SendWait("^+{E}");
+
+        }
+        private void EditTab_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            //Enable Export menu
+            // MessageBox.Show("tab seleccted");
+            this.MenuExport.IsEnabled = true;
+        }
         private void btn_bg_2_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -3167,7 +3211,7 @@ namespace CameraControl
             string _installDetectorFile = Path.Combine(Settings.ApplicationFolder, "VerifyInstall.txt");
             FileInfo fileInfo = new FileInfo(_installDetectorFile);
 
-            FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+            //FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
 
             DateTime creationDate = fileInfo.CreationTime;
             DateTime today = DateTime.Now;
