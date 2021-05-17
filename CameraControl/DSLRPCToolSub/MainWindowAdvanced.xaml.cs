@@ -179,6 +179,13 @@ namespace CameraControl
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            try
+            {
+                string __TempPath = Path.Combine(Path.GetTempPath(), "OrangeMonkie");
+                if (Directory.Exists(__TempPath)) { Directory.Delete(__TempPath, true); }
+                Directory.CreateDirectory(__TempPath);
+            }
+            catch (Exception ex) { Log.Error("MaintainTempFolder", ex); }
             ServiceProvider.WindowsManager.ExecuteCommand(CmdConsts.All_Close);
             App.Current.Shutdown();
             Application.Current.Shutdown();
@@ -203,8 +210,9 @@ namespace CameraControl
             if (txt_CaptureName.IsFocused)
                 return;
             TriggerClass.KeyDown(e);
-
+           
             string _keyvalue = TriggerClass.KeyDownReturn(e);
+            //MessageBox.Show(_keyvalue);
             if (_keyvalue == "") { return; }
 
             Keys_Shortcuts(_keyvalue);
@@ -1255,10 +1263,15 @@ namespace CameraControl
         {
             ETg_Btn7.IsChecked = false;
             Tg_Btn7.IsChecked = false;
+            ETg_Btn6.IsChecked = true;
+            Tg_Btn6.IsChecked = true;
+            Horizontal_mList.IsChecked = false;
+            Vertical_mList.IsChecked = true;
             V_CenterLineApply(true);
         }
         private void Tg_Btn6_Unchecked(object sender, RoutedEventArgs e)
         {
+            Vertical_mList.IsChecked = false;
             V_CenterLineApply(false);
         }
 
@@ -1292,207 +1305,310 @@ namespace CameraControl
 
         private void Tg_Btn7_Checked(object sender, RoutedEventArgs e)
         {
-            ETg_Btn6.IsChecked = false;
-            Tg_Btn6.IsChecked = false;
-            H_CenterLineApply(true);
+            try
+            {
+                ETg_Btn6.IsChecked = false;
+                Tg_Btn6.IsChecked = false;
+                ETg_Btn7.IsChecked = true;
+                Tg_Btn7.IsChecked = true;
+                Horizontal_mList.IsChecked = true;
+                Vertical_mList.IsChecked = false;
+                H_CenterLineApply(true);
+            }
+            catch(Exception ex) { ex.ToString(); }
         }
         private void Tg_Btn7_Unchecked(object sender, RoutedEventArgs e)
         {
-            H_CenterLineApply(false);
+            try
+            {
+                Horizontal_mList.IsChecked = false;
+                H_CenterLineApply(false);
+            }catch(Exception ex) { ex.ToString(); }
         }
 
         private void H_CenterLineApply(bool _checkedStatus)
         {
-            if (_checkedStatus == true)
+            try
             {
-                if (EditTab.IsSelected)
+                if (_checkedStatus == true)
                 {
-                    EH_Line1.X2 = CameraGrid.ActualWidth;
-                    EH_Line1.Visibility = Visibility.Visible;
+                    if (EditTab.IsSelected)
+                    {
+                        EH_Line1.X2 = CameraGrid.ActualWidth;
+                        EH_Line1.Visibility = Visibility.Visible;
+                    }
+                    if (CaptureTab.IsSelected)
+                    {
+                        CH_Line1.X2 = CameraGrid.ActualWidth;
+                        CH_Line1.Visibility = Visibility.Visible;
+                    }
                 }
-                if (CaptureTab.IsSelected)
+                else
                 {
-                    CH_Line1.X2 = CameraGrid.ActualWidth;
-                    CH_Line1.Visibility = Visibility.Visible;
+                    if (EditTab.IsSelected)
+                    {
+                        EH_Line1.Visibility = Visibility.Collapsed;
+                    }
+                    if (CaptureTab.IsSelected)
+                    {
+                        CH_Line1.Visibility = Visibility.Collapsed;
+                    }
                 }
-            }
-            else
-            {
-                if (EditTab.IsSelected)
-                {
-                    EH_Line1.Visibility = Visibility.Collapsed;
-                }
-                if (CaptureTab.IsSelected)
-                {
-                    CH_Line1.Visibility = Visibility.Collapsed;
-                }
-            }
+            }catch(Exception ex) { ex.ToString(); }
         }
 
+        private void CGrid_0()
+        {
+            CGrid0.IsChecked = true;
+            Egrid1.IsChecked = true;
+        }
         private void grid2_Checked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                double width = EditPicGrid.ActualWidth;
-                double height = EditPicGrid.ActualHeight;
-                EVG_Line1.X1 = width / 3;
-                EVG_Line1.X2 = width / 3;
-                EVG_Line1.Y2 = height;
-                EVG_Line1.Y1 = 0;
-                EVG_Line2.X1 = (2 * width) / 3;
-                EVG_Line2.X2 = (2 * width) / 3;
-                EVG_Line2.Y1 = 0;
-                EVG_Line2.Y2 = height;
-                EHG_Line1.X1 = 0;
-                EHG_Line1.Y1 = height / 3;
-                EHG_Line1.X2 = width;
-                EHG_Line1.Y2 = height / 3;
-                EHG_Line2.X1 = 0;
-                EHG_Line2.Y1 = (2 * height) / 3;
-                EHG_Line2.X2 = width;
-                EHG_Line2.Y2 = (2 * height) / 3;
+                Grid3x3.IsEnabled = false;
+                Grid3x3Dial.IsEnabled = true;
+                Grid6x4.IsEnabled = true;
+                CGrid1.IsChecked = true;
+                Grid3x3.IsChecked = true;
+                Egrid2.IsChecked = true;
+                Grid3x3Dial.IsChecked = false;
+                Grid6x4.IsChecked = false;
+                if (EditTab.IsSelected)
+                {
+                    double width = EditPicGrid.ActualWidth;
+                    double height = EditPicGrid.ActualHeight;
+                    EVG_Line1.X1 = width / 3;
+                    EVG_Line1.X2 = width / 3;
+                    EVG_Line1.Y2 = height;
+                    EVG_Line1.Y1 = 0;
+                    EVG_Line2.X1 = (2 * width) / 3;
+                    EVG_Line2.X2 = (2 * width) / 3;
+                    EVG_Line2.Y1 = 0;
+                    EVG_Line2.Y2 = height;
+                    EHG_Line1.X1 = 0;
+                    EHG_Line1.Y1 = height / 3;
+                    EHG_Line1.X2 = width;
+                    EHG_Line1.Y2 = height / 3;
+                    EHG_Line2.X1 = 0;
+                    EHG_Line2.Y1 = (2 * height) / 3;
+                    EHG_Line2.X2 = width;
+                    EHG_Line2.Y2 = (2 * height) / 3;
 
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
-            }
-            if (CaptureTab.IsSelected)
-            {
-                double width = CameraGrid.ActualWidth;
-                double height = CameraGrid.ActualHeight;
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    double width = CameraGrid.ActualWidth;
+                    double height = CameraGrid.ActualHeight;
 
-                GridLines_Capture(1, width, height);
+                    GridLines_Capture(1, width, height);
+                }
             }
+            catch(Exception ex) { ex.ToString(); }
         }
         private void grid2_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                Grid3x3.IsChecked = false;
+
+                if (EditTab.IsSelected)
+                {
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    CVG_Line1.Visibility = CVG_Line2.Visibility = CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
+                }
             }
-            if (CaptureTab.IsSelected)
-            {
-                CVG_Line1.Visibility = CVG_Line2.Visibility = CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
-            }
+            catch(Exception ex) { ex.ToString(); }
         }
         private void grid3_Checked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                double width = EditPicGrid.ActualWidth;
-                double height = EditPicGrid.ActualHeight;
-                EVG_Line1.X1 = width / 6;
-                EVG_Line1.X2 = width / 6;
-                EVG_Line1.Y2 = height;
-                EVG_Line1.Y1 = 0;
-                EVG_Line2.X1 = width / 3;
-                EVG_Line2.X2 = width / 3;
-                EVG_Line2.Y2 = height;
-                EVG_Line2.Y1 = 0;
-                EVG_Line3.X1 = width / 2;
-                EVG_Line3.X2 = width / 2;
-                EVG_Line3.Y2 = height;
-                EVG_Line3.Y1 = 0;
-                EVG_Line4.X1 = (2 * width) / 3;
-                EVG_Line4.X2 = (2 * width) / 3;
-                EVG_Line4.Y2 = height;
-                EVG_Line4.Y1 = 0;
-                EVG_Line5.X1 = (5 * width) / 6;
-                EVG_Line5.X2 = (5 * width) / 6;
-                EVG_Line5.Y2 = height;
-                EVG_Line5.Y1 = 0;
-                EHG_Line1.X1 = 0;
-                EHG_Line1.Y1 = height / 4;
-                EHG_Line1.X2 = width;
-                EHG_Line1.Y2 = height / 4;
-                EHG_Line2.X1 = 0;
-                EHG_Line2.Y1 = height / 2;
-                EHG_Line2.X2 = width;
-                EHG_Line2.Y2 = height / 2;
-                EHG_Line3.X1 = 0;
-                EHG_Line3.Y1 = (3 * height) / 4;
-                EHG_Line3.X2 = width;
-                EHG_Line3.Y2 = (3 * height) / 4;
+                Grid3x3.IsEnabled = true;
+                Grid3x3Dial.IsEnabled = true;
+                Grid6x4.IsEnabled = false;
 
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Visible;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Visible;
+                CGrid2.IsChecked = true;
+                Egrid3.IsChecked = true;
+                Grid3x3.IsChecked = false;
+                Grid3x3Dial.IsChecked = false;
+                Grid6x4.IsChecked = true;
+                if (EditTab.IsSelected)
+                {
+                    double width = EditPicGrid.ActualWidth;
+                    double height = EditPicGrid.ActualHeight;
+                    EVG_Line1.X1 = width / 6;
+                    EVG_Line1.X2 = width / 6;
+                    EVG_Line1.Y2 = height;
+                    EVG_Line1.Y1 = 0;
+                    EVG_Line2.X1 = width / 3;
+                    EVG_Line2.X2 = width / 3;
+                    EVG_Line2.Y2 = height;
+                    EVG_Line2.Y1 = 0;
+                    EVG_Line3.X1 = width / 2;
+                    EVG_Line3.X2 = width / 2;
+                    EVG_Line3.Y2 = height;
+                    EVG_Line3.Y1 = 0;
+                    EVG_Line4.X1 = (2 * width) / 3;
+                    EVG_Line4.X2 = (2 * width) / 3;
+                    EVG_Line4.Y2 = height;
+                    EVG_Line4.Y1 = 0;
+                    EVG_Line5.X1 = (5 * width) / 6;
+                    EVG_Line5.X2 = (5 * width) / 6;
+                    EVG_Line5.Y2 = height;
+                    EVG_Line5.Y1 = 0;
+                    EHG_Line1.X1 = 0;
+                    EHG_Line1.Y1 = height / 4;
+                    EHG_Line1.X2 = width;
+                    EHG_Line1.Y2 = height / 4;
+                    EHG_Line2.X1 = 0;
+                    EHG_Line2.Y1 = height / 2;
+                    EHG_Line2.X2 = width;
+                    EHG_Line2.Y2 = height / 2;
+                    EHG_Line3.X1 = 0;
+                    EHG_Line3.Y1 = (3 * height) / 4;
+                    EHG_Line3.X2 = width;
+                    EHG_Line3.Y2 = (3 * height) / 4;
+
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Visible;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Visible;
+                }
+
+                if (CaptureTab.IsSelected)
+                {
+                    double width = CameraGrid.ActualWidth;
+                    double height = CameraGrid.ActualHeight;
+
+                    GridLines_Capture(2, width, height);
+                }
             }
-
-            if (CaptureTab.IsSelected)
-            {
-                double width = CameraGrid.ActualWidth;
-                double height = CameraGrid.ActualHeight;
-
-                GridLines_Capture(2, width, height);
-            }
+            catch(Exception ex) { }
         }
         private void grid3_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Collapsed;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Collapsed;
-            }
-            if (CaptureTab.IsSelected)
-            {
-                CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = CVG_Line5.Visibility = Visibility.Collapsed;
-                CHG_Line1.Visibility = CHG_Line2.Visibility = CHG_Line3.Visibility = Visibility.Collapsed;
-            }
+                Grid6x4.IsChecked = false;
+                if (EditTab.IsSelected)
+                {
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Collapsed;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Collapsed;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = CVG_Line5.Visibility = Visibility.Collapsed;
+                    CHG_Line1.Visibility = CHG_Line2.Visibility = CHG_Line3.Visibility = Visibility.Collapsed;
+                }
+            }catch(Exception ex) { ex.ToString(); }
         }
         private void grid4_Checked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                double width = EditPicGrid.ActualWidth;
-                double height = EditPicGrid.ActualHeight;
-                EVG_Line1.X1 = width / 3;
-                EVG_Line1.X2 = width / 3;
-                EVG_Line1.Y2 = height;
-                EVG_Line1.Y1 = 0;
-                EVG_Line2.X1 = (2 * width) / 3;
-                EVG_Line2.X2 = (2 * width) / 3;
-                EVG_Line2.Y1 = 0;
-                EVG_Line2.Y2 = height;
-                EHG_Line1.X1 = 0;
-                EHG_Line1.Y1 = height / 3;
-                EHG_Line1.X2 = width;
-                EHG_Line1.Y2 = height / 3;
-                EHG_Line2.X1 = 0;
-                EHG_Line2.Y1 = (2 * height) / 3;
-                EHG_Line2.X2 = width;
-                EHG_Line2.Y2 = (2 * height) / 3;
-                ////Diagonals
-                EVG_Line3.X1 = 0;
-                EVG_Line3.X2 = width;
-                EVG_Line3.Y2 = height;
-                EVG_Line4.X1 = width;
-                EVG_Line4.X2 = 0;
-                EVG_Line4.Y1 = 0;
-                EVG_Line4.Y2 = height;
+                Grid3x3.IsEnabled = true;
+                Grid3x3Dial.IsEnabled = false;
+                Grid6x4.IsEnabled = true;
 
-                //EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
-                //EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
+                Grid3x3.IsChecked = false;
+                Grid6x4.IsChecked = false;
+                CGrid3.IsChecked = true;
+                Egrid4.IsChecked = true;
+                Grid3x3Dial.IsChecked = true;
+                if (EditTab.IsSelected)
+                {
+                    double width = EditPicGrid.ActualWidth;
+                    double height = EditPicGrid.ActualHeight;
+                    EVG_Line1.X1 = width / 3;
+                    EVG_Line1.X2 = width / 3;
+                    EVG_Line1.Y2 = height;
+                    EVG_Line1.Y1 = 0;
+                    EVG_Line2.X1 = (2 * width) / 3;
+                    EVG_Line2.X2 = (2 * width) / 3;
+                    EVG_Line2.Y1 = 0;
+                    EVG_Line2.Y2 = height;
+                    EHG_Line1.X1 = 0;
+                    EHG_Line1.Y1 = height / 3;
+                    EHG_Line1.X2 = width;
+                    EHG_Line1.Y2 = height / 3;
+                    EHG_Line2.X1 = 0;
+                    EHG_Line2.Y1 = (2 * height) / 3;
+                    EHG_Line2.X2 = width;
+                    EHG_Line2.Y2 = (2 * height) / 3;
+                    ////Diagonals
+                    EVG_Line3.X1 = 0;
+                    EVG_Line3.X2 = width;
+                    EVG_Line3.Y2 = height;
+                    EVG_Line4.X1 = width;
+                    EVG_Line4.X2 = 0;
+                    EVG_Line4.Y1 = 0;
+                    EVG_Line4.Y2 = height;
 
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
-            }
-            if (CaptureTab.IsSelected)
-            {
-                double width = CameraGrid.ActualWidth;
-                double height = CameraGrid.ActualHeight;
+                    //EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
+                    //EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
 
-                GridLines_Capture(3, width, height);
-            }
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    double width = CameraGrid.ActualWidth;
+                    double height = CameraGrid.ActualHeight;
+
+                    GridLines_Capture(3, width, height);
+                }
+            }catch(Exception ex) { ex.ToString(); }
         }
         private void grid4_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Collapsed;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                Grid3x3Dial.IsChecked = false;
+
+                if (EditTab.IsSelected)
+                {
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Collapsed;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = Visibility.Collapsed;
+                    CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
+                }
             }
-            if (CaptureTab.IsSelected)
+            catch(Exception ex) { ex.ToString(); }
+        }
+        private void toggle_grid(object sender,RoutedEventArgs e)
+        {
+            if(CGrid0.IsChecked==true || Egrid1.IsChecked == true)
             {
-                CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = Visibility.Collapsed;
-                CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
+                grid2_Checked(sender, e);
+                return;
+            }
+            if(CGrid1.IsChecked==true || Egrid2.IsChecked == true)
+            {
+                grid3_Checked(sender, e);
+                return;
+            }
+            if (CGrid2.IsChecked == true || Egrid3.IsChecked == true)
+            {
+                grid4_Checked(sender, e);
+                return;
+            }
+            if (CGrid3.IsChecked == true || Egrid4.IsChecked == true)
+            {
+                CGrid0.IsChecked = true;
+                Egrid1.IsChecked = true;
+                Grid6x4.IsEnabled = true;
+                Grid3x3.IsEnabled = true;
+                Grid3x3Dial.IsEnabled = true;
+                Grid3x3Dial.IsChecked = false;
+                Grid3x3.IsChecked = false;
+                Grid6x4.IsChecked = false;
+                return;
             }
         }
 
@@ -1624,9 +1740,13 @@ namespace CameraControl
 
         private void ETg_Btn8_Checked(object sender, RoutedEventArgs e)
         {
-            if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
+            if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") {
+                ETg_Btn8.IsChecked = false;
+                overlayMenu_item.IsChecked = false;
+                return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-
+            ETg_Btn8.IsChecked = true;
+            overlayMenu_item.IsChecked = true;
             try
             {
                 Overlay1.Visibility = Overlay2.Visibility = Overlay4.Visibility = Overlay5.Visibility = Visibility.Collapsed;
@@ -1652,8 +1772,11 @@ namespace CameraControl
         }
         private void ETg_Btn8_Unchecked(object sender, RoutedEventArgs e)
         {
+            overlayMenu_item.IsChecked = false;
+            ETg_Btn8.IsChecked = false;
             Overlay1.Visibility = Overlay2.Visibility = Overlay4.Visibility = Overlay5.Visibility = Visibility.Collapsed;
         }
+
         #region Rotate Image
         private void ERotateLeft_Click(object sender, RoutedEventArgs e)
         {
@@ -2206,6 +2329,7 @@ namespace CameraControl
             #endregion
             try
             {
+                newSource = null;
                 _ListBoxSelectedIndex = -1;
                 images_Folder = new List<ImageDetails>();
 
@@ -2221,8 +2345,11 @@ namespace CameraControl
                 foreach (var f in files)
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                    StaticClass.GenerateSmallThumb(f, file);
-
+                    //StaticClass.GenerateSmallThumb(f, file);
+                    //FileInfo fi = new FileInfo(f);
+                    //File.Copy(f, file);
+                    StaticClass.GenerateLargeThumb(f, file);
+                    
                     ImageDetails id = new ImageDetails()
                     {
                         Path_Orginal = f,
@@ -2256,9 +2383,10 @@ namespace CameraControl
                     ImageListBox_Folder.Items.Add(img);
                     ListBoxSnapshots.Items.Add(img);
                 }
-
+                
                 LoadFolderSelectedItem(imrLocal);
                 UpdateImageData();
+                __exportPathUpdate.PathImg = __Pathupdate.PathImg;
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
@@ -2283,7 +2411,9 @@ namespace CameraControl
                 foreach (var f in files)
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                    StaticClass.GenerateSmallThumb(f, file);
+                    //StaticClass.GenerateSmallThumb(f, file);
+                    FileInfo fi = new FileInfo(f);
+                    File.Copy(f, file);
 
                     ImageDetails id = new ImageDetails()
                     {
@@ -2495,8 +2625,12 @@ namespace CameraControl
             __CropChangeFromButtons = true;
             if (CaptureTab.IsSelected)
             {
+                ratio1.IsChecked = true;
                 ratio2.IsChecked = false;
                 ratio3.IsChecked = false;
+                ratio_1.IsChecked = true;
+                ratio_4.IsChecked = false;
+                ratio_16.IsChecked = false;
 
                 LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
 
@@ -2519,6 +2653,16 @@ namespace CameraControl
             }
             else if (EditTab.IsSelected)
             {
+                if (ETg_Btn9.IsChecked == true)
+                {
+                    ratio_1.IsChecked = true;
+                    ratio_4.IsChecked = false;
+                    ratio_16.IsChecked = false;
+                    Eratio1.IsChecked = true;
+                    Eratio2.IsChecked = false;
+                    Eratio3.IsChecked = false;
+                }
+
                 double X, Y, W, H; X = Y = W = H = 0;
                 EditGrid_height = (int)__EditPicGrid_ActualHeight;
                 EditGrid_width = (int)__EditPicGrid_ActualWidth;
@@ -2566,6 +2710,10 @@ namespace CameraControl
             {
                 ratio1.IsChecked = false;
                 ratio3.IsChecked = false;
+                ratio2.IsChecked = true;
+                ratio_1.IsChecked = false;
+                ratio_4.IsChecked = true;
+                ratio_16.IsChecked = false;
 
                 LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
 
@@ -2601,6 +2749,16 @@ namespace CameraControl
             }
             else if (EditTab.IsSelected)
             {
+                if (ETg_Btn9.IsChecked == true)
+                {
+                    ratio_1.IsChecked = false;
+                    ratio_4.IsChecked = true;
+                    ratio_16.IsChecked = false;
+                    Eratio1.IsChecked = false;
+                    Eratio2.IsChecked = true;
+                    Eratio3.IsChecked = false;
+                }
+
                 EditGrid_height = (int)__EditPicGrid_ActualHeight;
                 EditGrid_width = (int)__EditPicGrid_ActualWidth;
 
@@ -2663,6 +2821,10 @@ namespace CameraControl
             {
                 ratio2.IsChecked = false;
                 ratio1.IsChecked = false;
+                ratio3.IsChecked = true;
+                ratio_1.IsChecked = false;
+                ratio_4.IsChecked = false;
+                ratio_16.IsChecked = true;
 
                 LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
 
@@ -2698,6 +2860,16 @@ namespace CameraControl
             }
             else if (EditTab.IsSelected)
             {
+                if (ETg_Btn9.IsChecked==true)
+                {
+                    ratio_1.IsChecked = false;
+                    ratio_4.IsChecked = false;
+                    ratio_16.IsChecked = true;
+                    Eratio1.IsChecked = false;
+                    Eratio2.IsChecked = false;
+                    Eratio3.IsChecked = true;
+                }
+
                 EditGrid_height = (int)__EditPicGrid_ActualHeight;
                 EditGrid_width = (int)__EditPicGrid_ActualWidth;
 
@@ -2758,7 +2930,7 @@ namespace CameraControl
         {
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-
+            ETg_Btn9.IsChecked = true;
             try
             {
                 if (__EditPicGrid_ActualWidth <= 0) { __EditPicGrid_ActualWidth = EditPicGrid.ActualWidth; }
@@ -2942,10 +3114,47 @@ namespace CameraControl
                 if (ti.Header.ToString() == "Edit")
                 {
                     this.MenuExport.IsEnabled = true;
+                    this.MenuMode.IsEnabled = false;
+                    this.menu_edit.IsEnabled = true;
+                    this.menu_focusZoom.IsEnabled = false;
+                    this.overlayMenu_item.IsEnabled = true;
+                    this.ratio_1.IsChecked = false;
+                    this.ratio_4.IsChecked = false;
+                    this.ratio_16.IsChecked = false;
+                    this.Vertical_mList.IsChecked = false;
+                    this.Horizontal_mList.IsChecked = false;
+                    this.Grid3x3.IsChecked = false;
+                    this.Grid6x4.IsChecked = false;
+                    this.Grid3x3Dial.IsChecked = false;
+                    this.Grid3x3.IsEnabled = true;
+                    this.Grid6x4.IsEnabled = true;
+                    this.Grid3x3Dial.IsEnabled = true;
+                    CGrid_0();
+                    Tg_Btn6_Unchecked(sender, e);
                 }
                 else
                 {
                     this.MenuExport.IsEnabled = false;
+                    this.MenuMode.IsEnabled = true;
+                    this.menu_edit.IsEnabled = false;
+                    this.menu_focusZoom.IsEnabled = true;
+                    this.overlayMenu_item.IsEnabled = false;
+                    this.Zoomx1.IsChecked = false;
+                    this.Zoomx5.IsChecked = false;
+                    this.Zoomx10.IsChecked = false;
+                    this.ratio_1.IsChecked = false;
+                    this.ratio_4.IsChecked = false;
+                    this.ratio_16.IsChecked = false;
+                    this.Vertical_mList.IsChecked = false;
+                    this.Horizontal_mList.IsChecked = false;
+                    this.Grid3x3.IsChecked = false;
+                    this.Grid6x4.IsChecked = false;
+                    this.Grid3x3Dial.IsChecked = false;
+                    this.Grid3x3.IsEnabled = true;
+                    this.Grid6x4.IsEnabled = true;
+                    this.Grid3x3Dial.IsEnabled = true;
+                    CGrid_0();
+                    Tg_Btn7_Unchecked(sender, e);
                 }
             }
         }
@@ -3028,6 +3237,7 @@ namespace CameraControl
         {
             //Enable Export menu
             // MessageBox.Show("tab seleccted");
+            this.menu_edit.IsEnabled = true;
             this.MenuExport.IsEnabled = true;
         }
         private void btn_bg_2_Click(object sender, RoutedEventArgs e)
@@ -3147,9 +3357,6 @@ namespace CameraControl
 
         #endregion Sidchanges
 
-
-
-
         private void cmb_Zoom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -3199,6 +3406,101 @@ namespace CameraControl
 
                 LVViewModel.lvInstance().ZoomSliderValue = 0;
                 sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom1x_checked(object sender,RoutedEventArgs e)
+        {
+            try
+            {
+                
+                Zoomx5.IsChecked = false;
+                Zoomx10.IsChecked = false;
+                sldZoom.Value = 5;
+            }
+            catch(Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom5x_checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+               
+                Zoomx1.IsChecked = false;
+                Zoomx10.IsChecked = false;
+                sldZoom.Value = 25;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom10x_checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+               
+                Zoomx1.IsChecked = false;
+                Zoomx5.IsChecked = false;
+                sldZoom.Value = 50;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom1x_unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Zoomx1.IsChecked = false;
+                sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom5x_unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Zoomx5.IsChecked = false;
+                sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom10x_unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Zoomx10.IsChecked = false;
+                sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void toggelZoom(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (sldZoom.Value == 0)
+                {
+                    Zoomx1.IsChecked = true;
+                    Zoomx5.IsChecked = false;
+                    Zoomx10.IsChecked = false;
+                    sldZoom.Value = 5;
+                }
+                else if (sldZoom.Value == 5)
+                {
+                    Zoomx1.IsChecked = false;
+                    Zoomx5.IsChecked = true;
+                    Zoomx10.IsChecked = false;
+                    sldZoom.Value = 25;
+                }
+                else if(sldZoom.Value==25)
+                {
+                    Zoomx1.IsChecked = false;
+                    Zoomx5.IsChecked = false;
+                    Zoomx10.IsChecked = true;
+                    sldZoom.Value = 50;
+                }
+                else 
+                {
+                    Zoomx1.IsChecked = false;
+                    Zoomx5.IsChecked = false;
+                    Zoomx10.IsChecked = false;
+                    sldZoom.Value = 0;
+                }
             }
             catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
         }
@@ -3308,6 +3610,53 @@ namespace CameraControl
             grd_Edit_Canvasbg.IsEnabled = true;
             grd_Edit_canvasUpper.IsEnabled = true;
             grd_Edit_Bottom.IsEnabled = true;
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+
+            System.Windows.Application.Current.Shutdown();
+            try
+            {
+                string __TempPath = Path.Combine(Path.GetTempPath(), "OrangeMonkie");
+                if (Directory.Exists(__TempPath)) { Directory.Delete(__TempPath, true); }
+                Directory.CreateDirectory(__TempPath);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
+        private void Mode_360Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                tab_360.IsSelected = true;
+                modeSingle.IsEnabled = true;
+                mode360.IsEnabled = false;
+                modeVideo.IsEnabled = true;
+            }
+            catch (Exception ex) { ex.ToString(); }
+        }
+        private void Mode_SingleChecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                tab_Single.IsSelected = true;
+                modeSingle.IsEnabled = false;
+                mode360.IsEnabled = true;
+                modeVideo.IsEnabled = true;
+            }catch(Exception ex) { ex.ToString(); }
+
+        }
+        private void Mode_VideoChecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                tab_video.IsSelected = true;
+                modeSingle.IsEnabled = true;
+                mode360.IsEnabled = true;
+                modeVideo.IsEnabled = false;
+            }
+            catch (Exception ex) { ex.ToString(); }
         }
     }
 }

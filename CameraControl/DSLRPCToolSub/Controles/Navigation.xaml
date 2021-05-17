@@ -37,9 +37,9 @@
                             </Grid>
 
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 10">
-                                <materialDesign:PackIcon Kind="SkipPrevious"  x:Name="SkipPrevious" MouseDown="SkipPrevious_MouseDown"  Margin="0 0 0 0" Height="20" Width="20" Foreground="#ffffff"/>
-                                <materialDesign:PackIcon Margin="5 0 5 0" Kind="Play" Height="20" Width="20" Foreground="#ffffff"/>
-                                <materialDesign:PackIcon Margin="0 0 0 0" Kind="SkipNext" x:Name="SkipNext" MouseDown="SkipNext_MouseDown" Height="20" Width="20" Foreground="#ffffff"/>
+                                <materialDesign:PackIcon Kind="SkipPrevious"  x:Name="SkipPrevious" MouseDown="SkipPrevious_MouseDown"  Margin="5 0 5 0" Height="20" Width="20" Foreground="#ffffff"/>
+                                <materialDesign:PackIcon Margin="5 0 5 0" Kind="Play" Height="20" Width="20" Foreground="#ffffff" Visibility="Collapsed" />
+                                <materialDesign:PackIcon Margin="5 0 5 0" Kind="SkipNext" x:Name="SkipNext" MouseDown="SkipNext_MouseDown" Height="20" Width="20" Foreground="#ffffff"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

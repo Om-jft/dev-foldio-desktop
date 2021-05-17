@@ -62,19 +62,19 @@ namespace CameraControl.Core.Classes
         {
             _helpData = new Dictionary<HelpSections, string>
                             {
-                                {HelpSections.MainMenu, "http://digicamcontrol.com/doc/userguide"},
-                                {HelpSections.Bracketig, "http://digicamcontrol.com/doc/userguide/interface/bracketing"},
+                                {HelpSections.MainMenu, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.Bracketig, "https://orangemonkie.com/support/application/"},
                                 {
                                     HelpSections.FocusStacking,
-                                    "http://digicamcontrol.com/doc/userguide/interface/liveview#focus-stacking"
+                                    "https://orangemonkie.com/support/application/"
                                     },
-                                {HelpSections.Settings, "http://digicamcontrol.com/doc/userguide/settings"},
-                                {HelpSections.TimeLapse, "http://digicamcontrol.com/doc/userguide/interface/timelapse"},
-                                {HelpSections.LiveView, "http://digicamcontrol.com/doc/userguide/interface/liveview"},
-                                {HelpSections.Session, "http://digicamcontrol.com/doc/userguide/session"},
-                                {HelpSections.Bulb, "http://digicamcontrol.com/doc/userguide/interface/astromod"},
-                                {HelpSections.MultipleCamera, "http://digicamcontrol.com/doc/userguide/interface/multicam"},
-                                {HelpSections.DownloadPhotos, "http://digicamcontrol.com/doc/userguide/interface/downph"},
+                                {HelpSections.Settings, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.TimeLapse, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.LiveView, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.Session, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.Bulb, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.MultipleCamera, "https://orangemonkie.com/support/application/"},
+                                {HelpSections.DownloadPhotos, "https://orangemonkie.com/support/application/"},
                             };
         }
 

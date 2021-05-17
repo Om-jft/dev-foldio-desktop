@@ -292,7 +292,7 @@ namespace DSLR_Tool_PC.ViewModels
                 Task.Run(() =>
                 {
                     lock (_Sliderlockobj)
-                        if (!Monitor.Wait(_Sliderlockobj, 500))
+                        if (!Monitor.Wait(_Sliderlockobj, 1000))
                         {
                             //MessageBox.Show("Background Filter.");
                             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
@@ -441,7 +441,7 @@ namespace DSLR_Tool_PC.ViewModels
                 //}
                 //}
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch (Exception ex) { /*MessageBox.Show(ex.ToString());*/ }
         }
 
         private Bitmap Apply_WhiteClipping(Bitmap _bmpImage)
@@ -482,7 +482,7 @@ namespace DSLR_Tool_PC.ViewModels
                 if (BackgroundFilter > 1)
                 {
                     if ((BackgroundFilter % 2) == 0) { TempBgFilter = BackgroundFilter + 1; } else { TempBgFilter = BackgroundFilter; }
-                    MessageBox.Show(TempBgFilter.ToString());
+                    //MessageBox.Show(TempBgFilter.ToString());
                     StaticClass.RemoveBG_usingPy(tempFile_In, tempFile_In, TempBgFilter);
                     Log.Debug(tempFile_In);
 
@@ -593,8 +593,10 @@ namespace DSLR_Tool_PC.ViewModels
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             __mainWindowAdvanced.HideProgress();
-            System.Windows.MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
             __mainWindowAdvanced.BrowseReload(_strApplPath);
+            System.Windows.MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
+            
+            
             //__PathUpdate.__SelectedImageDetails = null;
             //__PathUpdate.PathImg = "";
             //ServiceProvider.Settings.EditImageByte = null;
@@ -664,7 +666,7 @@ namespace DSLR_Tool_PC.ViewModels
                         Directory.CreateDirectory(_strApplPath);
                     if (_strApplPath == __mainWindowAdvanced.OGFolder)
                     {
-                        MessageBox.Show("Choose a different destination folder.");
+                        MessageBox.Show("Choose a different destination folder.", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
                     }
                 }
