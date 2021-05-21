@@ -202,6 +202,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\BumpKit.dll</HintPath>
     </Reference>
+    <Reference Include="CircularProgressBar, Version=2.8.0.16, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\CircularProgressBar.2.8.0.16\lib\net40\CircularProgressBar.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -261,6 +264,9 @@
     <Reference Include="Griffin.WebServer">
       <HintPath>..\packages\Griffin.WebServer.0.5.0\lib\net40\Griffin.WebServer.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="GroupDocs.Watermark, Version=21.3.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>..\packages\GroupDocs.Watermark.21.3.0\lib\net20\GroupDocs.Watermark.dll</HintPath>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
@@ -400,6 +406,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WinFormAnimation, Version=1.6.0.4, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinFormAnimation.1.6.0.4\lib\net40\WinFormAnimation.dll</HintPath>
+    </Reference>
     <Reference Include="WixSharp">
       <HintPath>..\packages\WixSharp.bin.1.0.41.0\lib\WixSharp.dll</HintPath>
     </Reference>
@@ -478,9 +487,6 @@
     <Compile Include="DSLRPCToolSub\Controles\EditBottomControl.xaml.cs">
       <DependentUpon>EditBottomControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DSLRPCToolSub\Controles\LoaderControl.xaml.cs">
-      <DependentUpon>LoaderControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DSLRPCToolSub\Controles\LVControlerSimple.xaml.cs">
       <DependentUpon>LVControlerSimple.xaml</DependentUpon>
     </Compile>
@@ -515,9 +521,6 @@
     <Compile Include="DSLRPCToolSub\Controles\PhotoEdit.xaml.cs">
       <DependentUpon>PhotoEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DSLRPCToolSub\Controles\ProgressWindow.xaml.cs">
-      <DependentUpon>ProgressWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DSLRPCToolSub\Controles\TurnTableControl.xaml.cs">
       <DependentUpon>TurnTableControl.xaml</DependentUpon>
     </Compile>
@@ -542,6 +545,7 @@
     <Compile Include="DSLRPCToolSub\ViewModels\EditLeftControlViewModel.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\ExportGIFModel.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\ExportMP4ViewModel.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\ExportPathUpdate.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\ExportZipModel.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\ImageDetails.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\LevelGraphViewModel.cs" />
@@ -759,10 +763,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DSLRPCToolSub\Controles\LoaderControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DSLRPCToolSub\Controles\LVControlerSimple.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -806,10 +806,6 @@
     <Page Include="DSLRPCToolSub\Controles\PhotoEdit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DSLRPCToolSub\Controles\ProgressWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DSLRPCToolSub\Controles\TurnTableControl.xaml">
       <Generator>MSBuild:Compile</Generator>

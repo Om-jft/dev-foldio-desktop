@@ -88,7 +88,7 @@
     </Controls:MetroWindow.RightWindowCommands>-->
 
     <Grid>
-        <Grid>
+        <Grid Background="#222222">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -201,109 +201,76 @@
             </StackPanel>-->
 
 
-            <Menu Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" Visibility="{Binding Branding.ShowMainMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="0" Margin="0" HorizontalAlignment="Left"
-              IsMainMenu="True">
+            <Menu Background="#222222" Foreground="white" Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" Visibility="{Binding Branding.ShowMainMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="0" Margin="0" HorizontalAlignment="Left"
+              IsMainMenu="True" >
                 <Menu.DataContext>
                     <viewModel:MainMenuViewModel/>
                 </Menu.DataContext>
                 <MenuItem Header="{T:TranslateExtension MenuFile}" Padding="5,2" Margin="1">
-                    <MenuItem Header="{T:TranslateExtension SettingsToolTip}" Command="{Binding SettingsCommand}" Visibility="{Binding Branding.ShowSettingMenuMainWindow, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension MenuExit}" Command="{Binding SendCommand}" CommandParameter="All_Close" InputGestureText="{myClasess:CommandShortcutExtensioncs All_Close}"/>
+                    <!--<MenuItem Header="Open"   IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+O">-->
+                        
+                    <!--</MenuItem>-->
+                    <MenuItem Header="Recent Open"    IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" Margin="0"/>
+                    
+                    <!--<MenuItem Header="Save"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+S"/>
+                    <MenuItem Header="Save As"   IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+SHIFT+S"/>
+                    
+                    <MenuItem Header="Import"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+SHIFT+I"/>-->
+                    <MenuItem Header="Export" x:Name="MenuExport" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White">
+                        <MenuItem Header="Quick GIF Export"  Click="MenuItem_Click_1" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="CTRL+SHIFT+E" Padding="10,0,10,0"/>
+                        <MenuItem Header="Other Export"  Click="MenuItem_Click_1" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="CTRL+E" Padding="10,0,10,0"/>
+                    </MenuItem>
+
+                    <!--<MenuItem Header="Settings"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White"/>-->
+                    
+                    <MenuItem Header="{T:TranslateExtension MenuExit}" InputGestureText="{myClasess:CommandShortcutExtensioncs All_Close}" Background="#222222" Foreground="White" Name="Exit" Click="Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="{T:TranslateExtension MenuView}" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowViewMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <MenuItem Header="{T:TranslateExtension LabelShowFocusPoints}" IsChecked="{Binding ShowFocusPoints, Mode=OneWay}" Command="{Binding ToggleFocusCommand}" IsCheckable="True"/>
-                    <MenuItem Header="{T:TranslateExtension LabelFlip}" IsChecked="{Binding FlipPreview}" IsCheckable="True"/>
-                    <MenuItem Header="{T:TranslateExtension LabelEnhancedThumbs}" IsChecked="{Binding EnhancedThumbs}" IsCheckable="True"/>
-                    <MenuItem Header="{T:TranslateExtension LabelShowThumbInfo}" IsChecked="{Binding ShowThumbInfo}" IsCheckable="True"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension MenuLayout}">
-                        <MenuItem Header="{T:TranslateExtension MenuLayoutLandscape}" Command="{Binding SetLayoutCommand}" CommandParameter="Normal"/>
-                        <MenuItem Header="{T:TranslateExtension MenuLayoutPortrait}" Command="{Binding SetLayoutCommand}" CommandParameter="GridRight"/>
-                        <MenuItem Header="{T:TranslateExtension MenuLayoutGrid}" Command="{Binding SetLayoutCommand}" CommandParameter="Grid"/>
+                    <MenuItem Header="Live View"  Background="#222222" Foreground="White">
+                        <MenuItem Header="1:1" x:Name="ratio_1" IsCheckable="True" IsChecked="False" Checked="ratio1_Checked" Unchecked="ratio1_Unchecked"
+                      Background="#222222" Foreground="White" Padding="0,0,20,0"/>
+                        <MenuItem Header="4:3" x:Name="ratio_4" IsCheckable="True" IsChecked="False" Checked="ratio2_Checked" Unchecked="ratio2_Unchecked" Background="#222222" Foreground="White" Padding="0,0,20,0"/>
+                        <MenuItem Header="16:9" x:Name="ratio_16" IsCheckable="True" IsChecked="False" Checked="ratio3_Checked" Unchecked="ratio3_Unchecked" Background="#222222" Foreground="White" Padding="0,0,20,0"/>
                     </MenuItem>
-                    <MenuItem Header="{T:TranslateExtension MenuThumbnailSize}">
-                        <MenuItem Header="80 %" Command="{Binding ThumbSizeCommand}" CommandParameter="80"/>
-                        <MenuItem Header="100 %" Command="{Binding ThumbSizeCommand}" CommandParameter="100"/>
-                        <MenuItem Header="200 %" Command="{Binding ThumbSizeCommand}" CommandParameter="200"/>
-                        <MenuItem Header="300 %" Command="{Binding ThumbSizeCommand}" CommandParameter="300"/>
-                        <MenuItem Header="400 %" Command="{Binding ThumbSizeCommand}" CommandParameter="400"/>
-                        <MenuItem Header="500 %" Command="{Binding ThumbSizeCommand}" CommandParameter="500"/>
-                        <Slider Minimum="50" Maximum="600" Value="{Binding Settings.ThumbHeigh}"/>
+                    <MenuItem Header="Center Line" Background="#222222" Foreground="White">
+                        <MenuItem Header="Vertical" x:Name="Vertical_mList" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="ALT+V" Padding="0,0,20,0"/>
+                        <MenuItem Header="Horizontal" x:Name="Horizontal_mList" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="ALT+H" Padding="0,0,20,0" />
                     </MenuItem>
-                    <MenuItem Header="{T:TranslateExtension MenuWindows}">
-                        <MenuItem Header="{T:TranslateExtension LiveViewToolTip}" Command="{Binding Source={x:Static Member=myClasess:WpfCommands.ShowLiveViewCommand}}" CommandParameter="{Binding Source={x:Static Member=Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice}" InputGestureText="{myClasess:CommandShortcutExtensioncs BarcodeWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension DownloadWindowTitle}" Command="{Binding SendCommand}" CommandParameter="DownloadPhotosWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs DownloadPhotosWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension TimeLapseToolTip}" Command="{Binding SendCommand}" CommandParameter="TimeLapseWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs TimeLapseWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelAstronomy}" Command="{Binding SendCommand}" CommandParameter="BulbWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs BulbWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension MenuMultipleCamera}" Command="{Binding SendCommand}" CommandParameter="MultipleCameraWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs MultipleCameraWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelPrint}" Command="{Binding SendCommand}" CommandParameter="PrintWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs PrintWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelBarcode}" Command="{Binding SendCommand}" CommandParameter="BarcodeWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs BarcodeWnd_Show}"/>
-                        <MenuItem Header="{T:TranslateExtension SelectTagsToolTip}" Command="{Binding SendCommand}" CommandParameter="TagSelectorWnd_Show" InputGestureText="{myClasess:CommandShortcutExtensioncs TagSelectorWnd_Show}"/>
+                    <MenuItem Header="Grid"  Background="#222222" Foreground="White">
+                        <MenuItem x:Name="Grid3x3" Header="3x3" IsCheckable="True" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Background="#222222" Foreground="White"  InputGestureText="ALT+1" Padding="0,0,20,0" />
+                        <MenuItem x:Name="Grid6x4" Header="6x4" IsCheckable="True" IsChecked="False" Checked="grid3_Checked" Unchecked="grid3_Unchecked" Background="#222222" Foreground="White" InputGestureText="ALT+2" Padding="0,0,20,0"/>
+                        <MenuItem x:Name="Grid3x3Dial" Header="3x3 + Dial" IsCheckable="True" IsChecked="False" Checked="grid4_Checked" Unchecked="grid4_Unchecked"  Background="#222222" Foreground="White" InputGestureText="ALT+3" Padding="0,0,20,0" />
+                        <MenuItem Header="Toggle GRID" Background="#222222" Foreground="White" InputGestureText="ALT+G" Padding="0,0,20,0" Click="toggle_grid"/>
                     </MenuItem>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension LabelEmailPublicWebAddress}" IsEnabled="{Binding Settings.PublicWebserver}"
-                              Click="MenuItem_Click"/>
+                    <MenuItem x:Name="menu_focusZoom" Header="Focus Zoom" Background="#222222" Foreground="White">
+                        <MenuItem x:Name="Zoomx1" Header="x1" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Foreground="White" InputGestureText="CTRL+1" Padding="0,0,20,0" Checked="Zoom1x_checked" Unchecked="Zoom1x_unchecked" />
+                        <MenuItem x:Name="Zoomx5" Header="x5" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Checked="Zoom5x_checked" Unchecked="Zoom5x_unchecked" Foreground="White" InputGestureText="CTRL+2" Padding="0,0,20,0"/>
+                        <MenuItem x:Name="Zoomx10" Header="x10" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Checked="Zoom10x_checked" Unchecked="Zoom10x_unchecked" Foreground="White" InputGestureText="CTRL+3" Padding="0,0,20,0" />
+                        <MenuItem Header="Toggle ZOOM" Padding="0,0,20,0" Click="toggelZoom"  Background="#222222" Foreground="White" InputGestureText="CTRL+T" />
+                    </MenuItem>
+
+                    <MenuItem x:Name="overlayMenu_item" Header="Overlay" Background="#222222" Foreground="White" InputGestureText="CTRL+H" Checked="ETg_Btn8_Checked" Unchecked="ETg_Btn8_Unchecked" IsCheckable="True" IsChecked="False"/>
                 </MenuItem>
-                <MenuItem Header="{T:TranslateExtension MenuSession}" Visibility="{Binding Branding.ShowSessionPanel, Converter={StaticResource BooleanToVisibilityConverter}}"  Padding="5,2" Margin="1">
-                    <MenuItem Header="{T:TranslateExtension MenuSessionAdd}" Command="{Binding NewSessionCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuSessionEdit}" Command="{Binding EditSessionCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuSessionDel}" Command="{Binding DelSessionCommand}"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension LabelRefreshSession}" Command="{Binding RefreshSessionCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension LabelSessionOpenFolder}" Command="{Binding ShowSessionCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuIncrementSeries}" Command="{Binding SendCommand}" CommandParameter="NextSeries" InputGestureText="{myClasess:CommandShortcutExtensioncs NextSeries}"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension LabelSelection}">
-                        <MenuItem Header="{T:TranslateExtension LabelSelectNone}" Command="{Binding Path=SelectNoneCommand}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelSelectAll}" Command="{Binding SendCommand}" CommandParameter="SelectAll_Image" InputGestureText="{myClasess:CommandShortcutExtensioncs SelectAll_Image}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelSelectUnLiked}" Command="{Binding Path=SelectUnLiked}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelSelectLiked}" Command="{Binding Path=SelectLiked}"/>
-                        <MenuItem Header="{T:TranslateExtension LabelSelectSeries}" Command="{Binding Path=SelectSeries}"/>
-                        <MenuItem Header="{T:TranslateExtension MenuInver}" Command="{Binding Path=SelectInvertCommand}"/>
-                    </MenuItem>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension MenuImportSession}" Command="{Binding Path=ImportSessionCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuExportSession}" Command="{Binding Path=ExportSessionCommand}"/>
-                    <Separator/>
-                    <MenuItem Header="Copy full path in clipboard" Command="{Binding Path=CopyNameClipboardCommand}" />
+                <MenuItem x:Name="menu_edit" Header="Edit" Visibility="{Binding Branding.ShowSessionPanel, Converter={StaticResource BooleanToVisibilityConverter}}"  Padding="5,2" Margin="1" >
+                    <MenuItem Header="Undo" Command="{Binding NewSessionCommand}" Background="#222222" Foreground="White" InputGestureText="CTRL+Z"/>
+                    <MenuItem Header="Redo" Command="{Binding EditSessionCommand}" Background="#222222" Foreground="White" InputGestureText="CTRL+R"/>
+                    <MenuItem x:Name="menu_crop" Header="Crop" Background="#222222" Foreground="White" InputGestureText="CTRL+L" Click="ETg_Btn9_Checked" />
+                    <!--<MenuItem Header="Zoom +" Command="{Binding RefreshSessionCommand}" Background="#222222" Foreground="White" InputGestureText="CTRL++"/>
+                    <MenuItem Header="Zoom -" Command="{Binding ShowSessionCommand}" Background="#222222" Foreground="White" InputGestureText="CTRL+-"/>-->
+                    <MenuItem Header="Pan" Command="{Binding SendCommand}" CommandParameter="NextSeries" InputGestureText="CTRL+P" Background="#222222" Foreground="White"/>
+                    <MenuItem Header="Rotate" Background="#222222" Foreground="White" InputGestureText="ALT+R" Click="ERotateRight_Click"/>
+                    <!--<MenuItem Header="Add Watermark" Command="{Binding Path=ImportSessionCommand}" Background="#222222" Foreground="White" InputGestureText="CTRL+W"/>-->
                 </MenuItem>
-                <MenuItem Header="{T:TranslateExtension MenuCamera}" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowCameraMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <MenuItem Header="{T:TranslateExtension MenuCameraProperty}" Command="{Binding Path=CameraPropertyCommand}" IsEnabled="{Binding CameraConnected}"/>
-                    <MenuItem Header="{T:TranslateExtension LabelUseAsMaster}" Command="{Binding Path=UseAsMasterCommand}" IsEnabled="{Binding CameraConnected}"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension LabelRefreshCameraList}" Command="{Binding Path=RefreshCommand}"/>
-                    <!--<MenuItem Header="{T:TranslateExtension MenuResetDevice}" Command="{Binding SendCommand}" CommandParameter="ResetDevice" InputGestureText="{myClasess:CommandShortcutExtensioncs ResetDevice}"/>-->
-                </MenuItem>
-                <MenuItem Header="{T:TranslateExtension MenuPlugins}" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowPluginMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <MenuItem Header="{T:TranslateExtension LabelExport}" ItemsSource="{Binding ExportPlugins}">
-                        <MenuItem.ItemTemplate>
-                            <DataTemplate>
-                                <MenuItem Header="{Binding Title}" Command="{Binding Path=DataContext.ExecuteExportPluginCommand, 
-                        RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Menu}} }" CommandParameter="{Binding}" />
-                            </DataTemplate>
-                        </MenuItem.ItemTemplate>
-                    </MenuItem>
-                    <MenuItem Header="{T:TranslateExtension LabelTools}" ItemsSource="{Binding ToolsPlugins}">
-                        <MenuItem.ItemTemplate>
-                            <DataTemplate>
-                                <MenuItem Header="{Binding Title}" Command="{Binding Path=DataContext.ExecuteToolPluginCommand, 
-                        RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Menu}} }" CommandParameter="{Binding}" />
-                            </DataTemplate>
-                        </MenuItem.ItemTemplate>
-                    </MenuItem>
+                <MenuItem x:Name="MenuMode" Header="Mode" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowCameraMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="white">
+                    <MenuItem x:Name="mode360" Header="360"  Click="Mode_360Checked"  IsEnabled="False" Background="#222222" Foreground="White"/>
+                    <MenuItem x:Name="modeSingle" Header="Single Shot"  Click="Mode_SingleChecked"  IsEnabled="True"  Background="#222222" Foreground="White"/>
+                    <MenuItem x:Name="modeVideo" Header="Video"  Click="Mode_VideoChecked"  IsEnabled="True"  Background="#222222" Foreground="White"/>
                 </MenuItem>
                 <MenuItem Header="{T:TranslateExtension MenuHelp}" Visibility="{Binding Branding.OnlineReference, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="5,2" Margin="1">
-                    <MenuItem Header="{T:TranslateExtension MenuOnlineManual}" Command="{Binding ManualPageCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuHomePage}" Command="{Binding HomePageCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuForum}" Command="{Binding ForumCommand}"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension LabelSendTheLogFile}" Command="{Binding SendLogFileCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuCheckForUpdate}" Command="{Binding CheckUpdateCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension LabelChangelog}" Command="{Binding ShowChangeLogCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuAbout}" Command="{Binding AboutCommand}"/>
+                    <MenuItem Header="Help Center" Command="{Binding ManualPageCommand}" Background="#222222" Foreground="White"/>
+                    <!--<MenuItem Header="License" Command="{Binding HomePageCommand}" Background="#222222" Foreground="White"/>
+                    <MenuItem Header="{T:TranslateExtension MenuAbout}" Command="{Binding AboutCommand}" Background="#222222" Foreground="White"/>-->
                 </MenuItem>
-                <MenuItem Header="{T:TranslateExtension MenuHomePage}" Command="{Binding HomePageCommand}" Visibility="{Binding HomePageMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="5,2" Margin="1"/>
             </Menu>
 
 
@@ -561,11 +528,11 @@
                 <ColumnDefinition Width="0"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid Background="#222222" Grid.Column="1">
+            <Grid  Grid.Column="1">
                 <TabControl x:Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged" >
                     <TabControl.Resources>
                         <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
-                            <Grid>
+                            <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20" />
@@ -774,9 +741,9 @@
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="0,0,30,0" HorizontalAlignment="Center" VerticalAlignment="Top" >
                                         <RadioButton x:Name="CGrid0" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="True" Style="{StaticResource ToolboxRadioSelector1}" />
-                                        <RadioButton x:Name="CGrid1" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Style="{StaticResource ToolboxRadioSelector2}"  />
-                                        <RadioButton x:Name="CGrid2" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Checked="grid3_Checked" Unchecked="grid3_Unchecked" Style="{StaticResource ToolboxRadioSelector3}"  />
-                                        <RadioButton x:Name="CGrid3" Margin="0,0,0,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Checked="grid4_Checked" Unchecked="grid4_Unchecked" Style="{StaticResource ToolboxRadioSelector4}"  />
+                                        <RadioButton x:Name="CGrid1" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Click="grid2_Checked" Unchecked="grid2_Unchecked" Style="{StaticResource ToolboxRadioSelector2}"  />
+                                        <RadioButton x:Name="CGrid2" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Click="grid3_Checked" Unchecked="grid3_Unchecked" Style="{StaticResource ToolboxRadioSelector3}"  />
+                                        <RadioButton x:Name="CGrid3" Margin="0,0,0,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Click="grid4_Checked" Unchecked="grid4_Unchecked" Style="{StaticResource ToolboxRadioSelector4}"  />
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Margin="0,0,30,0" HorizontalAlignment="Center" VerticalAlignment="Top" >
                                         <!--<RadioButton x:Name="ratio1" Margin="0,0,10,0" Checked="ratio1_Checked" Unchecked="ratio1_Unchecked" Background="Transparent" GroupName="CRGroup" Style="{StaticResource ToolboxRadioSelector5}"/>-->
@@ -1322,7 +1289,22 @@
                                                            HorizontalAlignment="Left" VerticalAlignment="Top" />
                                                 <ProgressBar x:Name="pb_Running" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" IsIndeterminate="True" Foreground="#FF2E74DA" 
                                                              Visibility="Collapsed" />
-                                                
+                                                <Grid HorizontalAlignment="Center">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <!--<custom:LoadingSpinner
+            Grid.Row="1"
+            Margin="10"
+            Cap="Triangle"
+            Diameter="250"
+            IsLoading="{Binding IsChecked, ElementName=cbIsLoading}"
+            Thickness="1"
+            Color="Black" />-->
+                                                </Grid>
+
                                             </Grid>
                                         </Border>
                                     </Grid>
