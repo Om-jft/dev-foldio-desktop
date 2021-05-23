@@ -29,7 +29,7 @@ namespace DSLR_Tool_PC.ViewModels
         private readonly object _Sliderlockobj = new object();
         
         public RelayCommand ApplyAllFrames { get; set; }
-        PhotoEdit __photoEdit = PhotoEdit.getInstance();
+        //PhotoEdit __photoEdit = PhotoEdit.getInstance();
         BackgroundWorker bgWorker = new BackgroundWorker();
         string _strApplPath = null;
         int total = 0;
