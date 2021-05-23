@@ -121,9 +121,6 @@
       <HintPath>..\packages\Accord.Video.DirectShow.3.8.2-alpha\lib\net46\Accord.Video.DirectShow.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CircularProgressBar, Version=2.8.0.16, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
-      <HintPath>..\packages\CircularProgressBar.2.8.0.16\lib\net40\CircularProgressBar.dll</HintPath>
-    </Reference>
     <Reference Include="Interop.WIA">
       <HintPath>..\packages\Interop.WIA.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>

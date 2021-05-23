@@ -25,7 +25,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel x:Name="BackgroundFilterControl" Orientation="Horizontal">
                             <CheckBox Background="Transparent" IsChecked="{Binding IsBackgroundFilterApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
                                 <StackPanel Orientation="Horizontal">

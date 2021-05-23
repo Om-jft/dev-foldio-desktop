@@ -187,20 +187,32 @@ namespace CameraControl.Core.Classes
         {
             string __returnValue = "";
 
-            if (_altPressed && e.Key == Key.V) { __returnValue = "Alt+V"; }
-            if (_altPressed && e.Key == Key.H) { __returnValue = "Alt+H"; }
+            if (_shftPressed && e.Key == Key.V) { __returnValue = "Shift+V"; }
+            if (_shftPressed && e.Key == Key.H) { __returnValue = "Shift+H"; }
 
-            if (_altPressed && e.Key == Key.D1 || _altPressed && e.Key == Key.NumPad1) { __returnValue = "Alt+1"; }
-            if (_altPressed && e.Key == Key.D2 || _altPressed && e.Key == Key.NumPad2) { __returnValue = "Alt+2"; }
-            if (_altPressed && e.Key == Key.D3 || _altPressed && e.Key == Key.NumPad3) { __returnValue = "Alt+3"; }
-            if (_altPressed && e.Key == Key.G) { __returnValue = "Alt+G"; }
+            if (_shftPressed && e.Key == Key.D1 || _shftPressed && e.Key == Key.NumPad1) { __returnValue = "Shift+1"; }
+            if (_shftPressed && e.Key == Key.D2 || _shftPressed && e.Key == Key.NumPad2) { __returnValue = "Shift+2"; }
+            if (_shftPressed && e.Key == Key.D3 || _shftPressed && e.Key == Key.NumPad3) { __returnValue = "Shift+3"; }
+            if (_shftPressed && e.Key == Key.G) { __returnValue = "Shift+G"; }
+            if (_shftPressed && e.Key == Key.L) { __returnValue = "Shift+L"; }
+            if (_shftPressed && e.Key == Key.R) { __returnValue = "Shift+R"; }
 
-            if (_ctrlPressed && _shftPressed &&  e.Key == Key.E) { __returnValue = "Ctrl+Shift+E"; }
-            if (_ctrlPressed && e.Key == Key.E) { __returnValue = "Ctrl+E"; }
+            if (_ctrlPressed && e.Key == Key.E)
+            {
+                if (_ctrlPressed && _shftPressed && e.Key == Key.E) { __returnValue = "Ctrl+Shift+E"; }
+                else { __returnValue = "Ctrl+E"; } 
+            
+            }
+            if (_ctrlPressed && e.Key == Key.L) { __returnValue = "Ctrl+L"; }
+            if (_ctrlPressed && e.Key == Key.H) { __returnValue = "Ctrl+H"; }
+            if (_ctrlPressed && e.Key == Key.P) { __returnValue = "Ctrl+P"; }
+            if (_ctrlPressed && e.Key == Key.Z) { __returnValue = "Ctrl+Z"; }
+            if (_ctrlPressed && e.Key == Key.R) { __returnValue = "Ctrl+R"; }
 
             if (_ctrlPressed && e.Key == Key.NumPad1 || _ctrlPressed && e.Key == Key.D1) { __returnValue = "Ctrl+1"; }
             if (_ctrlPressed && e.Key == Key.NumPad2 || _ctrlPressed && e.Key == Key.D2) { __returnValue = "Ctrl+2"; }
-            if (_ctrlPressed && e.Key == Key.NumPad3 || _ctrlPressed && e.Key == Key.D3) { __returnValue = "Ctrl+2"; }
+            if (_ctrlPressed && e.Key == Key.NumPad3 || _ctrlPressed && e.Key == Key.D3) { __returnValue = "Ctrl+3"; }
+            if (_ctrlPressed && e.Key == Key.T) { __returnValue = "Ctrl+T"; }
 
             if (_ctrlPressed && e.Key == Key.OemPlus) { __returnValue = "Ctrl++"; }
             if (_ctrlPressed && e.Key == Key.OemMinus) { __returnValue = "Ctrl+-"; }
