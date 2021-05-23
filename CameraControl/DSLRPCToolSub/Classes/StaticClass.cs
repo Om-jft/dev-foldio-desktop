@@ -515,13 +515,12 @@ namespace DSLR_Tool_PC
             return parent;
         }
 
-        public static string saveBitmap2File(Bitmap b, string fileName)
+        public static void saveBitmap2File(Bitmap b, string fileName)
         {
             var formatFile = fileName;
             //formatFile = formatFile.Substring(formatFile.Length - 3);
             formatFile = System.IO.Path.GetExtension(formatFile).ToString().Replace(".", "").ToLower();
-            //var file = fileName.Substring(0, fileName.LastIndexOf("."));
-            //fileName = file + "1." + formatFile;
+           
             switch (formatFile)
             {
                 case "bmp":
@@ -541,20 +540,9 @@ namespace DSLR_Tool_PC
                     b.Save(fileName, System.Drawing.Imaging.ImageFormat.Tiff);
                     break;
             }
-            return fileName;
+           
         }
 
-        public static System.Drawing.Bitmap BitmapFromWriteableBitmap(WriteableBitmap writeBmp)
-        {
-            System.Drawing.Bitmap bmp;
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create((BitmapSource)writeBmp));
-                enc.Save(outStream);
-                bmp = new System.Drawing.Bitmap(outStream);
-            }
-            return bmp;
-        }
+        
     }
 }

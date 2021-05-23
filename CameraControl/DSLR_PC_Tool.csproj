@@ -202,9 +202,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\BumpKit.dll</HintPath>
     </Reference>
-    <Reference Include="CircularProgressBar, Version=2.8.0.16, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
-      <HintPath>..\packages\CircularProgressBar.2.8.0.16\lib\net40\CircularProgressBar.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -411,6 +408,9 @@
     </Reference>
     <Reference Include="WixSharp">
       <HintPath>..\packages\WixSharp.bin.1.0.41.0\lib\WixSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.2.0.0\lib\net40\WpfAnimatedGif.dll</HintPath>
     </Reference>
     <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WriteableBitmapEx.1.6.3\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
@@ -1109,6 +1109,9 @@
     <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 15.png" />
     <Resource Include="DSLRPCToolSub\Assets\Images\hover\Group 19.png" />
     <Resource Include="icon.ico" />
+    <EmbeddedResource Include="DSLRPCToolSub\Assets\Images\Spinner.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="pyFiles\model.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -15,7 +15,14 @@ namespace DSLR_Tool_PC.Controles
     public partial class PhotoEdit : UserControl
     {
         PhotoEditModel _photoeditmodel = PhotoEditModel.GetInstance();
+        private static PhotoEdit _photoedit_inst = null;
+        public static PhotoEdit getInstance()
+        {
+            if (_photoedit_inst == null)
+                _photoedit_inst = new PhotoEdit();
 
+            return _photoedit_inst;
+        }
         public PhotoEdit()
         {
             this.DataContext = _photoeditmodel;

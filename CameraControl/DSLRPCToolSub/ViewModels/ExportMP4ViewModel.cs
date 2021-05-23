@@ -34,7 +34,7 @@ namespace DSLR_Tool_PC.ViewModels
         private string _uripathimgGIF = "";
         private bool _rotationstatus = false;
         private string _uripathimgGIFPreview = "";
-
+        private string oPath = null;
         MainWindowAdvanced __mainWindowAdvanced = null;
         public void ExecuteInti(object __this)
         {
@@ -125,6 +125,7 @@ namespace DSLR_Tool_PC.ViewModels
                 IsEnableButton = false;
                 __mainWindowAdvanced.ChangesProgress.Value = 0;
                 __mainWindowAdvanced.ProgressLabel.Text = "Exporting to MP4...";
+                __mainWindowAdvanced.ProgressText.Text = "Expoting frames to MP4...";
                 _backgroundWorker.RunWorkerAsync();
                 __mainWindowAdvanced.ShowProgress();
                 __Parent_window.Hide();
@@ -436,12 +437,22 @@ namespace DSLR_Tool_PC.ViewModels
             //RaisePropertyChanged(() => IsFree);
             __Parent_window.Close();
             __mainWindowAdvanced.HideProgress();
+            __mainWindowAdvanced.ChangesProgress.Value = 0;
+            if (!File.Exists(oPath))
+            {
+                MessageBox.Show("Video file not found !");
+            }
+            else
+            {
+                MessageBox.Show("Saved Successfully at location " + oPath, "ExportMP4", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
             IsEnableButton = true;
         }
 
 
         private void _backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+           
             try
             {
 
@@ -525,6 +536,7 @@ namespace DSLR_Tool_PC.ViewModels
         private void GenerateMp4(string tempFolder)
         {
             string OutPutFile = Path.Combine(__SaveFilePath, "mp_" + DateTime.Now.Ticks.ToString() + ".mp4");
+            oPath = OutPutFile;
             try
             {
                 string ffmpegPath = Path.Combine(Settings.ApplicationFolder, "ffmpeg.exe");
@@ -566,14 +578,14 @@ namespace DSLR_Tool_PC.ViewModels
             }
             catch (Exception ex) { Log.Debug("", ex); }
 
-            if (!File.Exists(OutPutFile))
-            {
-                MessageBox.Show("Video file not found !");
-            }
-            else
-            {
-                MessageBox.Show("Saved Successfully at location " + OutPutFile, "ExportMP4", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            //if (!File.Exists(OutPutFile))
+            //{
+            //    MessageBox.Show("Video file not found !");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Saved Successfully at location " + OutPutFile, "ExportMP4", MessageBoxButton.OK, MessageBoxImage.Information);
+            //}
         }
 
         private void CopyFile(string filename, string destFile)
