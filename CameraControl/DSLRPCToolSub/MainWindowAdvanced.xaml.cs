@@ -3749,7 +3749,7 @@ namespace CameraControl
                     __exportPathUpdate.PathImg = __Pathupdate.PathImg;
                 });
             }
-            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
+            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex);}
         }
         public void FrameToFile()
         {
