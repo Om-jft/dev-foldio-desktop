@@ -71,7 +71,9 @@ namespace CameraControl
         public int EditFilterFlag = 0;
         //Added Code
         BackgroundWorker bgWorker = new BackgroundWorker();
-        PathUpdate __Pathupdate = PathUpdate.getInstance();
+
+        public PathUpdate __Pathupdate = PathUpdate.getInstance();
+
         PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
         ExportZipModel __exportZipModel = ExportZipModel.getInstance();
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
@@ -2069,6 +2071,7 @@ namespace CameraControl
                 RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, menu_crop);
                 menu_crop.RaiseEvent(routedEventArgs);
             }
+            if (_keyvalue == "Ctrl+L") { MessageBox.Show(_keyvalue); }
 
             if (_keyvalue == "Ctrl+1")
             {
@@ -3120,6 +3123,7 @@ namespace CameraControl
                     this.Grid3x3.IsEnabled = true;
                     this.Grid6x4.IsEnabled = true;
                     this.Grid3x3Dial.IsEnabled = true;
+
                     this.Tg_Btn6.IsChecked = false;
                     this.Tg_Btn7.IsChecked = false;
                     
@@ -3148,8 +3152,10 @@ namespace CameraControl
                     this.Grid3x3.IsEnabled = true;
                     this.Grid6x4.IsEnabled = true;
                     this.Grid3x3Dial.IsEnabled = true;
+
                     this.Tg_Btn6.IsChecked = false;
                     this.Tg_Btn7.IsChecked = false;
+
                     CGrid_0();
                     Tg_Btn7_Unchecked(sender, e);
                 }
@@ -3690,7 +3696,7 @@ namespace CameraControl
                 string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
 
                 var files = Directory.GetFiles(_folderpath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
-                
+
                 string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
                 if (!Directory.Exists(tempfolder))
                     Directory.CreateDirectory(tempfolder);
@@ -3699,6 +3705,7 @@ namespace CameraControl
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
                     //StaticClass.GenerateSmallThumb(f, file);
+
                     FileInfo fi = new FileInfo(f);
                     File.Copy(f, file);
                     //StaticClass.GenerateLargeThumb(f, file);
@@ -3707,6 +3714,7 @@ namespace CameraControl
                     {
                         Path_Orginal = f,
                         Path = file,
+
                         FileName = System.IO.Path.GetFileName(f),
                         Extension = System.IO.Path.GetExtension(f),
                         DateModified = (System.IO.File.GetCreationTime(f)).ToString("yyyy-MM-dd"),
@@ -3720,7 +3728,6 @@ namespace CameraControl
                     images_Folder.Add(id);
                     Thread.Sleep(10);
                 }
-                
                 ImageDetails imrLocal = new ImageDetails();
                 this.Dispatcher.Invoke(() =>
                 {
@@ -3742,15 +3749,15 @@ namespace CameraControl
                         ImageLIstBox_Folder.Items.Add(img);
                         ImageListBox_Folder.Items.Add(img);
                         ListBoxSnapshots.Items.Add(img);
-                        
                     }
                     LoadFolderSelectedItem(imrLocal);
                     UpdateImageData();
                     __exportPathUpdate.PathImg = __Pathupdate.PathImg;
                 });
             }
-            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
+            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex);}
         }
+
         public void FrameToFile()
         {
             string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());

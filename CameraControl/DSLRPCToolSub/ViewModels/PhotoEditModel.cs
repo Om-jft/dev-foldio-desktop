@@ -434,7 +434,6 @@ namespace DSLR_Tool_PC.ViewModels
                         WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
                         ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
 
-
                         if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
                         {
                             
@@ -442,6 +441,7 @@ namespace DSLR_Tool_PC.ViewModels
                             __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(_finalBmp);
                             _finalBmp.Dispose();
                         }
+
                     }
                    
                 }
@@ -659,7 +659,6 @@ namespace DSLR_Tool_PC.ViewModels
             string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
             if (!Directory.Exists(_strApplPath))
                 Directory.CreateDirectory(_strApplPath);
- 
             try
                 {
                 foreach (var _imgfl in _pathImagFiles)
