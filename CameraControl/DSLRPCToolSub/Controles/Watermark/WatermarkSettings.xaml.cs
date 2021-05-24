@@ -37,9 +37,9 @@ namespace DSLR_Tool_PC.Controles
             {
                 using (var dialog = new System.Windows.Forms.OpenFileDialog())
                 {
-                    dialog.Filter = "Bitmap Image (*.bmp)|*.bmp|JPEG Image (*.jpeg)|*.jpeg|JPG Image(*.jpg)|*.jpg|PNG Image(*.png)|*.png|TIFF Image(*.tiff)|*.tiff";
+                    dialog.Filter = "Image files (*.jpg,*.jpeg,*.jpe,*.jfif,*.png,*.bmp,*.tiff )|*.jpg;*.jpeg;*.jpe;*.jfif;*.png;*.bmp;*.tiff";
                     dialog.Title = "Watermark Image";
-                    dialog.DefaultExt = ".jpeg";
+                    //dialog.DefaultExt = ".jpeg";
                     if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         wtrMrkImg.ImagePath = dialog.FileName;
@@ -51,8 +51,8 @@ namespace DSLR_Tool_PC.Controles
                         img.UriSource = new Uri(dialog.FileName, UriKind.Absolute);
                         img.EndInit();
 
-                        wtrMrkImg.ImageWidth = img.PixelWidth;
-                        wtrMrkImg.ImageHeight = img.PixelHeight;
+                        wtrMrkImg.ImageWidth = 100;
+                        wtrMrkImg.ImageHeight = 100;
                     }
                 }
             }

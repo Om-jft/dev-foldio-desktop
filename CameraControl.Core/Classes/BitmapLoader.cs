@@ -316,7 +316,7 @@ namespace CameraControl.Core.Classes
             {
                 JpegBitmapEncoder encoder = new JpegBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(source));
-                encoder.QualityLevel = 100;
+                encoder.QualityLevel = 90;
                 encoder.Save(stream);
                 stream.Close();
             }

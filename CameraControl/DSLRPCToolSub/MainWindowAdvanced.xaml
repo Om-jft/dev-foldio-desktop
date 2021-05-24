@@ -89,7 +89,7 @@
     </Controls:MetroWindow.RightWindowCommands>-->
 
     <Grid>
-        <Grid>
+        <Grid Background="#222222">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -202,8 +202,8 @@
             </StackPanel>-->
 
 
-            <Menu Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" Visibility="{Binding Branding.ShowMainMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="0" Margin="0" HorizontalAlignment="Left"
-              IsMainMenu="True">
+            <Menu Background="#222222" Foreground="white" Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" Visibility="{Binding Branding.ShowMainMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="0" Margin="0" HorizontalAlignment="Left"
+              IsMainMenu="True" >
                 <Menu.DataContext>
                     <viewModel:MainMenuViewModel/>
                 </Menu.DataContext>
@@ -211,14 +211,16 @@
                     <!--<MenuItem Header="Open"   IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+O">-->
                         
                     <!--</MenuItem>-->
-                    <MenuItem Header="Recent Open"    IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" Margin="0"/>
+
+                    <!--<MenuItem Header="Recent Open"    IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" Margin="0"/>-->
                     
                     <!--<MenuItem Header="Save"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+S"/>
                     <MenuItem Header="Save As"   IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+Shift+S"/>
                     
                     <MenuItem Header="Import"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+Shift+I"/>-->
                     <MenuItem Header="Export" x:Name="MenuExport" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White">
-                        <MenuItem Header="Quick GIF Export"  Click="MenuItem_Click_1" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+Shift+E" Padding="10,0,10,0"/>
+
+                        <MenuItem Header="Quick GIF Export"  Click="QuickExport"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+Shift+E" Padding="10,0,10,0"/>
                         <MenuItem Header="Other Export"  Click="MenuItem_Click_1" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+E" Padding="10,0,10,0"/>
                     </MenuItem>
 
@@ -226,6 +228,7 @@
                     
                     <MenuItem Header="{T:TranslateExtension MenuExit}" InputGestureText="{myClasess:CommandShortcutExtensioncs All_Close}" Background="#222222" Foreground="White" Name="Exit" Click="Exit_Click"/>
                 </MenuItem>
+                
                 <MenuItem Header="{T:TranslateExtension MenuView}" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowViewMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <MenuItem x:Name="menu_liveView" Header="Live View"  Background="#222222" Foreground="White">
                         <MenuItem Header="1:1" x:Name="ratio_1" IsCheckable="True" IsChecked="False" Checked="ratio1_Checked" Unchecked="ratio1_Unchecked"
@@ -234,20 +237,21 @@
                         <MenuItem Header="16:9" x:Name="ratio_16" IsCheckable="True" IsChecked="False" Checked="ratio3_Checked" Unchecked="ratio3_Unchecked" Background="#222222" Foreground="White" Padding="0,0,20,0"/>
                     </MenuItem>
                     <MenuItem Header="Center Line" Background="#222222" Foreground="White">
-                        <MenuItem Header="Vertical" x:Name="Vertical_mList" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Alt+V" Padding="0,0,20,0"/>
-                        <MenuItem Header="Horizontal" x:Name="Horizontal_mList" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Alt+H" Padding="0,0,20,0" />
+
+                        <MenuItem Header="Vertical" x:Name="Vertical_mList" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Shift+V" Padding="0,0,20,0"/>
+                        <MenuItem Header="_Horizontal" x:Name="Horizontal_mList" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Shift+H" Padding="0,0,20,0" />
                     </MenuItem>
                     <MenuItem Header="Grid"  Background="#222222" Foreground="White">
-                        <MenuItem x:Name="Grid3x3" Header="3x3" IsCheckable="True" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Background="#222222" Foreground="White"  InputGestureText="Alt+1" Padding="0,0,20,0" />
-                        <MenuItem x:Name="Grid6x4" Header="6x4" IsCheckable="True" IsChecked="False" Checked="grid3_Checked" Unchecked="grid3_Unchecked" Background="#222222" Foreground="White" InputGestureText="Alt+2" Padding="0,0,20,0"/>
-                        <MenuItem x:Name="Grid3x3Dial" Header="3x3 + Dial" IsCheckable="True" IsChecked="False" Checked="grid4_Checked" Unchecked="grid4_Unchecked"  Background="#222222" Foreground="White" InputGestureText="Alt+3" Padding="0,0,20,0" />
-                        <MenuItem Header="Toggle GRID" Background="#222222" Foreground="White" InputGestureText="Alt+G" Padding="0,0,20,0" Click="toggle_grid"/>
+                        <MenuItem x:Name="Grid3x3" Header="3x3" IsCheckable="True" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Background="#222222" Foreground="White"  InputGestureText="Shift+1" Padding="0,0,20,0" />
+                        <MenuItem x:Name="Grid6x4" Header="6x4" IsCheckable="True" IsChecked="False" Checked="grid3_Checked" Unchecked="grid3_Unchecked" Background="#222222" Foreground="White" InputGestureText="Shift+2" Padding="0,0,20,0"/>
+                        <MenuItem x:Name="Grid3x3Dial" Header="3x3 + Dial" IsCheckable="True" IsChecked="False" Checked="grid4_Checked" Unchecked="grid4_Unchecked"  Background="#222222" Foreground="White" InputGestureText="Shift+3" Padding="0,0,20,0" />
+                        <MenuItem x:Name="toggle_grid_menu" Header="Toggle GRID" Background="#222222" Foreground="White" InputGestureText="Shift+G" Padding="0,0,20,0" Click="toggle_grid"/>
                     </MenuItem>
                     <MenuItem x:Name="menu_focusZoom" Header="Focus Zoom" Background="#222222" Foreground="White">
-                        <MenuItem x:Name="Zoomx1" Header="x1" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Foreground="White" InputGestureText="Ctrl+1" Padding="0,0,20,0" Checked="Zoom1x_checked" Unchecked="Zoom1x_unchecked" />
+                        <MenuItem x:Name="Zoomx1" Header="x1" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Foreground="White" InputGestureText="Ctrl+1" Padding="0,0,20,0" Checked="Zoom1x_checked" Unchecked="Zoom1x_unchecked" Click="Zoom1x_checked" />
                         <MenuItem x:Name="Zoomx5" Header="x5" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Checked="Zoom5x_checked" Unchecked="Zoom5x_unchecked" Foreground="White" InputGestureText="Ctrl+2" Padding="0,0,20,0"/>
                         <MenuItem x:Name="Zoomx10" Header="x10" IsCheckable="True" IsChecked="{Binding LiveView}"  Background="#222222" Checked="Zoom10x_checked" Unchecked="Zoom10x_unchecked" Foreground="White" InputGestureText="Ctrl+3" Padding="0,0,20,0" />
-                        <MenuItem Header="Toggle ZOOM" Padding="0,0,20,0" Click="toggelZoom"  Background="#222222" Foreground="White" InputGestureText="Ctrl+T" />
+                        <MenuItem x:Name="toggleZoom_menu" Header="Toggle Zoom" Padding="0,0,20,0" Click="toggelZoom"  Background="#222222" Foreground="White" InputGestureText="Ctrl+T" />
                     </MenuItem>
 
                     <MenuItem x:Name="overlayMenu_item" Header="Overlay" Background="#222222" Foreground="White" InputGestureText="Ctrl+H" Checked="ETg_Btn8_Checked" Unchecked="ETg_Btn8_Unchecked" IsCheckable="True" IsChecked="False"/>
@@ -258,8 +262,10 @@
                     <MenuItem x:Name="menu_crop" Header="Crop" Background="#222222" Foreground="White" InputGestureText="Ctrl+L" Click="ETg_Btn9_Checked" />
                     <!--<MenuItem Header="Zoom +" Command="{Binding RefreshSessionCommand}" Background="#222222" Foreground="White" InputGestureText="Ctrl++"/>
                     <MenuItem Header="Zoom -" Command="{Binding ShowSessionCommand}" Background="#222222" Foreground="White" InputGestureText="Ctrl+-"/>-->
-                    <MenuItem Header="Pan" Command="{Binding SendCommand}" CommandParameter="NextSeries" InputGestureText="Ctrl+P" Background="#222222" Foreground="White"/>
-                    <MenuItem Header="Rotate" Background="#222222" Foreground="White" InputGestureText="Alt+R" Click="ERotateRight_Click"/>
+
+                    <!--<MenuItem Header="Pan" Command="{Binding SendCommand}" CommandParameter="NextSeries" InputGestureText="Ctrl+P" Background="#222222" Foreground="White"/>-->
+                    <MenuItem x:Name="menu_rotate" Header="Rotate" Background="#222222" Foreground="White" InputGestureText="Shift+R" Click="ERotateRight_Click"/>
+
                     <!--<MenuItem Header="Add Watermark" Command="{Binding Path=ImportSessionCommand}" Background="#222222" Foreground="White" InputGestureText="Ctrl+W"/>-->
                 </MenuItem>
                 <MenuItem x:Name="MenuMode" Header="Mode" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowCameraMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="white">
@@ -268,16 +274,10 @@
                     <MenuItem x:Name="modeVideo" Header="Video"  Click="Mode_VideoChecked"  IsEnabled="True"  Background="#222222" Foreground="White"/>
                 </MenuItem>
                 <MenuItem Header="{T:TranslateExtension MenuHelp}" Visibility="{Binding Branding.OnlineReference, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="5,2" Margin="1">
-                    <MenuItem Header="{T:TranslateExtension MenuOnlineManual}" Command="{Binding ManualPageCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuHomePage}" Command="{Binding HomePageCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuForum}" Command="{Binding ForumCommand}"/>
-                    <Separator/>
-                    <MenuItem Header="{T:TranslateExtension LabelSendTheLogFile}" Command="{Binding SendLogFileCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuCheckForUpdate}" Command="{Binding CheckUpdateCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension LabelChangelog}" Command="{Binding ShowChangeLogCommand}"/>
-                    <MenuItem Header="{T:TranslateExtension MenuAbout}" Command="{Binding AboutCommand}"/>
+                    <MenuItem Header="Help Center" Command="{Binding ManualPageCommand}" Background="#222222" Foreground="White"/>
+                    <!--<MenuItem Header="License" Command="{Binding HomePageCommand}" Background="#222222" Foreground="White"/>
+                    <MenuItem Header="{T:TranslateExtension MenuAbout}" Command="{Binding AboutCommand}" Background="#222222" Foreground="White"/>-->
                 </MenuItem>
-                <MenuItem Header="{T:TranslateExtension MenuHomePage}" Command="{Binding HomePageCommand}" Visibility="{Binding HomePageMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="5,2" Margin="1"/>
             </Menu>
 
 
@@ -535,11 +535,11 @@
                 <ColumnDefinition Width="0"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid Background="#222222" Grid.Column="1">
+            <Grid  Grid.Column="1">
                 <TabControl x:Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged" >
                     <TabControl.Resources>
                         <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
-                            <Grid>
+                            <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20" />
@@ -748,9 +748,9 @@
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="0,0,30,0" HorizontalAlignment="Center" VerticalAlignment="Top" >
                                         <RadioButton x:Name="CGrid0" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="True" Style="{StaticResource ToolboxRadioSelector1}" />
-                                        <RadioButton x:Name="CGrid1" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Style="{StaticResource ToolboxRadioSelector2}"  />
-                                        <RadioButton x:Name="CGrid2" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Checked="grid3_Checked" Unchecked="grid3_Unchecked" Style="{StaticResource ToolboxRadioSelector3}"  />
-                                        <RadioButton x:Name="CGrid3" Margin="0,0,0,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Checked="grid4_Checked" Unchecked="grid4_Unchecked" Style="{StaticResource ToolboxRadioSelector4}"  />
+                                        <RadioButton x:Name="CGrid1" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Click="grid2_Checked" Unchecked="grid2_Unchecked" Style="{StaticResource ToolboxRadioSelector2}"  />
+                                        <RadioButton x:Name="CGrid2" Margin="0,0,10,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Click="grid3_Checked" Unchecked="grid3_Unchecked" Style="{StaticResource ToolboxRadioSelector3}"  />
+                                        <RadioButton x:Name="CGrid3" Margin="0,0,0,0" Background="Transparent" GroupName="CGGroup" IsChecked="False" Click="grid4_Checked" Unchecked="grid4_Unchecked" Style="{StaticResource ToolboxRadioSelector4}"  />
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Margin="0,0,30,0" HorizontalAlignment="Center" VerticalAlignment="Top" >
                                         <!--<RadioButton x:Name="ratio1" Margin="0,0,10,0" Checked="ratio1_Checked" Unchecked="ratio1_Unchecked" Background="Transparent" GroupName="CRGroup" Style="{StaticResource ToolboxRadioSelector5}"/>-->
@@ -1261,6 +1261,21 @@
                                                 </Grid>
                                                  <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
+                                                <Grid x:Name="preLoader" Visibility="Collapsed">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="15*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="6*"/>
+                                                        <RowDefinition Height="16*"/>
+                                                        <RowDefinition Height="7*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Image Grid.Column="0" Grid.Row="1" Name="img" gif:ImageBehavior.RepeatBehavior="Forever" 
+                /> <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
+                                                    <TextBlock Grid.Row="2" Grid.Column="0" x:Name="preloaderText" Text="Loading images, please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" LineStackingStrategy="BlockLineHeight" Foreground="#FF0B0C0C"/>
+                                                </Grid>
+                                                 <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
+
                                                 <StackPanel x:Name="ProgressPannel" Background = "#c0c0c0" VerticalAlignment="Center" Visibility="Collapsed" Panel.ZIndex="888" Margin="10,0,10,0">
                                                     
 
@@ -1303,7 +1318,22 @@
                                                            HorizontalAlignment="Left" VerticalAlignment="Top" />
                                                 <ProgressBar x:Name="pb_Running" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" IsIndeterminate="True" Foreground="#FF2E74DA" 
                                                              Visibility="Collapsed" />
-                                                
+                                                <Grid HorizontalAlignment="Center">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <!--<custom:LoadingSpinner
+            Grid.Row="1"
+            Margin="10"
+            Cap="Triangle"
+            Diameter="250"
+            IsLoading="{Binding IsChecked, ElementName=cbIsLoading}"
+            Thickness="1"
+            Color="Black" />-->
+                                                </Grid>
+
                                             </Grid>
                                         </Border>
                                     </Grid>

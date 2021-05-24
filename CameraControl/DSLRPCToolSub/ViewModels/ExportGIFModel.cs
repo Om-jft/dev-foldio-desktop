@@ -48,6 +48,8 @@ namespace DSLR_Tool_PC.ViewModels
         private System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
         private int total=0;
         private int count=0;
+        private bool successful = false;
+        private string gPath = null;
         #endregion
         #region Initializations
 
@@ -75,6 +77,11 @@ namespace DSLR_Tool_PC.ViewModels
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             __mainWindowAdvanced.HideProgress();
+            __mainWindowAdvanced.ChangesProgress.Value = 0;
+            if (successful == true)
+            {
+                MessageBox.Show("Saved Successfully at location.." + Environment.NewLine + gPath, "ExportGIF", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -84,8 +91,8 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            
-            
+
+           
 
             foreach (var img in ImagesGif) //todaysFiles is list of file names (with full path) to be zipped
             {
@@ -399,10 +406,12 @@ namespace DSLR_Tool_PC.ViewModels
                 catch (Exception) { return; }
 
                 total = ImagesGif.Count;
+                __mainWindowAdvanced.ProgressText.Text = "Exporting frames to GIF...";
                 __mainWindowAdvanced.ProgressLabel.Text = "Exporting frames to GIF image...";
                 bgWorker.RunWorkerAsync();
                 __mainWindowAdvanced.ShowProgress();
-                __Parent_window.Hide();
+                if(__Parent_window!=null)
+                    __Parent_window.Hide();
                 //GenarateGIFs(tempPathFolder);
 
                 //try
@@ -417,12 +426,12 @@ namespace DSLR_Tool_PC.ViewModels
         }
         private void GenerateGif(string tempFolder, string gifPath)
         {
-            bool successful = false;
+            successful = false;
             if (!Directory.Exists(gifPath)) { Directory.CreateDirectory(gifPath); }
 
             string _GifFileName = "gf_" + DateTime.Now.Ticks.ToString() + ".gif";
             gifPath = Path.Combine(gifPath, _GifFileName);
-
+            gPath = gifPath;
             try
             {
                 var _fileExtension = System.IO.Path.GetExtension(ShortPathGIF);
@@ -464,10 +473,10 @@ namespace DSLR_Tool_PC.ViewModels
                 Log.Debug("", ex);
             }
 
-            if (successful == true)
-            {
-                MessageBox.Show("Saved Successfully at location.." + Environment.NewLine + gifPath, "ExportGIF", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            //if (successful == true)
+            //{
+            //    MessageBox.Show("Saved Successfully at location.." + Environment.NewLine + gifPath, "ExportGIF", MessageBoxButton.OK, MessageBoxImage.Information);
+            //}
         }
     }
 }

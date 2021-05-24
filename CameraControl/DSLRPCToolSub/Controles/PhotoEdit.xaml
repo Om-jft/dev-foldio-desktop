@@ -25,12 +25,12 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel x:Name="BackgroundFilterControl" Orientation="Horizontal">
                             <CheckBox Background="Transparent" IsChecked="{Binding IsBackgroundFilterApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Margin="0" IsEnabled="{Binding IsBackgroundFilterApply}" PreviewTextInput="TextBox_PreviewTextInput" 
-                                             Text="{Binding ElementName=sldBackground, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="25" TextAlignment="Left" 
+                                    <TextBox Margin="0,0,3,0" IsEnabled="{Binding IsBackgroundFilterApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding ElementName=sldBackground, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="20" TextAlignment="Right" 
                                              FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto" />
                                     <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
                                 </StackPanel>
@@ -65,8 +65,8 @@
                             <CheckBox Background="Transparent" IsChecked="{Binding IsWhiteBalanceApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Margin="0" IsEnabled="{Binding IsWhiteBalanceApply}" PreviewTextInput="TextBox_PreviewTextInput" 
-                                             Text="{Binding Value, ElementName=sldWhiteBalance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                    <TextBox Margin="0,0,3,0" TextAlignment="Right" IsEnabled="{Binding IsWhiteBalanceApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldWhiteBalance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="20"  FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
                                     <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
                                 </StackPanel>
                             </Border>
@@ -87,8 +87,8 @@
                             <CheckBox Background="Transparent" IsChecked="{Binding IsContrastApply}" Style="{StaticResource ChkboxSelector_new}" Width="21"/>
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Margin="0" IsEnabled="{Binding IsContrastApply}" PreviewTextInput="TextBox_PreviewTextInput" 
-                                             Text="{Binding Value, ElementName=sldContrast, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                    <TextBox Margin="0,0,3,0" IsEnabled="{Binding IsContrastApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldContrast, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="20" TextAlignment="Right" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
                                     <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
                                 </StackPanel>
                             </Border>
@@ -109,8 +109,8 @@
                             <CheckBox Background="Transparent" IsChecked="{Binding IsBrightnessApply}" Style="{StaticResource ChkboxSelector_new}" Width="21" />
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5 0 5 0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Margin="0" IsEnabled="{Binding IsBrightnessApply}" PreviewTextInput="TextBox_PreviewTextInput" 
-                                             Text="{Binding Value, ElementName=sldBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                    <TextBox Margin="0,0,3,0" IsEnabled="{Binding IsBrightnessApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="20" TextAlignment="Right" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
                                     <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
                                 </StackPanel>
                             </Border>
@@ -131,8 +131,8 @@
                             <CheckBox Background="Transparent" IsChecked="{Binding IsSaturationApply}"  Style="{StaticResource ChkboxSelector_new}" Width="21"/>
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5,0,5,0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Margin="0,0,0,0" IsEnabled="{Binding IsSaturationApply}" PreviewTextInput="TextBox_PreviewTextInput" 
-                                             Text="{Binding Value, ElementName=sldSaturation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                    <TextBox  IsEnabled="{Binding IsSaturationApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldSaturation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="20" TextAlignment="Right" FontSize="12" Foreground="#ffffff" Margin="0,0,3,0" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
                                     <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
                                 </StackPanel>
                             </Border>
@@ -153,8 +153,8 @@
                             <CheckBox Background="Transparent" IsChecked="{Binding IsWhiteClippingApply}"  Style="{StaticResource ChkboxSelector_new}" Width="21"/>
                             <Border Background="Transparent" BorderThickness="0 0 0 1" BorderBrush="#7f8486" Margin="5,0,5,0">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Margin="0,0,0,0" IsEnabled="{Binding IsWhiteClippingApply}" PreviewTextInput="TextBox_PreviewTextInput" 
-                                             Text="{Binding Value, ElementName=sldWhiteClipping, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="25" TextAlignment="Left" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
+                                    <TextBox Margin="0,0,3,0" IsEnabled="{Binding IsWhiteClippingApply}" PreviewTextInput="TextBox_PreviewTextInput" 
+                                             Text="{Binding Value, ElementName=sldWhiteClipping, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="20" TextAlignment="Right" FontSize="12" Foreground="#ffffff" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" VerticalContentAlignment="Center" FontWeight="Medium" FontFamily="Roboto"/>
                                     <TextBlock Text="%" Foreground="#7f8486" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="12" HorizontalAlignment="Right" FontWeight="Medium" FontFamily="Roboto"/>
                                 </StackPanel>
                             </Border>

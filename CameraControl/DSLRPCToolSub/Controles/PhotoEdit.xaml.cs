@@ -15,7 +15,14 @@ namespace DSLR_Tool_PC.Controles
     public partial class PhotoEdit : UserControl
     {
         PhotoEditModel _photoeditmodel = PhotoEditModel.GetInstance();
+        //private static PhotoEdit _photoedit_inst = null;
+        //public static PhotoEdit getInstance()
+        //{
+        //    if (_photoedit_inst == null)
+        //        _photoedit_inst = new PhotoEdit();
 
+        //    return _photoedit_inst;
+        //}
         public PhotoEdit()
         {
             this.DataContext = _photoeditmodel;
@@ -33,16 +40,16 @@ namespace DSLR_Tool_PC.Controles
             var slidervalue = sldBackground.Value;
             //ImageLIstBox_Folder
 
-            foreach (MainWindowAdvanced window in Application.Current.Windows.OfType<MainWindowAdvanced>())
-            {
-                // window.ListBoxSnapshots.SelectedItem = window.ListBoxSnapshots.Items.GetItemAt(txtFrameValue - 1);
-                //Image img = window.EditFramePicEdit.i;
-                //Background _bg = new Background();
-                //BlurBitmapEffect myBlurEffect = new BlurBitmapEffect();
-                //myBlurEffect.Radius = sldBackground.Value;
-                //myBlurEffect.KernelType = KernelType.Box;
-                //Bitmap capcha = new Bitmap(window.EditFramePicEdit.Source.ToString());
-            }
+            //foreach (MainWindowAdvanced window in Application.Current.Windows.OfType<MainWindowAdvanced>())
+            //{
+            //    window.ListBoxSnapshots.SelectedItem = window.ListBoxSnapshots.Items.GetItemAt(txtFrameValue - 1);
+            //    Image img = window.EditFramePicEdit.i;
+            //    Background _bg = new Background();
+            //    BlurBitmapEffect myBlurEffect = new BlurBitmapEffect();
+            //    myBlurEffect.Radius = sldBackground.Value;
+            //    myBlurEffect.KernelType = KernelType.Box;
+            //    Bitmap capcha = new Bitmap(window.EditFramePicEdit.Source.ToString());
+            //}
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

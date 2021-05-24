@@ -27,7 +27,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Button Content="Close" Grid.Row="2"  Name="button2" VerticalAlignment="Top" Click="button2_Click" Margin="16" />
-        <TextBlock Name="textBlock2" Margin="16" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Justify">digiCamControl - Copyright (c) 2018 Duka István<LineBreak/>
+        <TextBlock Name="textBlock2" Margin="16" TextWrapping="Wrap" TextTrimming="WordEllipsis" TextAlignment="Justify">DSLR PC Tool - Copyright (c) 2021 ORANGEMONKIE, INC<LineBreak/>
 <LineBreak/>
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the 'Software'), to deal
@@ -48,6 +48,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN<LineBr
 THE SOFTWARE." <LineBreak/>
         </TextBlock>
         <Button Content="Home page" Grid.Row="1"  HorizontalAlignment="Left" Margin="16" Name="button1" VerticalAlignment="Top" Width="120" Click="button1_Click" />
-        <Button Content="Donate" Grid.Row="1"  HorizontalAlignment="Right" Margin="16" Name="btn_donate" VerticalAlignment="Top" Width="120" Click="btn_donate_Click" />
+        <Button Content="Purchase" Grid.Row="1"  HorizontalAlignment="Right" Margin="16" Name="btn_donate" VerticalAlignment="Top" Width="120" Click="btn_donate_Click" />
     </Grid>
 </Controls:MetroWindow>

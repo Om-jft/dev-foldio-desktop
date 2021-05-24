@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -64,5 +65,8 @@ namespace DSLR_Tool_PC.ViewModels
         public DateTime CreationDateTime { get; set; }
 
         public string TimeModified { get; set; }
+        public Bitmap Frame { get; set; }
+        public int rotateAngle { get; set; }
+        public bool croppedImage { get; set; }
     }
 }

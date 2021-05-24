@@ -39,7 +39,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using CameraControl.DSLRPCToolSub.ViewModels;
 using WpfAnimatedGif;
-
+using System.Drawing.Imaging;
 
 namespace CameraControl
 {
@@ -51,7 +51,7 @@ namespace CameraControl
         public string OGFolder = null;
         public string DisplayName { get; set; }
         private int _ListBoxSelectedIndex = -1;
-
+        public string newSource = null;
         private object _locker = new object();
         private FileItem _selectedItem = null;
         private Timer _selectiontimer = new Timer(4000);
@@ -59,6 +59,7 @@ namespace CameraControl
         private string selectedpath = string.Empty;
         private string _folderpath = null;
         private bool _sortCameraOreder = true;
+        public bool KeyPreview { get; set; }
 
         public RelayCommand<AutoExportPluginConfig> ConfigurePluginCommand { get; set; }
         public RelayCommand<IAutoExportPlugin> AddPluginCommand { get; set; }
@@ -67,13 +68,17 @@ namespace CameraControl
         public RelayCommand<CameraPreset> LoadInAllPresetCommand { get; private set; }
         public RelayCommand<CameraPreset> VerifyPresetCommand { get; private set; }
 
+        public int EditFilterFlag = 0;
         //Added Code
         BackgroundWorker bgWorker = new BackgroundWorker();
+
         public PathUpdate __Pathupdate = PathUpdate.getInstance();
+
         PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
         ExportZipModel __exportZipModel = ExportZipModel.getInstance();
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
         ExportGIFModel __gIFModel = ExportGIFModel.getInstance();
+        public ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
         //public double CameraGrid_height;
@@ -98,7 +103,7 @@ namespace CameraControl
             VerifyPresetCommand = new RelayCommand<CameraPreset>(VerifyPreset);
             ConfigurePluginCommand = new RelayCommand<AutoExportPluginConfig>(ConfigurePlugin);
             AddPluginCommand = new RelayCommand<IAutoExportPlugin>(AddPlugin);
-            
+            this.KeyPreview = true;
             InitializeComponent();
 
             var image = new BitmapImage();
@@ -196,6 +201,13 @@ namespace CameraControl
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            try
+            {
+                string __TempPath = Path.Combine(Path.GetTempPath(), "OrangeMonkie");
+                if (Directory.Exists(__TempPath)) { Directory.Delete(__TempPath, true); }
+                Directory.CreateDirectory(__TempPath);
+            }
+            catch (Exception ex) { Log.Error("MaintainTempFolder", ex); }
             ServiceProvider.WindowsManager.ExecuteCommand(CmdConsts.All_Close);
             App.Current.Shutdown();
             Application.Current.Shutdown();
@@ -222,6 +234,7 @@ namespace CameraControl
             TriggerClass.KeyDown(e);
 
             string _keyvalue = TriggerClass.KeyDownReturn(e);
+            //MessageBox.Show(_keyvalue);
             if (_keyvalue == "") { return; }
 
             Keys_Shortcuts(_keyvalue);
@@ -231,8 +244,13 @@ namespace CameraControl
         {
             if (e.Key == Key.Delete)
             {
+                //MessageBox.Show("In here");
                 ServiceProvider.WindowsManager.ExecuteCommand(WindowsCmdConsts.Del_Image);
                 e.Handled = true;
+            }
+            if (e.Key==Key.LeftAlt && e.Key== Key.V)
+            {
+                MessageBox.Show("here again");
             }
         }
 
@@ -1272,10 +1290,15 @@ namespace CameraControl
         {
             ETg_Btn7.IsChecked = false;
             Tg_Btn7.IsChecked = false;
+            ETg_Btn6.IsChecked = true;
+            Tg_Btn6.IsChecked = true;
+            Horizontal_mList.IsChecked = false;
+            Vertical_mList.IsChecked = true;
             V_CenterLineApply(true);
         }
         private void Tg_Btn6_Unchecked(object sender, RoutedEventArgs e)
         {
+            Vertical_mList.IsChecked = false;
             V_CenterLineApply(false);
         }
 
@@ -1309,207 +1332,310 @@ namespace CameraControl
 
         private void Tg_Btn7_Checked(object sender, RoutedEventArgs e)
         {
-            ETg_Btn6.IsChecked = false;
-            Tg_Btn6.IsChecked = false;
-            H_CenterLineApply(true);
+            try
+            {
+                ETg_Btn6.IsChecked = false;
+                Tg_Btn6.IsChecked = false;
+                ETg_Btn7.IsChecked = true;
+                Tg_Btn7.IsChecked = true;
+                Horizontal_mList.IsChecked = true;
+                Vertical_mList.IsChecked = false;
+                H_CenterLineApply(true);
+            }
+            catch(Exception ex) { ex.ToString(); }
         }
         private void Tg_Btn7_Unchecked(object sender, RoutedEventArgs e)
         {
-            H_CenterLineApply(false);
+            try
+            {
+                Horizontal_mList.IsChecked = false;
+                H_CenterLineApply(false);
+            }catch(Exception ex) { ex.ToString(); }
         }
 
         private void H_CenterLineApply(bool _checkedStatus)
         {
-            if (_checkedStatus == true)
+            try
             {
-                if (EditTab.IsSelected)
+                if (_checkedStatus == true)
                 {
-                    EH_Line1.X2 = CameraGrid.ActualWidth;
-                    EH_Line1.Visibility = Visibility.Visible;
+                    if (EditTab.IsSelected)
+                    {
+                        EH_Line1.X2 = CameraGrid.ActualWidth;
+                        EH_Line1.Visibility = Visibility.Visible;
+                    }
+                    if (CaptureTab.IsSelected)
+                    {
+                        CH_Line1.X2 = CameraGrid.ActualWidth;
+                        CH_Line1.Visibility = Visibility.Visible;
+                    }
                 }
-                if (CaptureTab.IsSelected)
+                else
                 {
-                    CH_Line1.X2 = CameraGrid.ActualWidth;
-                    CH_Line1.Visibility = Visibility.Visible;
+                    if (EditTab.IsSelected)
+                    {
+                        EH_Line1.Visibility = Visibility.Collapsed;
+                    }
+                    if (CaptureTab.IsSelected)
+                    {
+                        CH_Line1.Visibility = Visibility.Collapsed;
+                    }
                 }
-            }
-            else
-            {
-                if (EditTab.IsSelected)
-                {
-                    EH_Line1.Visibility = Visibility.Collapsed;
-                }
-                if (CaptureTab.IsSelected)
-                {
-                    CH_Line1.Visibility = Visibility.Collapsed;
-                }
-            }
+            }catch(Exception ex) { ex.ToString(); }
         }
 
+        private void CGrid_0()
+        {
+            CGrid0.IsChecked = true;
+            Egrid1.IsChecked = true;
+        }
         private void grid2_Checked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                double width = EditPicGrid.ActualWidth;
-                double height = EditPicGrid.ActualHeight;
-                EVG_Line1.X1 = width / 3;
-                EVG_Line1.X2 = width / 3;
-                EVG_Line1.Y2 = height;
-                EVG_Line1.Y1 = 0;
-                EVG_Line2.X1 = (2 * width) / 3;
-                EVG_Line2.X2 = (2 * width) / 3;
-                EVG_Line2.Y1 = 0;
-                EVG_Line2.Y2 = height;
-                EHG_Line1.X1 = 0;
-                EHG_Line1.Y1 = height / 3;
-                EHG_Line1.X2 = width;
-                EHG_Line1.Y2 = height / 3;
-                EHG_Line2.X1 = 0;
-                EHG_Line2.Y1 = (2 * height) / 3;
-                EHG_Line2.X2 = width;
-                EHG_Line2.Y2 = (2 * height) / 3;
+                Grid3x3.IsEnabled = false;
+                Grid3x3Dial.IsEnabled = true;
+                Grid6x4.IsEnabled = true;
+                CGrid1.IsChecked = true;
+                Grid3x3.IsChecked = true;
+                Egrid2.IsChecked = true;
+                Grid3x3Dial.IsChecked = false;
+                Grid6x4.IsChecked = false;
+                if (EditTab.IsSelected)
+                {
+                    double width = EditPicGrid.ActualWidth;
+                    double height = EditPicGrid.ActualHeight;
+                    EVG_Line1.X1 = width / 3;
+                    EVG_Line1.X2 = width / 3;
+                    EVG_Line1.Y2 = height;
+                    EVG_Line1.Y1 = 0;
+                    EVG_Line2.X1 = (2 * width) / 3;
+                    EVG_Line2.X2 = (2 * width) / 3;
+                    EVG_Line2.Y1 = 0;
+                    EVG_Line2.Y2 = height;
+                    EHG_Line1.X1 = 0;
+                    EHG_Line1.Y1 = height / 3;
+                    EHG_Line1.X2 = width;
+                    EHG_Line1.Y2 = height / 3;
+                    EHG_Line2.X1 = 0;
+                    EHG_Line2.Y1 = (2 * height) / 3;
+                    EHG_Line2.X2 = width;
+                    EHG_Line2.Y2 = (2 * height) / 3;
 
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
-            }
-            if (CaptureTab.IsSelected)
-            {
-                double width = CameraGrid.ActualWidth;
-                double height = CameraGrid.ActualHeight;
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    double width = CameraGrid.ActualWidth;
+                    double height = CameraGrid.ActualHeight;
 
-                GridLines_Capture(1, width, height);
+                    GridLines_Capture(1, width, height);
+                }
             }
+            catch(Exception ex) { ex.ToString(); }
         }
         private void grid2_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                Grid3x3.IsChecked = false;
+
+                if (EditTab.IsSelected)
+                {
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    CVG_Line1.Visibility = CVG_Line2.Visibility = CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
+                }
             }
-            if (CaptureTab.IsSelected)
-            {
-                CVG_Line1.Visibility = CVG_Line2.Visibility = CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
-            }
+            catch(Exception ex) { ex.ToString(); }
         }
         private void grid3_Checked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                double width = EditPicGrid.ActualWidth;
-                double height = EditPicGrid.ActualHeight;
-                EVG_Line1.X1 = width / 6;
-                EVG_Line1.X2 = width / 6;
-                EVG_Line1.Y2 = height;
-                EVG_Line1.Y1 = 0;
-                EVG_Line2.X1 = width / 3;
-                EVG_Line2.X2 = width / 3;
-                EVG_Line2.Y2 = height;
-                EVG_Line2.Y1 = 0;
-                EVG_Line3.X1 = width / 2;
-                EVG_Line3.X2 = width / 2;
-                EVG_Line3.Y2 = height;
-                EVG_Line3.Y1 = 0;
-                EVG_Line4.X1 = (2 * width) / 3;
-                EVG_Line4.X2 = (2 * width) / 3;
-                EVG_Line4.Y2 = height;
-                EVG_Line4.Y1 = 0;
-                EVG_Line5.X1 = (5 * width) / 6;
-                EVG_Line5.X2 = (5 * width) / 6;
-                EVG_Line5.Y2 = height;
-                EVG_Line5.Y1 = 0;
-                EHG_Line1.X1 = 0;
-                EHG_Line1.Y1 = height / 4;
-                EHG_Line1.X2 = width;
-                EHG_Line1.Y2 = height / 4;
-                EHG_Line2.X1 = 0;
-                EHG_Line2.Y1 = height / 2;
-                EHG_Line2.X2 = width;
-                EHG_Line2.Y2 = height / 2;
-                EHG_Line3.X1 = 0;
-                EHG_Line3.Y1 = (3 * height) / 4;
-                EHG_Line3.X2 = width;
-                EHG_Line3.Y2 = (3 * height) / 4;
+                Grid3x3.IsEnabled = true;
+                Grid3x3Dial.IsEnabled = true;
+                Grid6x4.IsEnabled = false;
 
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Visible;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Visible;
+                CGrid2.IsChecked = true;
+                Egrid3.IsChecked = true;
+                Grid3x3.IsChecked = false;
+                Grid3x3Dial.IsChecked = false;
+                Grid6x4.IsChecked = true;
+                if (EditTab.IsSelected)
+                {
+                    double width = EditPicGrid.ActualWidth;
+                    double height = EditPicGrid.ActualHeight;
+                    EVG_Line1.X1 = width / 6;
+                    EVG_Line1.X2 = width / 6;
+                    EVG_Line1.Y2 = height;
+                    EVG_Line1.Y1 = 0;
+                    EVG_Line2.X1 = width / 3;
+                    EVG_Line2.X2 = width / 3;
+                    EVG_Line2.Y2 = height;
+                    EVG_Line2.Y1 = 0;
+                    EVG_Line3.X1 = width / 2;
+                    EVG_Line3.X2 = width / 2;
+                    EVG_Line3.Y2 = height;
+                    EVG_Line3.Y1 = 0;
+                    EVG_Line4.X1 = (2 * width) / 3;
+                    EVG_Line4.X2 = (2 * width) / 3;
+                    EVG_Line4.Y2 = height;
+                    EVG_Line4.Y1 = 0;
+                    EVG_Line5.X1 = (5 * width) / 6;
+                    EVG_Line5.X2 = (5 * width) / 6;
+                    EVG_Line5.Y2 = height;
+                    EVG_Line5.Y1 = 0;
+                    EHG_Line1.X1 = 0;
+                    EHG_Line1.Y1 = height / 4;
+                    EHG_Line1.X2 = width;
+                    EHG_Line1.Y2 = height / 4;
+                    EHG_Line2.X1 = 0;
+                    EHG_Line2.Y1 = height / 2;
+                    EHG_Line2.X2 = width;
+                    EHG_Line2.Y2 = height / 2;
+                    EHG_Line3.X1 = 0;
+                    EHG_Line3.Y1 = (3 * height) / 4;
+                    EHG_Line3.X2 = width;
+                    EHG_Line3.Y2 = (3 * height) / 4;
+
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Visible;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Visible;
+                }
+
+                if (CaptureTab.IsSelected)
+                {
+                    double width = CameraGrid.ActualWidth;
+                    double height = CameraGrid.ActualHeight;
+
+                    GridLines_Capture(2, width, height);
+                }
             }
-
-            if (CaptureTab.IsSelected)
-            {
-                double width = CameraGrid.ActualWidth;
-                double height = CameraGrid.ActualHeight;
-
-                GridLines_Capture(2, width, height);
-            }
+            catch(Exception ex) { }
         }
         private void grid3_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Collapsed;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Collapsed;
-            }
-            if (CaptureTab.IsSelected)
-            {
-                CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = CVG_Line5.Visibility = Visibility.Collapsed;
-                CHG_Line1.Visibility = CHG_Line2.Visibility = CHG_Line3.Visibility = Visibility.Collapsed;
-            }
+                Grid6x4.IsChecked = false;
+                if (EditTab.IsSelected)
+                {
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = EVG_Line5.Visibility = Visibility.Collapsed;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = EHG_Line3.Visibility = Visibility.Collapsed;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = CVG_Line5.Visibility = Visibility.Collapsed;
+                    CHG_Line1.Visibility = CHG_Line2.Visibility = CHG_Line3.Visibility = Visibility.Collapsed;
+                }
+            }catch(Exception ex) { ex.ToString(); }
         }
         private void grid4_Checked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                double width = EditPicGrid.ActualWidth;
-                double height = EditPicGrid.ActualHeight;
-                EVG_Line1.X1 = width / 3;
-                EVG_Line1.X2 = width / 3;
-                EVG_Line1.Y2 = height;
-                EVG_Line1.Y1 = 0;
-                EVG_Line2.X1 = (2 * width) / 3;
-                EVG_Line2.X2 = (2 * width) / 3;
-                EVG_Line2.Y1 = 0;
-                EVG_Line2.Y2 = height;
-                EHG_Line1.X1 = 0;
-                EHG_Line1.Y1 = height / 3;
-                EHG_Line1.X2 = width;
-                EHG_Line1.Y2 = height / 3;
-                EHG_Line2.X1 = 0;
-                EHG_Line2.Y1 = (2 * height) / 3;
-                EHG_Line2.X2 = width;
-                EHG_Line2.Y2 = (2 * height) / 3;
-                ////Diagonals
-                EVG_Line3.X1 = 0;
-                EVG_Line3.X2 = width;
-                EVG_Line3.Y2 = height;
-                EVG_Line4.X1 = width;
-                EVG_Line4.X2 = 0;
-                EVG_Line4.Y1 = 0;
-                EVG_Line4.Y2 = height;
+                Grid3x3.IsEnabled = true;
+                Grid3x3Dial.IsEnabled = false;
+                Grid6x4.IsEnabled = true;
 
-                //EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
-                //EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
+                Grid3x3.IsChecked = false;
+                Grid6x4.IsChecked = false;
+                CGrid3.IsChecked = true;
+                Egrid4.IsChecked = true;
+                Grid3x3Dial.IsChecked = true;
+                if (EditTab.IsSelected)
+                {
+                    double width = EditPicGrid.ActualWidth;
+                    double height = EditPicGrid.ActualHeight;
+                    EVG_Line1.X1 = width / 3;
+                    EVG_Line1.X2 = width / 3;
+                    EVG_Line1.Y2 = height;
+                    EVG_Line1.Y1 = 0;
+                    EVG_Line2.X1 = (2 * width) / 3;
+                    EVG_Line2.X2 = (2 * width) / 3;
+                    EVG_Line2.Y1 = 0;
+                    EVG_Line2.Y2 = height;
+                    EHG_Line1.X1 = 0;
+                    EHG_Line1.Y1 = height / 3;
+                    EHG_Line1.X2 = width;
+                    EHG_Line1.Y2 = height / 3;
+                    EHG_Line2.X1 = 0;
+                    EHG_Line2.Y1 = (2 * height) / 3;
+                    EHG_Line2.X2 = width;
+                    EHG_Line2.Y2 = (2 * height) / 3;
+                    ////Diagonals
+                    EVG_Line3.X1 = 0;
+                    EVG_Line3.X2 = width;
+                    EVG_Line3.Y2 = height;
+                    EVG_Line4.X1 = width;
+                    EVG_Line4.X2 = 0;
+                    EVG_Line4.Y1 = 0;
+                    EVG_Line4.Y2 = height;
 
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
-            }
-            if (CaptureTab.IsSelected)
-            {
-                double width = CameraGrid.ActualWidth;
-                double height = CameraGrid.ActualHeight;
+                    //EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
+                    //EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
 
-                GridLines_Capture(3, width, height);
-            }
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Visible;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Visible;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    double width = CameraGrid.ActualWidth;
+                    double height = CameraGrid.ActualHeight;
+
+                    GridLines_Capture(3, width, height);
+                }
+            }catch(Exception ex) { ex.ToString(); }
         }
         private void grid4_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (EditTab.IsSelected)
+            try
             {
-                EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Collapsed;
-                EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                Grid3x3Dial.IsChecked = false;
+
+                if (EditTab.IsSelected)
+                {
+                    EVG_Line1.Visibility = EVG_Line2.Visibility = EVG_Line3.Visibility = EVG_Line4.Visibility = Visibility.Collapsed;
+                    EHG_Line1.Visibility = EHG_Line2.Visibility = Visibility.Collapsed;
+                }
+                if (CaptureTab.IsSelected)
+                {
+                    CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = Visibility.Collapsed;
+                    CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
+                }
             }
-            if (CaptureTab.IsSelected)
+            catch(Exception ex) { ex.ToString(); }
+        }
+        private void toggle_grid(object sender,RoutedEventArgs e)
+        {
+            if(CGrid0.IsChecked==true || Egrid1.IsChecked == true)
             {
-                CVG_Line1.Visibility = CVG_Line2.Visibility = CVG_Line3.Visibility = CVG_Line4.Visibility = Visibility.Collapsed;
-                CHG_Line1.Visibility = CHG_Line2.Visibility = Visibility.Collapsed;
+                grid2_Checked(sender, e);
+                return;
+            }
+            if(CGrid1.IsChecked==true || Egrid2.IsChecked == true)
+            {
+                grid3_Checked(sender, e);
+                return;
+            }
+            if (CGrid2.IsChecked == true || Egrid3.IsChecked == true)
+            {
+                grid4_Checked(sender, e);
+                return;
+            }
+            if (CGrid3.IsChecked == true || Egrid4.IsChecked == true)
+            {
+                CGrid0.IsChecked = true;
+                Egrid1.IsChecked = true;
+                Grid6x4.IsEnabled = true;
+                Grid3x3.IsEnabled = true;
+                Grid3x3Dial.IsEnabled = true;
+                Grid3x3Dial.IsChecked = false;
+                Grid3x3.IsChecked = false;
+                Grid6x4.IsChecked = false;
+                return;
             }
         }
 
@@ -1641,9 +1767,13 @@ namespace CameraControl
 
         private void ETg_Btn8_Checked(object sender, RoutedEventArgs e)
         {
-            if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
+            if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") {
+                ETg_Btn8.IsChecked = false;
+                overlayMenu_item.IsChecked = false;
+                return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-
+            ETg_Btn8.IsChecked = true;
+            overlayMenu_item.IsChecked = true;
             try
             {
                 Overlay1.Visibility = Overlay2.Visibility = Overlay4.Visibility = Overlay5.Visibility = Visibility.Collapsed;
@@ -1669,57 +1799,57 @@ namespace CameraControl
         }
         private void ETg_Btn8_Unchecked(object sender, RoutedEventArgs e)
         {
+            overlayMenu_item.IsChecked = false;
+            ETg_Btn8.IsChecked = false;
             Overlay1.Visibility = Overlay2.Visibility = Overlay4.Visibility = Overlay5.Visibility = Visibility.Collapsed;
         }
+
         #region Rotate Image
         private void ERotateLeft_Click(object sender, RoutedEventArgs e)
         {
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-
+            int ind = __photoEditModel.getIndex(__Pathupdate.PathImg);
             try
             {
-                //RotateTransform rt1 = new RotateTransform();
-                //switch (rotateRightCounter)
-                //{
-                //    case 1:
-                //        rt1.Angle = 270;
-                //        rotateRightCounter = 2;
-                //        rotateLeftCounter = 4;
-                //        //b.RotateFlip(RotateFlipType.Rotate90FlipXY);
-                //        break;
-                //    case 2:
-                //        rt1.Angle = 180;
-                //        rotateRightCounter = 3;
-                //        rotateLeftCounter = 3;
-                //        break;
-                //    case 3:
-                //        rt1.Angle = 90;
-                //        rotateRightCounter = 4;
-                //        rotateLeftCounter = 2;
-                //        break;
-                //    case 4:
-                //        rt1.Angle = 0;
-                //        rotateRightCounter = 1;
-                //        rotateLeftCounter = 1;
-                //        break;
-                //}
+                RotateTransform rt1 = new RotateTransform();
+                switch (rotateRightCounter)
+                {
+                    case 1:
+                        rt1.Angle = 270;
+                        rotateRightCounter = 2;
+                        rotateLeftCounter = 4;
+                        images_Folder[ind].rotateAngle = 270;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                    case 2:
+                        rt1.Angle = 180;
+                        rotateRightCounter = 3;
+                        rotateLeftCounter = 3;
+                        images_Folder[ind].rotateAngle = 180;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                    case 3:
+                        rt1.Angle = 90;
+                        rotateRightCounter = 4;
+                        rotateLeftCounter = 2;
+                        images_Folder[ind].rotateAngle = 90;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                    case 4:
+                        rt1.Angle = 0;
+                        rotateRightCounter = 1;
+                        rotateLeftCounter = 1;
+                        images_Folder[ind].rotateAngle = 0;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                }
 
-                //EditFramePic.LayoutTransform = rt1;
+                EditFramePic.LayoutTransform = rt1;
                 //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(__Pathupdate.PathImg, BitmapLoader.LargeThumbSize, (int)rt1.Angle);
-
-                ImageDetails _imageDetails = __Pathupdate.__SelectedImageDetails;
-                Bitmap b = new Bitmap(_imageDetails.Path);
-                string sourceDir = Path.GetDirectoryName(_imageDetails.Path).ToString();
-                string exFilename = _imageDetails.FileName.ToString();
-                if (_imageDetails == null) { return; }
-                string xName = (Path.Combine(Settings.ApplicationTempFolder + "\\" + _imageDetails.FileName.ToString()));
-                b.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                xName = StaticClass.saveBitmap2File(b, xName);
-                //if (File.Exists(xName)) { File.Delete(xName); }
-                string newSource = RecreateFiles(sourceDir, exFilename);
-                BrowseFolderImages(newSource, _imageDetails.FileName.ToString());
-
+                WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
+                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+                //UpdateImageData();
             }
             catch (Exception ex) { Log.Debug("ERotateLeft_Click", ex); }
         }
@@ -1727,57 +1857,51 @@ namespace CameraControl
             {
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-           
+            int ind = __photoEditModel.getIndex(__Pathupdate.PathImg);
             try
             {
-                //RotateTransform rt1 = new RotateTransform();
-                //switch (rotateLeftCounter)
-                //{
-                //    case 1:
-                //        rt1.Angle = 90;
-                //        rotateLeftCounter = 2;
-                //        rotateRightCounter = 4;
-                //        b.RotateFlip(RotateFlipType.Rotate270FlipXY);
-                //        break;
-                //    case 2:
-                //        rt1.Angle = 180;
-                //        rotateLeftCounter = 3;
-                //        rotateRightCounter = 3;
-                //        b.RotateFlip(RotateFlipType.RotateNoneFlipXY);
-                //        break;
-                //    case 3:
-                //        rt1.Angle = 270;
-                //        rotateLeftCounter = 4;
-                //        rotateRightCounter = 2;
-                //        b.RotateFlip(RotateFlipType.Rotate90FlipXY);
-                //        break;
-                //    case 4:
-                //        rt1.Angle = 0;
-                //        rotateLeftCounter = 1;
-                //        rotateRightCounter = 1;
-                //        b.RotateFlip(RotateFlipType.Rotate180FlipXY);
-                //        break;
-                //}
+                RotateTransform rt1 = new RotateTransform();
+                switch (rotateLeftCounter)
+                {
+                    case 1:
+                        rt1.Angle = 90;
+                        rotateLeftCounter = 2;
+                        rotateRightCounter = 4;
+                        images_Folder[ind].rotateAngle = 90;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                    case 2:
+                        rt1.Angle = 180;
+                        rotateLeftCounter = 3;
+                        rotateRightCounter = 3;
+                        images_Folder[ind].rotateAngle = 180;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                    case 3:
+                        rt1.Angle = 270;
+                        rotateLeftCounter = 4;
+                        rotateRightCounter = 2;
+                        images_Folder[ind].rotateAngle = 270;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                    case 4:
+                        rt1.Angle = 0;
+                        rotateLeftCounter = 1;
+                        rotateRightCounter = 1;
+                        images_Folder[ind].rotateAngle = 0;
+                        images_Folder[ind].Frame.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                }
 
-                //EditFramePic.LayoutTransform = rt1;
+                EditFramePic.LayoutTransform = rt1;
+
+                WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
+                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
 
                 //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(__Pathupdate.PathImg, BitmapLoader.LargeThumbSize, (int)rt1.Angle);
                 //UpdateImageData();
-
-                ImageDetails _imageDetails = __Pathupdate.__SelectedImageDetails;
-                Bitmap b = new Bitmap(_imageDetails.Path);
-                string sourceDir = Path.GetDirectoryName(_imageDetails.Path).ToString();
-                string exFilename = _imageDetails.FileName.ToString();
-                if (_imageDetails == null) { return; }
-                string xName = (Path.Combine(Settings.ApplicationTempFolder +"\\"+ _imageDetails.FileName.ToString()));
-                b.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                xName = StaticClass.saveBitmap2File(b, xName);
-                //if (File.Exists(xName)) { File.Delete(xName); }
-                string newSource = RecreateFiles(sourceDir, exFilename);
-                BrowseFolderImages(newSource,  _imageDetails.FileName.ToString());
             }
             catch (Exception ex) { Log.Debug("ERotateRight_Click", ex); }
-
         }
         #endregion
 
@@ -1808,34 +1932,23 @@ namespace CameraControl
                     _w = (int)(__EditPicGrid_ActualWidth - _x);
                     if (_x < 0) { _x = 0; }
                 }
+
                 var cImage = new CroppedBitmap(rtb, new Int32Rect(_x, _y, _w, _h));
                 //EditFramePic.Source = cImage;
 
-                var filename = Path.Combine(Settings.ApplicationTempFolder, Path.GetFileNameWithoutExtension(__Pathupdate.PathImg) + Path.GetExtension(__Pathupdate.PathImg));
+                var filename = Path.Combine(Settings.ApplicationTempFolder, Path.GetFileNameWithoutExtension(__Pathupdate.PathImg) + "(1)" + Path.GetExtension(__Pathupdate.PathImg));
                 JpegBitmapEncoder encoder = new JpegBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(cImage));
-                System.IO.FileStream fs = File.Create(filename);
-                using (fs)
+                using (System.IO.FileStream fs = File.Create(filename))
                 {
                     encoder.Save(fs);
                 }
-                
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(filename, BitmapLoader.LargeThumbSize, 0);
-                Bitmap b = new Bitmap(filename);
-                ImageDetails _imageDetails = __Pathupdate.__SelectedImageDetails;
-                string sourceDir=Path.GetDirectoryName(_imageDetails.Path).ToString();
-                string exFilename = _imageDetails.FileName.ToString();
-                if (_imageDetails == null) { return; }
-                string xName = (Path.Combine(Settings.ApplicationTempFolder,"\\" + _imageDetails.FileName.ToString()));
-                ImageDetails img = new ImageDetails();
-                img.Path=StaticClass.saveBitmap2File(b, xName);
-                b.Dispose();
-
-
-                //if (File.Exists(filename)) { File.Delete(filename); }
-                string newSource=RecreateFiles(sourceDir, exFilename);
-                BrowseFolderImages(newSource, exFilename);
-
+                int ind = __photoEditModel.getIndex(__Pathupdate.PathImg);
+                images_Folder[ind].Frame.Dispose();
+                images_Folder[ind].Frame = new Bitmap(filename);
+                images_Folder[ind].croppedImage = true;
+                if (File.Exists(filename)) { File.Delete(filename); }
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click", ex); }
             CropOut.Visibility = Visibility.Collapsed;
@@ -1843,11 +1956,8 @@ namespace CameraControl
         }
         #endregion
 
-        public string RecreateFiles(string source,string exFile)
+        public string RecreateFiles(string source,string tempfolder,string exFile)
         {
-            string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
-            if (!Directory.Exists(tempfolder))
-                Directory.CreateDirectory(tempfolder);
             string[] filePaths = Directory.GetFiles(source);
             foreach (var filename in filePaths)
             {
@@ -1855,14 +1965,15 @@ namespace CameraControl
                 int b = (filename.Length)-a;
                 string fl = filename.Substring(a,b);
                 if (fl == exFile) {
-                    string file = Settings.ApplicationTempFolder +"\\"+ fl;
+                    //string file = Settings.ApplicationTempFolder +"\\"+ fl;
 
-                    //Do your job with "file"  
-                    string str = tempfolder.ToString() + "\\" + fl;
-                    if (!File.Exists(str))
-                    {
-                        File.Copy(file, str);
-                    }
+                    ////Do your job with "file"  
+                    //string str = tempfolder.ToString() + "\\" + fl;
+                    //if (!File.Exists(str))
+                    //{
+                    //    File.Copy(file, str);
+                    //}
+                    continue;
                 } 
                 else
                 {
@@ -1929,67 +2040,113 @@ namespace CameraControl
 
         private void Keys_Shortcuts(string _keyvalue)
         {
-            if (_keyvalue == "Alt+V")
+            
+            if (_keyvalue == "Shift+V")
             {
-                if ((bool)Tg_Btn6.IsChecked)
-                {
-                    V_CenterLineApply(true);
-                    Tg_Btn6.IsChecked = false;
-                }
-                else
-                {
-                    V_CenterLineApply(false);
-                    Tg_Btn6.IsChecked = true;
-                }
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, Vertical_mList);
+                Vertical_mList.RaiseEvent(routedEventArgs);
             }
-            if (_keyvalue == "Alt+H")
+            if (_keyvalue == "Shift+H")
             {
-                if ((bool)Tg_Btn7.IsChecked)
-                {
-                    H_CenterLineApply(true);
-                    Tg_Btn7.IsChecked = false;
-                }
-                else
-                {
-                    H_CenterLineApply(false);
-                    Tg_Btn7.IsChecked = true;
-                }
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, Horizontal_mList);
+                Horizontal_mList.RaiseEvent(routedEventArgs);
             }
 
             if (_keyvalue == "Ctrl+E" || _keyvalue == "Ctrl+Shift+E")
             {
-                if (EditTab.IsSelected && ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null)
+                FrameToFile();
+                if (EditTab.IsSelected && ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null && _keyvalue=="Ctrl+E")
                 {
                     RoutedEventArgs routedEventArgs = new RoutedEventArgs(ButtonBase.ClickEvent, ExportButton);
                     ExportButton.RaiseEvent(routedEventArgs);
                 }
+                else
+                {
+                    if (EditTab.IsSelected && ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { __gIFModel.ProduceGIF(); }
+                }
+             
+            }
+            if (_keyvalue == "Ctrl+L") 
+            { 
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, menu_crop);
+                menu_crop.RaiseEvent(routedEventArgs);
             }
             if (_keyvalue == "Ctrl+L") { MessageBox.Show(_keyvalue); }
 
             if (_keyvalue == "Ctrl+1")
             {
-                if (__lvControler == null) { __lvControler = new LVControler(); }
-                __lvControler.ExecuteCommand(CmdConsts.LiveView_Zoom_All);
+                    RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Zoomx1);
+                    Zoomx1.RaiseEvent(routedEventArgs);
+
             }
             if (_keyvalue == "Ctrl+2")
             {
-                if (__lvControler == null) { __lvControler = new LVControler(); }
-                __lvControler.ExecuteCommand(CmdConsts.LiveView_Zoom_5x);
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Zoomx5);
+                Zoomx5.RaiseEvent(routedEventArgs);
             }
             if (_keyvalue == "Ctrl+3")
             {
-                if (__lvControler == null) { __lvControler = new LVControler(); }
-                __lvControler.ExecuteCommand(CmdConsts.LiveView_Zoom_10x);
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Zoomx10);
+                Zoomx10.RaiseEvent(routedEventArgs);
             }
-            int _zoomValue = LVViewModel.lvInstance().ZoomSliderValue;
+            if (_keyvalue == "Ctrl+T")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, toggleZoom_menu);
+                toggleZoom_menu.RaiseEvent(routedEventArgs);
+            }
+            if (_keyvalue == "Ctrl+H")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, overlayMenu_item);
+                overlayMenu_item.RaiseEvent(routedEventArgs);
+            }
+            if (_keyvalue == "Ctrl+P")
+            {
+                //pan mode
+            }
+            if (_keyvalue == "Ctrl+Z")
+            {
+                //undo
+            }
+            if (_keyvalue == "Ctrl+R")
+            {
+               //redo
+            }
 
-            if (_keyvalue == "Ctrl++") { if (_zoomValue <= 45) { _zoomValue += 5; LVViewModel.lvInstance().ZoomSliderValue = _zoomValue; } }
-            if (_keyvalue == "Ctrl+-") { if (_zoomValue >= 5) { _zoomValue -= 5; LVViewModel.lvInstance().ZoomSliderValue = _zoomValue; } }
+            //int _zoomValue = LVViewModel.lvInstance().ZoomSliderValue;
+
+            //if (_keyvalue == "Ctrl++") { if (_zoomValue <= 45) { _zoomValue += 5; LVViewModel.lvInstance().ZoomSliderValue = _zoomValue; } }
+            //if (_keyvalue == "Ctrl+-") { if (_zoomValue >= 5) { _zoomValue -= 5; LVViewModel.lvInstance().ZoomSliderValue = _zoomValue; } }
+
+            if (_keyvalue == "Shift+1")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Grid3x3);
+                Grid3x3.RaiseEvent(routedEventArgs);
+            }
+            if (_keyvalue == "Shift+2")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Grid6x4);
+                Grid6x4.RaiseEvent(routedEventArgs);
+            }
+            if (_keyvalue == "Shift+3")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Grid3x3Dial);
+                Grid3x3Dial.RaiseEvent(routedEventArgs);
+            }
+            if (_keyvalue == "Shift+G")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, toggle_grid_menu);
+                toggle_grid_menu.RaiseEvent(routedEventArgs);
+            }
+            if (_keyvalue == "Shift+R")
+            {
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, menu_rotate);
+                menu_rotate.RaiseEvent(routedEventArgs);
+            }
         }
 
         #region "EditLeftControl"
-        List<ImageDetails> images_History = new List<ImageDetails>();
-        List<ImageDetails> images_Folder = new List<ImageDetails>();
+        public List<ImageDetails> images_History = new List<ImageDetails>();
+        public List<ImageDetails> images_Folder = new List<ImageDetails>();
 
         public void BrowseReload(string _strApplPath)
         {
@@ -2152,6 +2309,7 @@ namespace CameraControl
         }
         private void BrowseFolderImages(string _folderPath)
         {
+            #region depricated code
             //try
             //{
             //    images_Folder = new List<ImageDetails>();
@@ -2312,7 +2470,13 @@ namespace CameraControl
 
                     __Pathupdate.PathImg = _item.Path;
                     __Pathupdate.__SelectedImageDetails = _item;
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(_item.Path, BitmapLoader.LargeThumbSize, 0);
+
+                    FileInfo f = new FileInfo(_item.FileName);
+                    string temp = Path.Combine(Settings.ApplicationTempFolder, f.Name);
+                    _item.Frame.Save(temp, System.Drawing.Imaging.ImageFormat.Bmp);
+                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(temp, BitmapLoader.LargeThumbSize, 0);
+                    if (File.Exists(temp)) { File.Delete(temp); }
+
                     _ListBoxSelectedIndex = ind;
                     __SelectedImage = _item;
                 }
@@ -2323,6 +2487,7 @@ namespace CameraControl
             }
 
         }
+        
         private ImageDetails __SelectedImage = null;
         private void LoadHistorySelectedItem(ImageDetails _item)
         {
@@ -2453,8 +2618,12 @@ namespace CameraControl
             __CropChangeFromButtons = true;
             if (CaptureTab.IsSelected)
             {
+                ratio1.IsChecked = true;
                 ratio2.IsChecked = false;
                 ratio3.IsChecked = false;
+                ratio_1.IsChecked = true;
+                ratio_4.IsChecked = false;
+                ratio_16.IsChecked = false;
 
                 LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
 
@@ -2477,6 +2646,16 @@ namespace CameraControl
             }
             else if (EditTab.IsSelected)
             {
+                if (ETg_Btn9.IsChecked == true)
+                {
+                    ratio_1.IsChecked = true;
+                    ratio_4.IsChecked = false;
+                    ratio_16.IsChecked = false;
+                    Eratio1.IsChecked = true;
+                    Eratio2.IsChecked = false;
+                    Eratio3.IsChecked = false;
+                }
+
                 double X, Y, W, H; X = Y = W = H = 0;
                 EditGrid_height = (int)__EditPicGrid_ActualHeight;
                 EditGrid_width = (int)__EditPicGrid_ActualWidth;
@@ -2524,6 +2703,10 @@ namespace CameraControl
             {
                 ratio1.IsChecked = false;
                 ratio3.IsChecked = false;
+                ratio2.IsChecked = true;
+                ratio_1.IsChecked = false;
+                ratio_4.IsChecked = true;
+                ratio_16.IsChecked = false;
 
                 LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
 
@@ -2559,6 +2742,16 @@ namespace CameraControl
             }
             else if (EditTab.IsSelected)
             {
+                if (ETg_Btn9.IsChecked == true)
+                {
+                    ratio_1.IsChecked = false;
+                    ratio_4.IsChecked = true;
+                    ratio_16.IsChecked = false;
+                    Eratio1.IsChecked = false;
+                    Eratio2.IsChecked = true;
+                    Eratio3.IsChecked = false;
+                }
+
                 EditGrid_height = (int)__EditPicGrid_ActualHeight;
                 EditGrid_width = (int)__EditPicGrid_ActualWidth;
 
@@ -2621,6 +2814,10 @@ namespace CameraControl
             {
                 ratio2.IsChecked = false;
                 ratio1.IsChecked = false;
+                ratio3.IsChecked = true;
+                ratio_1.IsChecked = false;
+                ratio_4.IsChecked = false;
+                ratio_16.IsChecked = true;
 
                 LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
 
@@ -2656,6 +2853,16 @@ namespace CameraControl
             }
             else if (EditTab.IsSelected)
             {
+                if (ETg_Btn9.IsChecked==true)
+                {
+                    ratio_1.IsChecked = false;
+                    ratio_4.IsChecked = false;
+                    ratio_16.IsChecked = true;
+                    Eratio1.IsChecked = false;
+                    Eratio2.IsChecked = false;
+                    Eratio3.IsChecked = true;
+                }
+
                 EditGrid_height = (int)__EditPicGrid_ActualHeight;
                 EditGrid_width = (int)__EditPicGrid_ActualWidth;
 
@@ -2692,6 +2899,7 @@ namespace CameraControl
                 __CropChangeFromButtons = true;
             }
         }
+        
         private void ratio3_Unchecked(object sender, RoutedEventArgs e)
         {
             if (CaptureTab.IsSelected)
@@ -2715,7 +2923,7 @@ namespace CameraControl
         {
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-
+            ETg_Btn9.IsChecked = true;
             try
             {
                 if (__EditPicGrid_ActualWidth <= 0) { __EditPicGrid_ActualWidth = EditPicGrid.ActualWidth; }
@@ -2915,6 +3123,10 @@ namespace CameraControl
                     this.Grid3x3.IsEnabled = true;
                     this.Grid6x4.IsEnabled = true;
                     this.Grid3x3Dial.IsEnabled = true;
+
+                    this.Tg_Btn6.IsChecked = false;
+                    this.Tg_Btn7.IsChecked = false;
+                    
                     CGrid_0();
                     Tg_Btn6_Unchecked(sender, e);
                 }
@@ -2940,6 +3152,10 @@ namespace CameraControl
                     this.Grid3x3.IsEnabled = true;
                     this.Grid6x4.IsEnabled = true;
                     this.Grid3x3Dial.IsEnabled = true;
+
+                    this.Tg_Btn6.IsChecked = false;
+                    this.Tg_Btn7.IsChecked = false;
+
                     CGrid_0();
                     Tg_Btn7_Unchecked(sender, e);
                 }
@@ -3015,6 +3231,18 @@ namespace CameraControl
             catch (Exception ex) { Log.Debug("", ex); }
         }
 
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SendKeys.SendWait("^+{E}");
+
+        }
+        private void EditTab_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            //Enable Export menu
+            // MessageBox.Show("tab seleccted");
+            this.menu_edit.IsEnabled = true;
+            this.MenuExport.IsEnabled = true;
+        }
         private void btn_bg_2_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -3132,9 +3360,6 @@ namespace CameraControl
 
         #endregion Sidchanges
 
-
-
-
         private void cmb_Zoom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -3187,6 +3412,101 @@ namespace CameraControl
             }
             catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
         }
+        private void Zoom1x_checked(object sender,RoutedEventArgs e)
+        {
+            try
+            {
+                
+                Zoomx5.IsChecked = false;
+                Zoomx10.IsChecked = false;
+                sldZoom.Value = 5;
+            }
+            catch(Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom5x_checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+               
+                Zoomx1.IsChecked = false;
+                Zoomx10.IsChecked = false;
+                sldZoom.Value = 25;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom10x_checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+               
+                Zoomx1.IsChecked = false;
+                Zoomx5.IsChecked = false;
+                sldZoom.Value = 50;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom1x_unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Zoomx1.IsChecked = false;
+                sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom5x_unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Zoomx5.IsChecked = false;
+                sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void Zoom10x_unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Zoomx10.IsChecked = false;
+                sldZoom.Value = 0;
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
+        private void toggelZoom(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (sldZoom.Value == 0)
+                {
+                    Zoomx1.IsChecked = true;
+                    Zoomx5.IsChecked = false;
+                    Zoomx10.IsChecked = false;
+                    sldZoom.Value = 5;
+                }
+                else if (sldZoom.Value == 5)
+                {
+                    Zoomx1.IsChecked = false;
+                    Zoomx5.IsChecked = true;
+                    Zoomx10.IsChecked = false;
+                    sldZoom.Value = 25;
+                }
+                else if(sldZoom.Value==25)
+                {
+                    Zoomx1.IsChecked = false;
+                    Zoomx5.IsChecked = false;
+                    Zoomx10.IsChecked = true;
+                    sldZoom.Value = 50;
+                }
+                else 
+                {
+                    Zoomx1.IsChecked = false;
+                    Zoomx5.IsChecked = false;
+                    Zoomx10.IsChecked = false;
+                    sldZoom.Value = 0;
+                }
+            }
+            catch (Exception ex) { Log.Debug("Tg_Btn5_Unchecked", ex); }
+        }
 
         int __SelectedModeTabIndex = -1;
         TurnTableViewModel _ttVM = TurnTableViewModel.GetInstance();
@@ -3196,7 +3516,7 @@ namespace CameraControl
             string _installDetectorFile = Path.Combine(Settings.ApplicationFolder, "VerifyInstall.txt");
             FileInfo fileInfo = new FileInfo(_installDetectorFile);
 
-             //fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
+            //FileInfo fileInfo = new FileInfo(@"../../StartUpWindow.xaml.cs");
 
             DateTime creationDate = fileInfo.CreationTime;
             DateTime today = DateTime.Now;
@@ -3385,19 +3705,24 @@ namespace CameraControl
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
                     //StaticClass.GenerateSmallThumb(f, file);
-                    //FileInfo fi = new FileInfo(f);
-                    //File.Copy(f, file);
-                    StaticClass.GenerateLargeThumb(f, file);
+
+                    FileInfo fi = new FileInfo(f);
+                    File.Copy(f, file);
+                    //StaticClass.GenerateLargeThumb(f, file);
 
                     ImageDetails id = new ImageDetails()
                     {
                         Path_Orginal = f,
                         Path = file,
-                        FileName = System.IO.Path.GetFileName(file),
-                        Extension = System.IO.Path.GetExtension(file),
-                        DateModified = (System.IO.File.GetCreationTime(file)).ToString("yyyy-MM-dd"),
-                        CreationDateTime = System.IO.File.GetCreationTimeUtc(file),
-                        TimeModified = System.IO.File.GetCreationTime(file).ToString("HH:mm:ss:ffffff")
+
+                        FileName = System.IO.Path.GetFileName(f),
+                        Extension = System.IO.Path.GetExtension(f),
+                        DateModified = (System.IO.File.GetCreationTime(f)).ToString("yyyy-MM-dd"),
+                        CreationDateTime = System.IO.File.GetCreationTimeUtc(f),
+                        TimeModified = System.IO.File.GetCreationTime(f).ToString("HH:mm:ss:ffffff"),
+                        Frame = new Bitmap(f.ToString()),
+                        rotateAngle = 0,
+                        croppedImage = false
                     };
                     count++;
                     images_Folder.Add(id);
@@ -3420,6 +3745,7 @@ namespace CameraControl
                             imrLocal = img;
                             selectedImage = true;
                         }
+                        
                         ImageLIstBox_Folder.Items.Add(img);
                         ImageListBox_Folder.Items.Add(img);
                         ListBoxSnapshots.Items.Add(img);
@@ -3430,6 +3756,25 @@ namespace CameraControl
                 });
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
+        }
+
+        public void FrameToFile()
+        {
+            string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+            if (!Directory.Exists(tempfolder))
+                Directory.CreateDirectory(tempfolder);
+            foreach(var f in images_Folder)
+            {
+                string filename = Path.GetFileName(f.Path_Orginal);
+                f.Frame.Save(Path.Combine(tempfolder, filename), System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            __exportPathUpdate.PathImg = Path.Combine(tempfolder, Path.GetFileName(images_Folder[0].Path_Orginal));
+        }
+
+        private void QuickExport(object sender, RoutedEventArgs e)
+        {
+            FrameToFile();
+            __gIFModel.ProduceGIF();
         }
     }
 }

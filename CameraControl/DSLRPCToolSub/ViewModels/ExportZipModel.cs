@@ -289,6 +289,9 @@ namespace DSLR_Tool_PC.ViewModels
                     archive.CreateEntryFromFile(Path.Combine(tempPathFolder, "imagefilm." + SelectedFileExtension), "imagefilm." + SelectedFileExtension);
                 }
             }
+            __mainWindowAdvanced.HideProgress();
+            __mainWindowAdvanced.ChangesProgress.Value = 0;
+            count = 0;
 
             if (successful == true)
             {
@@ -297,8 +300,7 @@ namespace DSLR_Tool_PC.ViewModels
 
             //if (tempPathFolder != "")
             //    Directory.Delete(tempPathFolder, true);
-            __mainWindowAdvanced.HideProgress();
-            count = 0;
+            
             
         }
 
@@ -310,6 +312,7 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+           
             try
             {
                 
@@ -389,6 +392,7 @@ namespace DSLR_Tool_PC.ViewModels
                     if (_saveFileDialog.SelectedPath == "") { return; }
                   
                     __mainWindowAdvanced.ChangesProgress.Value = 0;
+                    __mainWindowAdvanced.ProgressText.Text = "Exporting frames to ZIP...";
                     __mainWindowAdvanced.ShowProgress();
                     bgWorker.RunWorkerAsync();
                 }
