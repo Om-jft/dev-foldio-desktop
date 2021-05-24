@@ -37,6 +37,8 @@ using System;
 using FileInfo = System.IO.FileInfo;
 using System.Threading.Tasks;
 using System.Drawing;
+using CameraControl.DSLRPCToolSub.ViewModels;
+using WpfAnimatedGif;
 
 
 namespace CameraControl
@@ -55,7 +57,7 @@ namespace CameraControl
         private Timer _selectiontimer = new Timer(4000);
         private DateTime _lastLoadTime = DateTime.Now;
         private string selectedpath = string.Empty;
-
+        private string _folderpath = null;
         private bool _sortCameraOreder = true;
 
         public RelayCommand<AutoExportPluginConfig> ConfigurePluginCommand { get; set; }
@@ -66,7 +68,8 @@ namespace CameraControl
         public RelayCommand<CameraPreset> VerifyPresetCommand { get; private set; }
 
         //Added Code
-        PathUpdate __Pathupdate = PathUpdate.getInstance();
+        BackgroundWorker bgWorker = new BackgroundWorker();
+        public PathUpdate __Pathupdate = PathUpdate.getInstance();
         PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
         ExportZipModel __exportZipModel = ExportZipModel.getInstance();
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
@@ -98,7 +101,15 @@ namespace CameraControl
             
             InitializeComponent();
 
-            //Added code
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(Path.Combine(Settings.ApplicationFolder, "Spinner.gif"));
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(img, image);
+
+
+            //preloader.Source = new Uri(Path.Combine(Settings.ApplicationFolder, "Spinner.gif"));
+            ////Added code
             this.EditLevelGraph.DataContext = __Pathupdate.EditLevelGraphVM;
             this.CaptureLevelGraph.DataContext = __Pathupdate.CaptureLevelGraphVM;
 
@@ -118,6 +129,14 @@ namespace CameraControl
             _selectiontimer.Elapsed += _selectiontimer_Elapsed;
             _selectiontimer.AutoReset = false;
             ServiceProvider.WindowsManager.Event += WindowsManager_Event;
+
+           
+            bgWorker.DoWork += BgWorker_DoWork;
+            bgWorker.ProgressChanged += BgWorker_ProgressChanged;
+            bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
+
+            bgWorker.WorkerSupportsCancellation = true;
+            bgWorker.WorkerReportsProgress = true;
         }
 
         public virtual event PropertyChangedEventHandler PropertyChanged;
@@ -1945,6 +1964,7 @@ namespace CameraControl
                     ExportButton.RaiseEvent(routedEventArgs);
                 }
             }
+            if (_keyvalue == "Ctrl+L") { MessageBox.Show(_keyvalue); }
 
             if (_keyvalue == "Ctrl+1")
             {
@@ -2039,6 +2059,7 @@ namespace CameraControl
                     tbFolderName.Text = dialog.SelectedPath;
                     OGFolder = dialog.SelectedPath.ToString();
                     tbFolderName_thmb.Text = dialog.SelectedPath;
+                    //img.Visibility = Visibility.Visible;
                     BrowseFolderImages(tbFolderName.Text);
 
                     //__Pathupdate.PathImg = "";
@@ -2126,7 +2147,7 @@ namespace CameraControl
             }
             catch (Exception ex)
             {
-                Log.Debug("", ex);
+                Log.Debug("History Images...", ex);
             }
         }
         private void BrowseFolderImages(string _folderPath)
@@ -2183,67 +2204,17 @@ namespace CameraControl
 
             //catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
 
+            #endregion
 
-            try
+            _folderpath = _folderPath;
+            if (!bgWorker.IsBusy)
             {
-                _ListBoxSelectedIndex = -1;
-                images_Folder = new List<ImageDetails>();
-
-                string root = System.IO.Path.GetDirectoryName(_folderPath);
-                string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
-
-                var files = Directory.GetFiles(_folderPath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
-
-                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
-                if (!Directory.Exists(tempfolder))
-                    Directory.CreateDirectory(tempfolder);
-                int count = 0;
-                foreach (var f in files)
-                {
-                    var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                    StaticClass.GenerateSmallThumb(f, file);
-
-                    ImageDetails id = new ImageDetails()
-                    {
-                        Path_Orginal = f,
-                        Path = file,
-                        FileName = System.IO.Path.GetFileName(file),
-                        Extension = System.IO.Path.GetExtension(file),
-                        DateModified = (System.IO.File.GetCreationTime(file)).ToString("yyyy-MM-dd"),
-                        CreationDateTime = System.IO.File.GetCreationTimeUtc(file),
-                        TimeModified = System.IO.File.GetCreationTime(file).ToString("HH:mm:ss:ffffff")
-                    };
-                    count++;
-                    images_Folder.Add(id);
-                    Thread.Sleep(10);
-                }
-
-                images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
-                ImageListBox_Folder.Items.Clear();
-                ImageLIstBox_Folder.Items.Clear();
-                ListBoxSnapshots.Items.Clear();
-
-                bool selectedImage = false;
-                ImageDetails imrLocal = new ImageDetails();
-                foreach (var img in images_Folder)
-                {
-                    if (!selectedImage)
-                    {
-                        imrLocal = img;
-                        selectedImage = true;
-                    }
-                    ImageLIstBox_Folder.Items.Add(img);
-                    ImageListBox_Folder.Items.Add(img);
-                    ListBoxSnapshots.Items.Add(img);
-                }
-
-                LoadFolderSelectedItem(imrLocal);
-                UpdateImageData();
+                preLoader.Visibility = Visibility.Visible;
+                bgWorker.RunWorkerAsync();
             }
-            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
 
-        private void BrowseFolderImages(string _folderPath, string imr)
+        public void BrowseFolderImages(string _folderPath, string imr)
         {
 
             try
@@ -2263,8 +2234,10 @@ namespace CameraControl
                 foreach (var f in files)
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                    StaticClass.GenerateSmallThumb(f, file);
-
+                    //StaticClass.GenerateSmallThumb(f, file);
+                    //FileInfo fi = new FileInfo(f);
+                    //File.Copy(f, file);
+                    StaticClass.GenerateLargeThumb(f, file);
                     ImageDetails id = new ImageDetails()
                     {
                         Path_Orginal = f,
@@ -2280,27 +2253,32 @@ namespace CameraControl
                     Thread.Sleep(10);
                 }
 
-                images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
-                ImageListBox_Folder.Items.Clear();
-                ImageLIstBox_Folder.Items.Clear();
-                ListBoxSnapshots.Items.Clear();
-
-                bool selectedImage = false;
-                ImageDetails imrLocal = new ImageDetails();
-                foreach (var img in images_Folder)
+                this.Dispatcher.Invoke(() =>
                 {
-                    if (img.FileName.Equals(imr) && !selectedImage)
-                    {
-                        imrLocal = img;
-                        selectedImage = true;
-                    }
-                    ImageLIstBox_Folder.Items.Add(img);
-                    ImageListBox_Folder.Items.Add(img);
-                    ListBoxSnapshots.Items.Add(img);
-                }
+                    images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
+                    ImageListBox_Folder.Items.Clear();
+                    ImageLIstBox_Folder.Items.Clear();
+                    ListBoxSnapshots.Items.Clear();
 
-                LoadFolderSelectedItem(imrLocal);
-                UpdateImageData();
+                    bool selectedImage = false;
+                    ImageDetails imrLocal = new ImageDetails();
+                    foreach (var img in images_Folder)
+                    {
+                        if (img.FileName.Equals(imr) && !selectedImage)
+                        {
+                            imrLocal = img;
+                            selectedImage = true;
+                        }
+                        ImageLIstBox_Folder.Items.Add(img);
+                        ImageListBox_Folder.Items.Add(img);
+                        ListBoxSnapshots.Items.Add(img);
+                    }
+                    EditFilterFlag++;
+                    LoadFolderSelectedItem(imrLocal);
+                    UpdateImageData();
+                });
+
+                
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
@@ -2915,6 +2893,57 @@ namespace CameraControl
         private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //if (EditTab.IsSelected) { BrowseHistoryImages(); }
+            if (EditTab != null)
+            {
+                TabItem ti = MainTabControl.SelectedItem as TabItem;
+                if (ti.Header.ToString() == "Edit")
+                {
+                    this.MenuExport.IsEnabled = true;
+                    this.menu_liveView.IsEnabled = false;
+                    this.MenuMode.IsEnabled = false;
+                    this.menu_edit.IsEnabled = true;
+                    this.menu_focusZoom.IsEnabled = false;
+                    this.overlayMenu_item.IsEnabled = true;
+                    this.ratio_1.IsChecked = false;
+                    this.ratio_4.IsChecked = false;
+                    this.ratio_16.IsChecked = false;
+                    this.Vertical_mList.IsChecked = false;
+                    this.Horizontal_mList.IsChecked = false;
+                    this.Grid3x3.IsChecked = false;
+                    this.Grid6x4.IsChecked = false;
+                    this.Grid3x3Dial.IsChecked = false;
+                    this.Grid3x3.IsEnabled = true;
+                    this.Grid6x4.IsEnabled = true;
+                    this.Grid3x3Dial.IsEnabled = true;
+                    CGrid_0();
+                    Tg_Btn6_Unchecked(sender, e);
+                }
+                else
+                {
+                    this.MenuExport.IsEnabled = false;
+                    this.menu_liveView.IsEnabled = true;
+                    this.MenuMode.IsEnabled = true;
+                    this.menu_edit.IsEnabled = false;
+                    this.menu_focusZoom.IsEnabled = true;
+                    this.overlayMenu_item.IsEnabled = false;
+                    this.Zoomx1.IsChecked = false;
+                    this.Zoomx5.IsChecked = false;
+                    this.Zoomx10.IsChecked = false;
+                    this.ratio_1.IsChecked = false;
+                    this.ratio_4.IsChecked = false;
+                    this.ratio_16.IsChecked = false;
+                    this.Vertical_mList.IsChecked = false;
+                    this.Horizontal_mList.IsChecked = false;
+                    this.Grid3x3.IsChecked = false;
+                    this.Grid6x4.IsChecked = false;
+                    this.Grid3x3Dial.IsChecked = false;
+                    this.Grid3x3.IsEnabled = true;
+                    this.Grid6x4.IsEnabled = true;
+                    this.Grid3x3Dial.IsEnabled = true;
+                    CGrid_0();
+                    Tg_Btn7_Unchecked(sender, e);
+                }
+            }
         }
 
         #region SidChanges
@@ -3264,6 +3293,143 @@ namespace CameraControl
             grd_Edit_Canvasbg.IsEnabled = true;
             grd_Edit_canvasUpper.IsEnabled = true;
             grd_Edit_Bottom.IsEnabled = true;
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+
+            System.Windows.Application.Current.Shutdown();
+            try
+            {
+                string __TempPath = Path.Combine(Path.GetTempPath(), "OrangeMonkie");
+                if (Directory.Exists(__TempPath)) { Directory.Delete(__TempPath, true); }
+                Directory.CreateDirectory(__TempPath);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+        }
+
+        private void Mode_360Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                tab_360.IsSelected = true;
+                modeSingle.IsEnabled = true;
+                mode360.IsEnabled = false;
+                modeVideo.IsEnabled = true;
+            }
+            catch (Exception ex) { ex.ToString(); }
+        }
+        private void Mode_SingleChecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                tab_Single.IsSelected = true;
+                modeSingle.IsEnabled = false;
+                mode360.IsEnabled = true;
+                modeVideo.IsEnabled = true;
+            }catch(Exception ex) { ex.ToString(); }
+
+        }
+        private void Mode_VideoChecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                tab_video.IsSelected = true;
+                modeSingle.IsEnabled = true;
+                mode360.IsEnabled = true;
+                modeVideo.IsEnabled = false;
+            }
+            catch (Exception ex) { ex.ToString(); }
+        }
+
+        private void preloader_MediaEnded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BgWorker_RunWorkerCompleted(object sender,RunWorkerCompletedEventArgs e)
+        {
+            //__mainWindowAdvanced.HideProgress();
+            //System.Windows.MessageBox.Show("Apply All Frames and Saved
+            //Successfully...!", "Photo Edit", MessageBoxButton.OK,
+            //MessageBoxImage.Information);
+            //__mainWindowAdvanced.BrowseReload(_strApplPath); ResetAllControls();
+            //count = 0;
+            preLoader.Visibility = Visibility.Collapsed;
+        }
+
+        private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //__mainWindowAdvanced.ChangesProgress.Value = (count * 100) / total;
+            //__mainWindowAdvanced.ProgressLabel.Text = string.Format("Saving frame " + e.ProgressPercentage + " of " + total);
+        }
+
+        private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                newSource = null;
+                _ListBoxSelectedIndex = -1;
+                images_Folder = new List<ImageDetails>();
+
+                string root = System.IO.Path.GetDirectoryName(_folderpath);
+                string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
+
+                var files = Directory.GetFiles(_folderpath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
+
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
+                int count = 0;
+                foreach (var f in files)
+                {
+                    var file = Path.Combine(tempfolder, Path.GetFileName(f));
+                    //StaticClass.GenerateSmallThumb(f, file);
+                    //FileInfo fi = new FileInfo(f);
+                    //File.Copy(f, file);
+                    StaticClass.GenerateLargeThumb(f, file);
+
+                    ImageDetails id = new ImageDetails()
+                    {
+                        Path_Orginal = f,
+                        Path = file,
+                        FileName = System.IO.Path.GetFileName(file),
+                        Extension = System.IO.Path.GetExtension(file),
+                        DateModified = (System.IO.File.GetCreationTime(file)).ToString("yyyy-MM-dd"),
+                        CreationDateTime = System.IO.File.GetCreationTimeUtc(file),
+                        TimeModified = System.IO.File.GetCreationTime(file).ToString("HH:mm:ss:ffffff")
+                    };
+                    count++;
+                    images_Folder.Add(id);
+                    Thread.Sleep(10);
+                }
+                ImageDetails imrLocal = new ImageDetails();
+                this.Dispatcher.Invoke(() =>
+                {
+                    images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
+                    ImageListBox_Folder.Items.Clear();
+                    ImageLIstBox_Folder.Items.Clear();
+                    ListBoxSnapshots.Items.Clear();
+
+                    bool selectedImage = false;
+                    
+                    foreach (var img in images_Folder)
+                    {
+                        if (!selectedImage)
+                        {
+                            imrLocal = img;
+                            selectedImage = true;
+                        }
+                        ImageLIstBox_Folder.Items.Add(img);
+                        ImageListBox_Folder.Items.Add(img);
+                        ListBoxSnapshots.Items.Add(img);
+                    }
+                    LoadFolderSelectedItem(imrLocal);
+                    UpdateImageData();
+                    __exportPathUpdate.PathImg = __Pathupdate.PathImg;
+                });
+            }
+            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
         }
     }
 }

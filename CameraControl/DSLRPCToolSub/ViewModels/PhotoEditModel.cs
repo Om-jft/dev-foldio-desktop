@@ -204,7 +204,7 @@ namespace DSLR_Tool_PC.ViewModels
                 Task.Run(() =>
                 {
                     lock (_Sliderlockobj)
-                        if (!Monitor.Wait(_Sliderlockobj, 3))
+                        if (!Monitor.Wait(_Sliderlockobj, 30))
                         {
                             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
                         }
@@ -278,7 +278,7 @@ namespace DSLR_Tool_PC.ViewModels
                 Bitmap _finalBmp;
                 using (Bitmap bmp = new Bitmap(sourcefile))
                 {
-
+                    _finalBmp = bmp;
                     if (IsBrightnessApply)
                     {
                         int TempBrightness = 0;
@@ -344,16 +344,11 @@ namespace DSLR_Tool_PC.ViewModels
                         int TempWB= _whiteBalance * 2 + 55;
                         _finalBmp = Convert_WhiteBalance(bmp, (TempWB * 100));
                     }
-                    else if (_whiteBalance < 0 && _whiteBalance >= -100 && IsWhiteBalanceApply)
+                     if (_whiteBalance < 0 && _whiteBalance >= -100 && IsWhiteBalanceApply)
                     {
                         int TempWB = (_whiteBalance + 100) / 2;
                         _finalBmp = Convert_WhiteBalance(bmp, (TempWB * 100));
                     }
-                    else
-                    {
-                        _finalBmp = bmp;
-                    }
-
 
                     if (WhiteClipping > 0 && WhiteClipping <= 100 && IsWhiteClippingApply)
                     {
@@ -376,10 +371,31 @@ namespace DSLR_Tool_PC.ViewModels
                         ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
 
                         //string xname = StaticClass.saveBitmap2File(_finalBmp,);
+                        //if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
+                        //{
+                        //    MessageBox.Show(sourcefile.LastIndexOf("\\").ToString());
+                        //    exName = sourcefile.Substring(sourcefile.LastIndexOf("\\") + 1, sourcefile.Length - sourcefile.LastIndexOf("\\") - 1);
+                        //    string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                        //    if (!Directory.Exists(tempfolder))
+                        //        Directory.CreateDirectory(tempfolder);
+                        //    string source = sourcefile.Substring(0, sourcefile.Length - exName.Length);
+                        //    StaticClass.saveBitmap2File(_finalBmp, tempfolder + "\\" + exName);
+
+                        //    if (__mainWindowAdvanced.newSource != null) { source = __mainWindowAdvanced.newSource; }
+                        //    __mainWindowAdvanced.newSource = __mainWindowAdvanced.RecreateFiles(source, tempfolder, exName);
+                        //    __exportPathUpdate.PathImg = tempfolder + "\\" + exName;
+                        //    filterFlag++;
+                        //}
                     }
                     else
                     {
-                        //if (File.Exists(destfile)) { File.Delete(destfile); }
+                        //this.Dispatcher.Invoke(() =>
+                        //{
+                            
+                        //});
+                        if (File.Exists(destfile)) { 
+                            
+                            File.Delete(destfile); }
                         StaticClass.saveBitmap2File(_finalBmp, destfile);
                     }
                 }
@@ -546,9 +562,12 @@ namespace DSLR_Tool_PC.ViewModels
         
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+           
+            __mainWindowAdvanced.BrowseReload(__mainWindowAdvanced.OGFolder);
             __mainWindowAdvanced.HideProgress();
             System.Windows.MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
-            __mainWindowAdvanced.BrowseReload(_strApplPath);
+            
+            
             //__PathUpdate.__SelectedImageDetails = null;
             //__PathUpdate.PathImg = "";
             //ServiceProvider.Settings.EditImageByte = null;
@@ -578,17 +597,19 @@ namespace DSLR_Tool_PC.ViewModels
             string[] _pathImagFiles = Directory.GetFiles(_dirInfoApplPath.ToString());
             
             total = _pathImagFiles.Length;
-            //string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
+            string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
+            if (!Directory.Exists(_strApplPath))
+                Directory.CreateDirectory(_strApplPath);
             try
-            {
+                {
                 foreach (var _imgfl in _pathImagFiles)
                 {
                     count++;
                     //string TargetPath = "";
                     string _exFileName = System.IO.Path.GetFileName(_imgfl);
-                    //CopyBackUp(_imgfl, Path.Combine(__mainWindowAdvanced.OGFolder, _exFileName));
+                    CopyBackUp(_imgfl, Path.Combine(_strApplPath, _exFileName));
                     bgWorker.ReportProgress(count);
-                    FiltersCorrections(_imgfl, Path.Combine(_strApplPath, _exFileName));
+                    FiltersCorrections(Path.Combine(_strApplPath, _exFileName), _imgfl /*Path.Combine(_strApplPath, _exFileName)*/);
                    
                     //Thread.Sleep(3000);
                 }
@@ -602,31 +623,31 @@ namespace DSLR_Tool_PC.ViewModels
 
             if (!bgWorker.IsBusy)
             {
-                try
-                {
-                    FolderBrowserDialog folderDlg = new FolderBrowserDialog
-                    {
-                        ShowNewFolderButton = true
-                    };
-                    // Show the FolderBrowserDialog.  
-                    DialogResult result = folderDlg.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        _strApplPath = folderDlg.SelectedPath;
-                        //System.Windows.MessageBox.Show(_strApplPath);
-                        Environment.SpecialFolder root = folderDlg.RootFolder;
-                    }
-                    if (!Directory.Exists(_strApplPath))
-                        Directory.CreateDirectory(_strApplPath);
-                    if (_strApplPath == __mainWindowAdvanced.OGFolder)
-                    {
-                        MessageBox.Show("Choose a different destination folder.");
-                        return;
-                    }
-                }
-                catch (Exception ey) { ey.ToString();
-                    return;
-                }
+                //try
+                //{
+                //    //FolderBrowserDialog folderDlg = new FolderBrowserDialog
+                //    //{
+                //    //    ShowNewFolderButton = true
+                //    //};
+                //    //// Show the FolderBrowserDialog.  
+                //    //DialogResult result = folderDlg.ShowDialog();
+                //    //if (result == DialogResult.OK)
+                //    //{
+                //    //    _strApplPath = folderDlg.SelectedPath;
+                //    //    //System.Windows.MessageBox.Show(_strApplPath);
+                //    //    Environment.SpecialFolder root = folderDlg.RootFolder;
+                //    //}
+                //    //if (!Directory.Exists(_strApplPath))
+                //    //    Directory.CreateDirectory(_strApplPath);
+                //    //if (_strApplPath == __mainWindowAdvanced.OGFolder)
+                //    //{
+                //    //    MessageBox.Show("Choose a different destination folder.", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
+                //    //    return;
+                //    //}
+                //}
+                //catch (Exception ey) { ey.ToString();
+                //    return;
+                //}
                 __mainWindowAdvanced.ChangesProgress.Value = 0;
                 __mainWindowAdvanced.ShowProgress();
                 bgWorker.RunWorkerAsync();
