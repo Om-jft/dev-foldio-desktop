@@ -16,11 +16,13 @@ using CameraControl.Core.Classes;
 using DSLR_Tool_PC.Controles;
 using CameraControl.Devices;
 using CameraControl;
+using CameraControl.DSLRPCToolSub.ViewModels;
 
 namespace DSLR_Tool_PC.ViewModels
 {
     public class ExportMP4ViewModel : BaseFieldClass
     {
+        DSLR_Tool_PC.ViewModels.Watermark watermarkName = DSLR_Tool_PC.ViewModels.Watermark.GetInstance();
         public Window __Parent_window = null;
         private BackgroundWorker _backgroundWorker = new BackgroundWorker();
         private Timer _PlayTimer = new Timer(1000);
@@ -398,16 +400,25 @@ namespace DSLR_Tool_PC.ViewModels
                 System.IO.Directory.CreateDirectory(TargetFolder);
 
                 images.Clear();
-
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
                 foreach (var f in FilesGIF)
                 {
+                    string a = f;
+                    if (watermarkName.ImageName != "")
+                    {
+                        var file = Path.Combine(tempfolder, Path.GetFileName(f));
+                        File.Copy(f, file);
+                        a = WatermarkProperties.ApplyWatermark(file);
+                    }
                     ImageDetails id = new ImageDetails()
                     {
-                        Path = f,
-                        FileName = System.IO.Path.GetFileName(f),
-                        Extension = System.IO.Path.GetExtension(f),
-                        DateModified = System.IO.File.GetCreationTime(f).ToString("yyyy-MM-dd"),
-                        IsSelected = System.IO.Path.GetFileName(f).ToString() == __SelectedFileName ? true : false
+                        Path = a,
+                        FileName = System.IO.Path.GetFileName(a),
+                        Extension = System.IO.Path.GetExtension(a),
+                        DateModified = System.IO.File.GetCreationTime(a).ToString("yyyy-MM-dd"),
+                        IsSelected = System.IO.Path.GetFileName(a).ToString() == __SelectedFileName ? true : false
                     };
                     id.Width = (int)ExportWidth;
                     id.Height = (int)ExportHeight;

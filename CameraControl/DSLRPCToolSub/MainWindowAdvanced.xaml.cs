@@ -1807,7 +1807,7 @@ namespace CameraControl
         {
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-            int ind = __photoEditModel.getIndex(__Pathupdate.PathImg);
+            int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
             try
             {
                 RotateTransform rt1 = new RotateTransform();
@@ -1855,7 +1855,7 @@ namespace CameraControl
             {
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
-            int ind = __photoEditModel.getIndex(__Pathupdate.PathImg);
+            int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
             try
             {
                 RotateTransform rt1 = new RotateTransform();
@@ -1942,7 +1942,7 @@ namespace CameraControl
                     encoder.Save(fs);
                 }
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(filename, BitmapLoader.LargeThumbSize, 0);
-                int ind = __photoEditModel.getIndex(__Pathupdate.PathImg);
+                int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
                 images_Folder[ind].Frame.Dispose();
                 images_Folder[ind].Frame = new Bitmap(filename);
                 images_Folder[ind].croppedImage = true;
@@ -3523,7 +3523,7 @@ namespace CameraControl
             }
             //Task.Delay(10000).ContinueWith(t => trial_Over());
 
-           //Task.Delay(10000).ContinueWith(t => trial_Over());
+            //Task.Delay(10000).ContinueWith(t => trial_Over());
         }
 
         private void trial_Over()
@@ -3712,7 +3712,7 @@ namespace CameraControl
                         DateModified = (System.IO.File.GetCreationTime(f)).ToString("yyyy-MM-dd"),
                         CreationDateTime = System.IO.File.GetCreationTimeUtc(f),
                         TimeModified = System.IO.File.GetCreationTime(f).ToString("HH:mm:ss:ffffff"),
-                        Frame = new Bitmap(f.ToString()),
+                        Frame = new Bitmap(file.ToString()),
                         rotateAngle = 0,
                         croppedImage = false
                     };
@@ -3724,7 +3724,7 @@ namespace CameraControl
                 ImageDetails imrLocal = new ImageDetails();
                 this.Dispatcher.Invoke(() =>
                 {
-                    images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
+                    //images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
                     ImageListBox_Folder.Items.Clear();
                     ImageLIstBox_Folder.Items.Clear();
                     ListBoxSnapshots.Items.Clear();

@@ -555,6 +555,7 @@
     <Compile Include="DSLRPCToolSub\ViewModels\PhotoEditModel.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\TurnTableViewModel.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\Watermark.cs" />
+    <Compile Include="DSLRPCToolSub\ViewModels\WatermarkProperties.cs" />
     <Compile Include="Layouts\LayoutGrid.xaml.cs">
       <DependentUpon>LayoutGrid.xaml</DependentUpon>
     </Compile>
