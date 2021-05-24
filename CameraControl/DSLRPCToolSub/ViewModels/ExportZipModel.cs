@@ -15,12 +15,13 @@ using CameraControl;
 using System.ComponentModel;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
-
+using CameraControl.DSLRPCToolSub.ViewModels;
 
 namespace DSLR_Tool_PC.ViewModels
 {
     public partial class ExportZipModel : BaseFieldClass
     {
+        DSLR_Tool_PC.ViewModels.Watermark watermarkName = DSLR_Tool_PC.ViewModels.Watermark.GetInstance();
         public Window __Parent_window = null;
         public int ratiowidthzip = 0;
         public int ratioheightzip = 0;
@@ -249,19 +250,28 @@ namespace DSLR_Tool_PC.ViewModels
 
                 ImagesZip.Clear();
                 FileExtensions.Clear();
-
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
                 FileExtensions.Add("Jpg");
                 FileExtensions.Add("Png");
                 FileExtensions.Add("Bmp");
 
                 foreach (var f in FilesDetails)
                 {
+                    string a = f;
+                    if (watermarkName.ImageName != "")
+                    {
+                        var file = Path.Combine(tempfolder, Path.GetFileName(f));
+                        File.Copy(f, file);
+                        a = WatermarkProperties.ApplyWatermark(file);
+                    }
                     ImageDetails id = new ImageDetails()
                     {
-                        Path = f,
-                        FileName = System.IO.Path.GetFileName(f),
-                        Extension = System.IO.Path.GetExtension(f),
-                        DateModified = System.IO.File.GetCreationTime(f).ToString("yyyy-MM-dd"),
+                        Path = a,
+                        FileName = System.IO.Path.GetFileName(a),
+                        Extension = System.IO.Path.GetExtension(a),
+                        DateModified = System.IO.File.GetCreationTime(a).ToString("yyyy-MM-dd"),
                         IsZIPSelected = false,
                         Width = (int)ExportWidthZip,
                         Height = (int)ExportHeightZip
