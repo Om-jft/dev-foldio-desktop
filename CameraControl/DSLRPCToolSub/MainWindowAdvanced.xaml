@@ -211,6 +211,7 @@
                     <!--<MenuItem Header="Open"   IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+O">-->
                         
                     <!--</MenuItem>-->
+
                     <!--<MenuItem Header="Recent Open"    IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" Margin="0"/>-->
                     
                     <!--<MenuItem Header="Save"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+S"/>
@@ -218,6 +219,7 @@
                     
                     <MenuItem Header="Import"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+Shift+I"/>-->
                     <MenuItem Header="Export" x:Name="MenuExport" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White">
+
                         <MenuItem Header="Quick GIF Export"  Click="QuickExport"  IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+Shift+E" Padding="10,0,10,0"/>
                         <MenuItem Header="Other Export"  Click="MenuItem_Click_1" IsCheckable="False" IsChecked="False" IsEnabled="True" Visibility="Visible" Background="#222222" Foreground="White" InputGestureText="Ctrl+E" Padding="10,0,10,0"/>
                     </MenuItem>
@@ -235,6 +237,7 @@
                         <MenuItem Header="16:9" x:Name="ratio_16" IsCheckable="True" IsChecked="False" Checked="ratio3_Checked" Unchecked="ratio3_Unchecked" Background="#222222" Foreground="White" Padding="0,0,20,0"/>
                     </MenuItem>
                     <MenuItem Header="Center Line" Background="#222222" Foreground="White">
+
                         <MenuItem Header="Vertical" x:Name="Vertical_mList" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Shift+V" Padding="0,0,20,0"/>
                         <MenuItem Header="_Horizontal" x:Name="Horizontal_mList" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Shift+H" Padding="0,0,20,0" />
                     </MenuItem>
@@ -259,8 +262,10 @@
                     <MenuItem x:Name="menu_crop" Header="Crop" Background="#222222" Foreground="White" InputGestureText="Ctrl+L" Click="ETg_Btn9_Checked" />
                     <!--<MenuItem Header="Zoom +" Command="{Binding RefreshSessionCommand}" Background="#222222" Foreground="White" InputGestureText="Ctrl++"/>
                     <MenuItem Header="Zoom -" Command="{Binding ShowSessionCommand}" Background="#222222" Foreground="White" InputGestureText="Ctrl+-"/>-->
+
                     <!--<MenuItem Header="Pan" Command="{Binding SendCommand}" CommandParameter="NextSeries" InputGestureText="Ctrl+P" Background="#222222" Foreground="White"/>-->
                     <MenuItem x:Name="menu_rotate" Header="Rotate" Background="#222222" Foreground="White" InputGestureText="Shift+R" Click="ERotateRight_Click"/>
+
                     <!--<MenuItem Header="Add Watermark" Command="{Binding Path=ImportSessionCommand}" Background="#222222" Foreground="White" InputGestureText="Ctrl+W"/>-->
                 </MenuItem>
                 <MenuItem x:Name="MenuMode" Header="Mode" Padding="5,2" Margin="1" Visibility="{Binding Branding.ShowCameraMenu, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="white">
@@ -1248,6 +1253,13 @@
                                             <Grid x:Name="EditPicGrid" >
                                                 <Image Visibility="Collapsed" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                                                 <Image x:Name="EditFramePicEdit"  Grid.Column="1" Source="{Binding Source={x:Static Member=Core:ServiceProvider.Settings}, Path=SelectedBitmap.DisplayEditImage}" Stretch="Uniform"   Opacity="1" />
+                                                
+                                                <Grid x:Name="preLoader" Visibility="Collapsed">
+                                                    <Image Name="img" gif:ImageBehavior.RepeatBehavior="Forever" 
+                /> <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
+                                                    <TextBlock x:Name="preloaderText" Text="Loading images, please wait..." HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Medium" LineStackingStrategy="BlockLineHeight" Foreground="#FF0B0C0C"/>
+                                                </Grid>
+                                                 <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
                                                 <Grid x:Name="preLoader" Visibility="Collapsed">
                                                     <Grid.ColumnDefinitions>

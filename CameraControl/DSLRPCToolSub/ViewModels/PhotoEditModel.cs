@@ -440,7 +440,6 @@ namespace DSLR_Tool_PC.ViewModels
                         WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
                         ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
 
-
                         if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
                         {
                             
@@ -448,6 +447,7 @@ namespace DSLR_Tool_PC.ViewModels
                             __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(_finalBmp);
                             _finalBmp.Dispose();
                         }
+
                     }
                    
                 }
@@ -665,7 +665,6 @@ namespace DSLR_Tool_PC.ViewModels
             string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
             if (!Directory.Exists(_strApplPath))
                 Directory.CreateDirectory(_strApplPath);
- 
             try
                 {
                 foreach (var _imgfl in _pathImagFiles)
@@ -675,6 +674,7 @@ namespace DSLR_Tool_PC.ViewModels
                     string _exFileName = System.IO.Path.GetFileName(_imgfl);
                     CopyBackUp(_imgfl, Path.Combine(_strApplPath, _exFileName));
                     bgWorker.ReportProgress(count);
+
                     if (__mainWindowAdvanced.images_Folder[getIndex(_imgfl)].rotateAngle != 0 || __mainWindowAdvanced.images_Folder[getIndex(_imgfl)].croppedImage) 
                     {
                         string tempFile_In = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName().Replace(".", "") + "." + ImageFormat.Jpeg);
@@ -690,6 +690,7 @@ namespace DSLR_Tool_PC.ViewModels
                         FiltersCorrections(Path.Combine(_strApplPath, _exFileName), _imgfl,true /*Path.Combine(_strApplPath, _exFileName)*/);
                     }
                     
+
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString()); }
