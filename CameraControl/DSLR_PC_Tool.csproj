@@ -538,6 +538,12 @@
     <Compile Include="DSLRPCToolSub\MainWindowNew.xaml.cs">
       <DependentUpon>MainWindowNew.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DSLRPCToolSub\UndoRedo\BitmapFileChild.cs" />
+    <Compile Include="DSLRPCToolSub\UndoRedo\Caretaker.cs" />
+    <Compile Include="DSLRPCToolSub\UndoRedo\IUndoRedo.cs" />
+    <Compile Include="DSLRPCToolSub\UndoRedo\Memento.cs" />
+    <Compile Include="DSLRPCToolSub\UndoRedo\MementoOrganizer.cs" />
+    <Compile Include="DSLRPCToolSub\UndoRedo\UndoRedo.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\BaseExportModel.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\BaseFieldClass.cs" />
     <Compile Include="DSLRPCToolSub\ViewModels\CapturePhotoViewModel.cs" />

@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 using CameraControl.DSLRPCToolSub.Classes;
 using CameraControl.DSLRPCToolSub.ViewModels;
+using CameraControl.DSLRPCToolSub.UndoRedo;
 using FileInfo = System.IO.FileInfo;
 
 namespace DSLR_Tool_PC.ViewModels
@@ -36,21 +37,16 @@ namespace DSLR_Tool_PC.ViewModels
         int count = 0;
         ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         PathUpdate __PathUpdate = PathUpdate.getInstance();
-        string exName = null;
-        string newsource = null;
         //EditLeftControl __editLeftControl = null;
-        MainWindowAdvanced __mainWindowAdvanced = null;
         public int filterFlag = 0;
-
+        MainWindowAdvanced __mainWindowAdvanced = null;
         public void ExecuteInti(object __this)
         {
             //__editLeftControl = (EditLeftControl)__this;
             __mainWindowAdvanced = (MainWindowAdvanced)__this;
             //photoEdit = (PhotoEdit)__this;
         }
-
-        
-
+        //public PhotoEdit photoEdit = PhotoEdit.GetInstance();
         PhotoEditModel()
         {
             ApplyAllFrames = new RelayCommand(Start);
@@ -59,19 +55,9 @@ namespace DSLR_Tool_PC.ViewModels
             bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
 
             bgWorker.WorkerSupportsCancellation = true;
-            bgWorker.WorkerReportsProgress = true;
-
-            BackgroundWorker background_bgWorker = new BackgroundWorker();
-
-            background_bgWorker.DoWork += Background_BgWorker_DoWork;
-            background_bgWorker.ProgressChanged += Background_BgWorker_ProgressChanged;
-            background_bgWorker.RunWorkerCompleted += Background_BgWorker_RunWorkerCompleted;
-
-            background_bgWorker.WorkerSupportsCancellation = true;
-            background_bgWorker.WorkerReportsProgress = true;
+            bgWorker.WorkerReportsProgress = true;            
             ResetAllControls();
         }
-
         private static PhotoEditModel _photoeditmodel_inst = null;
         public static PhotoEditModel GetInstance()
         {
@@ -128,7 +114,17 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 _isBrightnessApply = value;
                 NotifyPropertyChanged("IsBrightnessApply");
-                if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+                //if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+                lock (_Sliderlockobj)
+                    Monitor.PulseAll(_Sliderlockobj);
+                Task.Run(() =>
+                {
+                    lock (_Sliderlockobj)
+                        if (!Monitor.Wait(_Sliderlockobj, 300))
+                        {
+                            if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage != null) { Task.Factory.StartNew(EditFiltersApply); }
+                        }
+                });
             }
         }
 
@@ -336,18 +332,21 @@ namespace DSLR_Tool_PC.ViewModels
             if (sourcefile == "" || sourcefile == null) { return; }
             //if (destfile == "" || destfile == null) { return; }
             int ind = getIndex(Path.GetFileName(sourcefile));
-            if(!IsBackgroundFilterApply && !IsBrightnessApply && !IsContrastApply && !IsSaturationApply && !IsWhiteBalanceApply && !IsWhiteClippingApply) { return; }
+            if(!IsBackgroundFilterApply && !IsBrightnessApply && !IsContrastApply && !IsSaturationApply && !IsWhiteBalanceApply && !IsWhiteClippingApply && destfile=="") { return; }
+            string tempfile = null;
             try {
-
-                //string tempFile_In = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName().Replace(".", "") + "." + ImageFormat.Jpeg);
-                //if (File.Exists(tempFile_In))
-                //    File.Delete(tempFile_In);
-                //Thread.Sleep(500);
-                //__mainWindowAdvanced.images_Folder[ind].Frame.Save(tempFile_In, System.Drawing.Imaging.ImageFormat.Jpeg);
                 Bitmap _finalBmp;
-                using (Bitmap bmp = new Bitmap(__mainWindowAdvanced.images_Folder[ind].Frame))
-                {
-                    _finalBmp = bmp;
+                //__mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
+                //__mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(__mainWindowAdvanced.images_Folder[ind].OGFrame);
+                Bitmap bmp = new Bitmap(__mainWindowAdvanced.images_Folder[ind].Frame);
+                
+                    if (destfile != "") 
+                    {
+                        tempfile = Path.Combine(Settings.ApplicationTempFolder, Path.GetFileName(sourcefile));
+                        File.Copy(sourcefile, tempfile);
+                        bmp = new Bitmap(tempfile); 
+                    }
+                    _finalBmp = new Bitmap( bmp);
                     if (IsBrightnessApply)
                     {
                         int TempBrightness = 0;
@@ -381,8 +380,6 @@ namespace DSLR_Tool_PC.ViewModels
                                 ContrastCorrection filter = new ContrastCorrection(TempContrast);
                                 filter.ApplyInPlace(bmp);
                                 _finalBmp = new Bitmap(bmp);
-                                //_finalBmp =AdjustContrast(bmp,TempContrast);
-
                             }
                             catch (Exception ex) { Log.Debug("FiltersCorrections", ex); }
                         }
@@ -431,24 +428,34 @@ namespace DSLR_Tool_PC.ViewModels
 
                     if (destfile == "" || destfile == null)
                     {
-                        WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
-                        ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
-
-                        if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
+                    WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
+                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+                    if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
                         {
-                            
+                            __mainWindowAdvanced.UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, ind, _finalBmp));
                             __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
                             __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(_finalBmp);
                             _finalBmp.Dispose();
+                            bmp.Dispose();
                         }
-
+                        bmp.Dispose();
                     }
                    
-                }
+                
                 if (destfile != "" && destfile != null)
                 {
                     if (File.Exists(destfile)) { File.Delete(destfile); }
+                    //_finalBmp = new Bitmap(_finalBmp);
+                    if (__mainWindowAdvanced.images_Folder[ind].rotateAngle != 0)
+                    {
+                        _finalBmp = new Bitmap(RotateFrame(__mainWindowAdvanced.images_Folder[ind].rotateAngle, _finalBmp));
+                    }
                     StaticClass.saveBitmap2File(_finalBmp, destfile);
+                    __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
+                    __mainWindowAdvanced.images_Folder[ind].OGFrame.Dispose();
+                    _finalBmp.Dispose();
+                    bmp.Dispose();
+                    if (File.Exists(tempfile)) { File.Delete(tempfile); }
                 }
                 //else
                 //{
@@ -458,7 +465,30 @@ namespace DSLR_Tool_PC.ViewModels
                 //}
                 //if (File.Exists(tempFile_In)) { File.Delete(tempFile_In); }
             }
-            catch (Exception ex) { /*MessageBox.Show(ex.ToString());*/ }
+            catch (Exception ex) { /*MessageBox.Show(ex.ToString());*/ Log.Debug("Filter Correction error: ",ex); }
+        }
+
+        public Bitmap RotateFrame(int rotationAngle,Bitmap finalBmp)
+        {
+            using (finalBmp)
+            {
+                switch (rotationAngle)
+                {
+                    case 0:
+                        finalBmp.RotateFlip(RotateFlipType.RotateNoneFlipNone);
+                        break;
+                    case 90:
+                        finalBmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                    case 180:
+                        finalBmp.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                        break;
+                    case 270:
+                        finalBmp.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                }
+                return new Bitmap(finalBmp);
+            }
         }
         public int getIndex(string filename)
         {
@@ -530,7 +560,7 @@ namespace DSLR_Tool_PC.ViewModels
             return _returnBmp;
         }
 
-        private void ResetAllControls()
+        public void ResetAllControls()
         {
             WhiteBalance = 0;
             Contrast = 0;
@@ -666,20 +696,7 @@ namespace DSLR_Tool_PC.ViewModels
                     count++;
                     CopyBackUp(_imgfl, Path.Combine(_strApplPath, Path.GetFileName(_imgfl)));
                     bgWorker.ReportProgress(count);
-                    //if (__mainWindowAdvanced.images_Folder[getIndex(Path.GetFileName(_imgfl))].rotateAngle != 0 || __mainWindowAdvanced.images_Folder[getIndex(Path.GetFileName(_imgfl))].croppedImage)
-                    //{
-                        string tempFile_In = Path.Combine(Settings.ApplicationTempFolder, Path.GetFileName(_imgfl));
-
-                        if (File.Exists(tempFile_In))
-                            File.Delete(tempFile_In);
-
-                        __mainWindowAdvanced.images_Folder[getIndex(Path.GetFileName(_imgfl))].Frame.Save(tempFile_In, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        FiltersCorrections(tempFile_In, _imgfl);
-                    //}
-                    //else
-                    //{
-                    //    FiltersCorrections(Path.Combine(_strApplPath, Path.GetFileName(_imgfl)), _imgfl /*Path.Combine(_strApplPath, _exFileName)*/);
-                    //}
+                    FiltersCorrections(_imgfl, _imgfl);
                 }
             }
             catch (Exception ex) { /*MessageBox.Show(ex.ToString());*/ }
@@ -783,36 +800,6 @@ namespace DSLR_Tool_PC.ViewModels
                 Log.Error("Unable to make backup ", ex);
                 return "";
             }
-        }
-
-        private void Background_BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            //worker complete events
-            //__photoEdit.BackgroundFilterControl.IsEnabled = true;
-        }
-
-        private void Background_BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //progresschage events
-        }
-
-        private void Background_BgWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                //report progress event
-                //_bmpImage.Save(tempFile_In, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                //int TempBgFilter = 0;
-                //if (BackgroundFilter > 1)
-                //{
-                //    if ((BackgroundFilter % 2) == 0) { TempBgFilter = BackgroundFilter + 1; } else { TempBgFilter = BackgroundFilter; }
-                //    //MessageBox.Show(TempBgFilter.ToString());
-                //    StaticClass.RemoveBG_usingPy(tempFile_In, tempFile_In, TempBgFilter);
-                //    Log.Debug(tempFile_In);
-                //}
-            }
-            catch (Exception ex) {/* MessageBox.Show(ex.ToString());*/ }
         }
     }
 }

@@ -66,7 +66,31 @@ namespace DSLR_Tool_PC.ViewModels
 
         public string TimeModified { get; set; }
         public Bitmap Frame { get; set; }
+        public Bitmap OGFrame { get; set; }
         public int rotateAngle { get; set; }
         public bool croppedImage { get; set; }
+
+        public ImageDetails(ImageDetails image)
+        {
+            this.CreationDateTime = image.CreationDateTime;
+            this.croppedImage = image.croppedImage;
+            this.DateModified = image.DateModified;
+            this.Description = image.Description;
+            this.Extension = image.Extension;
+            this.FileName = image.FileName;
+            this.Frame = image.Frame;
+            this.Height = image.Height;
+            this.IsSelected = image.IsSelected;
+            this.IsZIPSelected = image.IsZIPSelected;
+            this.Name = image.Name;
+            this.OGFrame = image.OGFrame;
+            this.Path = image.Path;
+            this.Path_Orginal = image.Path_Orginal;
+            this.rotateAngle = image.rotateAngle;
+            this.Size = image.Size;
+            this.TimeModified = image.TimeModified;
+            this.Width = image.Width;
+        }
+        public ImageDetails() { }
     }
 }

@@ -384,9 +384,10 @@ namespace DSLR_Tool_PC.ViewModels
                     StaticClass.IsCapturedPhoto = false;
                     StaticClass.Is360CaptureProcess = false;
 
-                    _backgroundWorker_DoWork();
+                    //_backgroundWorker_DoWork();
+                    string OutPutFile = Path.GetDirectoryName(DSLR_Tool_PC.StaticClass.FileName_LastCapturedImage);
                     images.Clear();
-
+                    MessageBox.Show("Saved Successfully at location. " + Environment.NewLine + OutPutFile, "360 Image", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
             V2:

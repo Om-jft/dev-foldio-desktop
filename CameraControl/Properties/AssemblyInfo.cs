@@ -45,7 +45,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Foldio360")]
-[assembly: AssemblyCopyright("Copyright ©  2019 Duka Istvan")]
+[assembly: AssemblyCopyright("Copyright ©  2021 Orange Monkie")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
