@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSLR_Tool_PC.Controles"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" Loaded="UserControl_Loaded"          
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
               >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -17,8 +17,8 @@
                 <ResourceDictionary Source="../Theme/Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+
     </UserControl.Resources>
-    
     <Grid >
         <materialDesign:Card Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="0" Background="#2e2f30">
             <StackPanel Margin="15">
@@ -45,16 +45,16 @@
                     </Border>
 
                     <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                        <StackPanel Orientation="Vertical"  VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Vertical"  VerticalAlignment="Top" >
                             <TextBlock Text="Frame" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto"/>
                             <StackPanel Orientation="Horizontal">
-                                <TextBox HorizontalAlignment="Left" Name="TxtFrame" KeyDown="TxtFrame_KeyDown" VerticalAlignment="Top" Foreground="#ffffff" Background="Transparent" FontSize="12" BorderThickness="0 0 0 1" BorderBrush="#7f8486"  Width="35" FontWeight="Medium" FontFamily="Roboto"/>
-                                <TextBlock x:Name="txtbyFrame" Text="/0" Foreground="#7f8486" VerticalAlignment="Center" Margin="3 0 0 0" FontSize="12" FontWeight="Medium" FontFamily="Roboto"/>
+                                <TextBox HorizontalAlignment="Left" Name="TxtFrame" KeyDown="TxtFrame_KeyDown" VerticalAlignment="Top" Foreground="#ffffff" Background="Transparent" FontSize="12" BorderThickness="0 0 0 1" BorderBrush="#7f8486"  Width="20" FontWeight="Medium" FontFamily="Roboto" Text="x"/>
+                                <TextBlock x:Name="txtbyFrame" Text="/ 0" Foreground="#7f8486" VerticalAlignment="Center" Margin="3 0 0 0" FontSize="12" FontWeight="Medium" FontFamily="Roboto" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Margin="0 20 0 0">
+                        <StackPanel Margin="0 40 0 0">
                             <TextBlock Text="Frame Distance" Foreground="#7f8486" FontSize="10" FontWeight="Medium" FontFamily="Roboto"/>
-                            <TextBlock Text="0º" x:Name="txtFramedistance" Foreground="#ffffff" FontSize="12" FontWeight="Medium" FontFamily="Roboto" Margin="0 5 0 0"/>
+                            <TextBlock Text="0 °" x:Name="txtFramedistance" Foreground="#ffffff" FontSize="14" FontWeight="Medium" FontFamily="Roboto" Margin="0 5 10 0" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

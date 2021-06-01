@@ -28,7 +28,7 @@ namespace DSLR_Tool_PC.ViewModels
     public class PhotoEditModel : BaseFieldClass
     {
         private readonly object _Sliderlockobj = new object();
-        
+        private string imageFolder = null;
         public RelayCommand ApplyAllFrames { get; set; }
         //PhotoEdit __photoEdit = PhotoEdit.getInstance();
         BackgroundWorker bgWorker = new BackgroundWorker();
@@ -327,7 +327,7 @@ namespace DSLR_Tool_PC.ViewModels
             }
         }
 
-        public void FiltersCorrections(string sourcefile, string destfile)
+        public void FiltersCorrections(string sourcefile, string destfile,bool ApplyAll)
         {
             if (sourcefile == "" || sourcefile == null) { return; }
             //if (destfile == "" || destfile == null) { return; }
@@ -336,8 +336,11 @@ namespace DSLR_Tool_PC.ViewModels
             string tempfile = null;
             try {
                 Bitmap _finalBmp;
-                //__mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
-                //__mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(__mainWindowAdvanced.images_Folder[ind].OGFrame);
+                if (ApplyAll)
+                {
+                    __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
+                    __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(__mainWindowAdvanced.images_Folder[ind].OGFrame);
+                }
                 Bitmap bmp = new Bitmap(__mainWindowAdvanced.images_Folder[ind].Frame);
                 
                     if (destfile != "") 
@@ -432,7 +435,10 @@ namespace DSLR_Tool_PC.ViewModels
                     ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
                     if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
                         {
+                        if (!ApplyAll)
+                        {
                             __mainWindowAdvanced.UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, ind, _finalBmp));
+                        }
                             __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
                             __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(_finalBmp);
                             _finalBmp.Dispose();
@@ -652,7 +658,7 @@ namespace DSLR_Tool_PC.ViewModels
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
            
-            __mainWindowAdvanced.BrowseReload(__mainWindowAdvanced.OGFolder);
+            __mainWindowAdvanced.BrowseReload(imageFolder);
             __mainWindowAdvanced.HideProgress();
             System.Windows.MessageBox.Show("Apply All Frames and Saved Successfully...!", "Photo Edit", MessageBoxButton.OK, MessageBoxImage.Information);
             
@@ -686,18 +692,19 @@ namespace DSLR_Tool_PC.ViewModels
             string[] _pathImagFiles = Directory.GetFiles(_dirInfoApplPath.ToString());
             
             total = _pathImagFiles.Length;
-            string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
-            if (!Directory.Exists(_strApplPath))
-                Directory.CreateDirectory(_strApplPath);
+            //string _strApplPath = System.IO.Path.Combine(_dirInfoApplPath.ToString(), "JPG_ORG");
+            //if (!Directory.Exists(_strApplPath))
+            //    Directory.CreateDirectory(_strApplPath);
             try
                 {
                 foreach (var _imgfl in _pathImagFiles)
                 {
                     count++;
-                    CopyBackUp(_imgfl, Path.Combine(_strApplPath, Path.GetFileName(_imgfl)));
+                    //CopyBackUp(_imgfl, Path.Combine(_strApplPath, Path.GetFileName(_imgfl)));
                     bgWorker.ReportProgress(count);
-                    FiltersCorrections(_imgfl, _imgfl);
+                    FiltersCorrections(_imgfl, "",true);
                 }
+                imageFolder = __mainWindowAdvanced.FrameToFile();
             }
             catch (Exception ex) { /*MessageBox.Show(ex.ToString());*/ }
         }
@@ -774,7 +781,7 @@ namespace DSLR_Tool_PC.ViewModels
         #endregion
         private void EditFiltersApply()
         {
-            FiltersCorrections(__PathUpdate.PathImg, "");
+            FiltersCorrections(__PathUpdate.PathImg, "",false);
             //ServiceProvider.Settings.EditImageByte = _applyfilterImage;
 
         }

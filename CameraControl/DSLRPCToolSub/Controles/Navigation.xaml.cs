@@ -1,4 +1,5 @@
 ﻿using CameraControl;
+using DSLR_Tool_PC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,28 @@ namespace DSLR_Tool_PC.Controles
     public partial class Navigation : UserControl
     {
         static int count = 0;
+        private static Navigation _Navigation_inst = null;
         public Navigation()
         {
             InitializeComponent();
+            _Navigation_inst = this;
         }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             // txtbyFrame.Text = "/0";
 
         }
 
+        
+        public static Navigation GetInstance()
+        {
+            if (_Navigation_inst == null)
+            {
+                _Navigation_inst = new Navigation();
 
+            }
+            return _Navigation_inst;
+        }
         private void TxtFrame_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -119,8 +130,6 @@ namespace DSLR_Tool_PC.Controles
 
                 throw;
             }
-
-
         }
     }
 }

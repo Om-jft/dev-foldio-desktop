@@ -81,7 +81,8 @@ namespace CameraControl
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
         ExportGIFModel __gIFModel = ExportGIFModel.getInstance();
         Caretaker __caretaker = Caretaker.GetInstance();
-        
+        Navigation navigation = null;
+
         public ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
@@ -141,7 +142,6 @@ namespace CameraControl
             _selectiontimer.Elapsed += _selectiontimer_Elapsed;
             _selectiontimer.AutoReset = false;
             ServiceProvider.WindowsManager.Event += WindowsManager_Event;
-
            
             bgWorker.DoWork += BgWorker_DoWork;
             bgWorker.ProgressChanged += BgWorker_ProgressChanged;
@@ -209,6 +209,7 @@ namespace CameraControl
             __gIFModel.ExecuteInti(this);
             __caretaker.ExecuteInti(this);
             UnDoObject.ExecuteInti(this);
+            
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -2403,6 +2404,8 @@ namespace CameraControl
                         if (File.Exists(temp)) { File.Delete(temp); }
                         _ListBoxSelectedIndex = ind;
                         __SelectedImage = _item;
+                        navigation=Navigation.GetInstance();
+                        navigation.TxtFrame.Text=(Convert.ToString(ind + 1));
                     }
                 }catch(Exception ex) { Log.Debug(ex.ToString()); }
                 ImageLIstBox_Folder.SelectedIndex = ind;
@@ -3625,7 +3628,7 @@ namespace CameraControl
                 string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
 
                 var files = Directory.GetFiles(_folderpath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
-
+                if (files.Count() <= 0) { MessageBox.Show("File type images not found in selected folder.","Select Images Folder",MessageBoxButton.OK,MessageBoxImage.Exclamation); return; }
                 string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
                 if (!Directory.Exists(tempfolder))
                     Directory.CreateDirectory(tempfolder);
@@ -3683,12 +3686,17 @@ namespace CameraControl
                     LoadFolderSelectedItem(imrLocal);
                     UpdateImageData();
                     __exportPathUpdate.PathImg = __Pathupdate.PathImg;
+                    int total = images_Folder.Count;
+                    navigation = Navigation.GetInstance();
+                    navigation.txtbyFrame.Text = String.Format("/ " + total.ToString());
+                    navigation.txtFramedistance.Text = String.Format(Convert.ToString(360 / total) + " °");
                 });
+                
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex);}
         }
 
-        public void FrameToFile()
+        public string FrameToFile()
         {
             string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
             if (!Directory.Exists(tempfolder))
@@ -3699,6 +3707,7 @@ namespace CameraControl
                 f.Frame.Save(Path.Combine(tempfolder, filename), System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             __exportPathUpdate.PathImg = Path.Combine(tempfolder, Path.GetFileName(images_Folder[0].Path_Orginal));
+            return tempfolder;
         }
 
         private void QuickExport(object sender, RoutedEventArgs e)
@@ -3714,13 +3723,13 @@ namespace CameraControl
         private void UndoClick(object sender, RoutedEventArgs e)
         {
             if (UnDoObject._Caretaker.IsUndoPossible()) { UnDoObject.Undo(1); }
-            else { MessageBox.Show("No action to undo.", "Invalid Undo Operation", MessageBoxButton.OK, MessageBoxImage.Information); }
+            else { MessageBox.Show("No action to undo.", "Invalid Undo Operation", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
             
         }
         private void RedoClick(object sender, RoutedEventArgs e)
         {
             if (UnDoObject._Caretaker.IsRedoPossible()) { UnDoObject.Redo(1); }
-            else { MessageBox.Show("No action to redo.", "Invalid Redo Operation", MessageBoxButton.OK, MessageBoxImage.Information); }
+            else { MessageBox.Show("No action to redo.", "Invalid Redo Operation", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
         }
         public void updateImageFolder(int index, Bitmap image)
         {
