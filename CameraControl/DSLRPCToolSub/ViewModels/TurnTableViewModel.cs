@@ -139,7 +139,7 @@ namespace DSLR_Tool_PC.ViewModels
                 IsFoldioFound = true;
                 DeviceName = mBluetoothLEDevice.Name;
                 DeviceSlno = mBluetoothLEDevice.BluetoothAddress.ToString();
-                if (IsDomeMode) { DisplayedDeviceImagePath = "pack://application:,,,/DSLRPCToolSub/Assets/Images/none/360-device-white.png"; }
+                if (IsDomeMode) { DisplayedDeviceImagePath = "pack://application:,,,/DSLRPCToolSub/Assets/Images/none/Component 5 – 1.png"; }
                 else { DisplayedDeviceImagePath = "pack://application:,,,/DSLRPCToolSub/Assets/Images/none/360-device-white.png"; }
 
                 haloEdgeStatusChanges(0);
@@ -555,7 +555,7 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 _isDomeMode = value;
                 NotifyPropertyChanged("IsDomeMode");
-                IsNotDomeMode = !IsDomeMode;
+                IsNotDomeMode = IsDomeMode;
             }
         }
 

@@ -242,7 +242,7 @@
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.Background>
-                                    <ImageBrush ImageSource="{Binding DisplayedDeviceImagePath}" Stretch="None"/>
+                                    <ImageBrush ImageSource="{Binding DisplayedDeviceImagePath}" Stretch="Uniform"/>
                                 </Grid.Background>
                             </Grid>
                         </Grid>
