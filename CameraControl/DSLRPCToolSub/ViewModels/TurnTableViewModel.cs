@@ -139,7 +139,7 @@ namespace DSLR_Tool_PC.ViewModels
                 IsFoldioFound = true;
                 DeviceName = mBluetoothLEDevice.Name;
                 DeviceSlno = mBluetoothLEDevice.BluetoothAddress.ToString();
-                if (IsDomeMode) { DisplayedDeviceImagePath = "pack://application:,,,/DSLRPCToolSub/Assets/Images/none/Component 5 – 1.png"; }
+                if (IsDomeMode) { DisplayedDeviceImagePath = "pack://application:,,,/DSLRPCToolSub/Assets/Images/none/Component 5x1.png"; }
                 else { DisplayedDeviceImagePath = "pack://application:,,,/DSLRPCToolSub/Assets/Images/none/360-device-white.png"; }
 
                 haloEdgeStatusChanges(0);
@@ -783,6 +783,78 @@ namespace DSLR_Tool_PC.ViewModels
                 MoveLeftCheckedStatus = false;
             }
         }
+        private void StartDeviceTurnProcessing()
+        {
+            if (__DeviceLock == false && mBluetoothLEDevice != null)
+            {
+                int _repeate = BTCmd.REPEAT_ONCE;
+                //IsDeviceControlEnable = false;
+                switch (_rotate_Direction)
+                {
+                    case "MoveLeft_90":
+                        _rotate_angl = (90 / BTCmd.ANGLE_DIVIDENT);
+                        sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateLeft(_rotate_angl, getSpeed(), _repeate));
+                        break;
+                    case "MoveRight_90":
+                        _rotate_angl = (90 / BTCmd.ANGLE_DIVIDENT);
+                        sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateRight(_rotate_angl, getSpeed(), _repeate));
+                        break;
+                    case "MoveLeft_360":
+                        //if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == false && IsCheckedContinueTurn == true) { _repeate = BTCmd.REPEAT_INFINITE; }
+                        _rotate_angl = (360 / BTCmd.ANGLE_DIVIDENT);
+                        sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateLeft(_rotate_angl, getSpeed(), _repeate));
+                        break;
+                    case "MoveRight_360":
+                        //if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == false && IsCheckedContinueTurn == true) { _repeate = BTCmd.REPEAT_INFINITE; }
+                        _rotate_angl = (360 / BTCmd.ANGLE_DIVIDENT);
+                        sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateRight(_rotate_angl, getSpeed(), _repeate));
+                        break;
+                    case "MoveLeft_with_Angle":
+                        if (RotationAngle_Text > 0)
+                        {
+                            _rotate_angl = (RotationAngle_Text / BTCmd.ANGLE_DIVIDENT);
+                            if (_rotate_angl == 0 && RotationAngle_Text > 0) { _rotate_angl = RotationAngle_Text; }
+                            rotateInControlMode(BTCmd.ROTATATION_DIRECTION_LEFT, _rotate_angl, getSpeed(), _repeate, true);
+                        }
+                        //
+                        break;
+                    case "MoveRight_with_Angle":
+                        if (RotationAngle_Text > 0)
+                        {
+                            _rotate_angl = (RotationAngle_Text / BTCmd.ANGLE_DIVIDENT);
+                            if (_rotate_angl == 0 && RotationAngle_Text > 0) { _rotate_angl = RotationAngle_Text; }
+                            rotateInControlMode(BTCmd.ROTATATION_DIRECTION_RIGHT, _rotate_angl, getSpeed(), _repeate, true);
+                        }
+                        //
+                        break;
+                    case "MoveLeft":
+                        rotateInControlMode(BTCmd.ROTATATION_DIRECTION_LEFT, 360, getSpeed(), BTCmd.REPEAT_INFINITE, false);
+                        //sendBluetoothMessage(BTCmd.STATE_IDLE, BTCmd.cancel(false));
+                        break;
+                    case "MoveRight":
+                        rotateInControlMode(BTCmd.ROTATATION_DIRECTION_RIGHT, 360, getSpeed(), BTCmd.REPEAT_INFINITE, false);
+                        //sendBluetoothMessage(BTCmd.STATE_IDLE, BTCmd.cancel(false));
+                        break;
+                    case "VideoRight":
+                        if (IsDeviceAndVedioMode == true && IsCheckedContinueTurn == true) { _repeate = BTCmd.REPEAT_INFINITE; _rotate_angl = 0; }
+                        if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == true) { _repeate = BTCmd.REPEAT_ONCE; _rotate_angl = (360 / BTCmd.ANGLE_DIVIDENT); }
+                        sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateRight(_rotate_angl, getSpeed(), _repeate));
+                        break;
+                }
+
+                __StartRotation = true;
+                WaitingForDeviceActivity(_rotate_angl);
+                if (_rotate_Direction == "VideoRight" && _rotate_angl == 0) { return; }
+                if (_rotate_Direction == "MoveLeft" || _rotate_Direction == "MoveRight") { return; }
+                _rotate_angl = 0;
+                _rotate_Direction = "";
+                IsDeviceControlEnable = true;
+                __StartRotation = false;
+                DeviceActivityPanelTextChange(false, "");
+                MoveRightCheckedStatus = false;
+                MoveLeftCheckedStatus = false;
+            }
+        }
         public void StopDeviceProcessing()
         {
             if (__Thread != null) { __Thread.Abort(); }
@@ -871,7 +943,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             DeviceActivityPanelTextChange(true, "Device_Rotate");
             _rotate_Direction = "MoveLeft";
-            __Thread = new Thread(StartDeviceProcessing);
+            __Thread = new Thread(StartDeviceTurnProcessing);
             __Thread.Start();
         }
 
@@ -879,7 +951,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             DeviceActivityPanelTextChange(true, "Device_Rotate");
             _rotate_Direction = "MoveRight";
-            __Thread = new Thread(StartDeviceProcessing);
+            __Thread = new Thread(StartDeviceTurnProcessing);
             __Thread.Start();
         }
         public void VideoMode_Right()

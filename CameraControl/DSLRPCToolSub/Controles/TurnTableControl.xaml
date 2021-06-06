@@ -436,13 +436,13 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="20,25,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" >
-                    <!--<Button x:Name="Left_Rotation" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Width="110" Height="24" 
-                                 Style="{StaticResource IconSelector12}"  Command="{Binding Left_Rotation}"  >
+                    <Button x:Name="Left_Rotation" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Width="110" Height="24" 
+                                 Style="{StaticResource IconSelector12}"  PreviewMouseLeftButtonDown="Left_Rotation_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Left_Rotation_PreviewMouseLeftButtonUp" >
                     </Button>
                     <Button x:Name="Right_Rotation" Margin="5,0,0,0"  Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Width="110" Height="24" 
-                                 Style="{StaticResource IconSelector11}" Command="{Binding Right_Rotation}" >
-                    </Button>-->
-                    <ToggleButton x:Name="TB_Left" Height="24" Width="110" BorderThickness="0" Style="{StaticResource TglBtn_Left}" Checked="TB_Left_Checked" Unchecked="TB_Left_Unchecked" IsChecked="{Binding IsLeftCheckedEvent}">
+                                 Style="{StaticResource IconSelector11}" PreviewMouseLeftButtonDown="Right_Rotation_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Right_Rotation_PreviewMouseLeftButtonUp">
+                    </Button>
+                    <!--<ToggleButton x:Name="TB_Left" Height="24" Width="110" BorderThickness="0" Style="{StaticResource TglBtn_Left}" Checked="TB_Left_Checked" Unchecked="TB_Left_Unchecked" IsChecked="{Binding IsLeftCheckedEvent}">
                         <ToggleButton.Background>
                             <ImageBrush ImageSource="../Assets/Images/none/Group 15.png"/>
                         </ToggleButton.Background>
@@ -451,7 +451,8 @@
                         <ToggleButton.Background>
                             <ImageBrush ImageSource="../Assets/Images/none/Group 19.png"/>
                         </ToggleButton.Background>
-                    </ToggleButton>
+                    </ToggleButton>-->
+                    
                 </StackPanel>
 
                 <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="20,10,0,0"  VerticalAlignment="Center" HorizontalAlignment="Left" >

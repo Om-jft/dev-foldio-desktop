@@ -1119,9 +1119,9 @@
     <EmbeddedResource Include="DSLRPCToolSub\Assets\Images\Spinner.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5 – 1%402x.png" />
-    <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5 – 1%403x.png" />
-    <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5 – 1.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5x1%402x.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5x1%403x.png" />
+    <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5x1.png" />
     <Content Include="pyFiles\model.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

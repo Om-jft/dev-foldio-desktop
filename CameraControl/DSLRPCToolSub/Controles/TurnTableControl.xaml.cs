@@ -104,5 +104,27 @@ namespace DSLR_Tool_PC.Controles
 
             _turntablemodel.StopDeviceProcessing();
         }
+
+        private void Right_Rotation_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                var brush = new ImageBrush();
+                brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/DSLRPCToolSub/Assets/Images/click/Group 19 Copy 2.png"));
+                //Left_Rotation.Background = brush;
+
+                _turntablemodel.MoveRight();
+            }
+        }
+
+        private void Right_Rotation_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed) { }
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/DSLRPCToolSub/Assets/Images/none/Group 19.png"));
+            //Left_Rotation.Background = brush;
+
+            _turntablemodel.StopDeviceProcessing();
+        }
     }
 }

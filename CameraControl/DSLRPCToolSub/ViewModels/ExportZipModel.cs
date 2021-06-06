@@ -386,7 +386,7 @@ namespace DSLR_Tool_PC.ViewModels
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch (Exception ex) { Log.Debug("Zip images exception: ",ex); }
         }
 
         public void ProduceZIP()

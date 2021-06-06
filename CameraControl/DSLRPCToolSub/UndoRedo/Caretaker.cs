@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CameraControl.DSLRPCToolSub.UndoRedo
 {
-    public class Caretaker
+    public class Caretaker:IDisposable
     {
         MainWindowAdvanced __mainWindowAdvanced = null;
         public void ExecuteInti(object __this)
@@ -23,8 +23,8 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
             }
             return _Caretaker_inst;
         }
-        private Stack<Memento> UndoStack = new Stack<Memento>();
-        private Stack<Memento> RedoStack = new Stack<Memento>();
+        public Stack<Memento> UndoStack = new Stack<Memento>();
+        public Stack<Memento> RedoStack = new Stack<Memento>();
 
         public Memento getUndoMemento()
         {
@@ -73,6 +73,12 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
             }
             else
                 return false;
+        }
+
+        public void Dispose()
+        {
+            UndoStack.Clear();
+            RedoStack.Clear();
         }
     }
 }

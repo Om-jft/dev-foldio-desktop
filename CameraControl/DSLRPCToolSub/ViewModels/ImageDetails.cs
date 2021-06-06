@@ -69,6 +69,12 @@ namespace DSLR_Tool_PC.ViewModels
         public Bitmap OGFrame { get; set; }
         public int rotateAngle { get; set; }
         public bool croppedImage { get; set; }
+        public int crop_X { get; set; }
+        public int crop_Y { get; set; }
+        public int crop_W { get; set; }
+        public int crop_H { get; set; }
+        public int resizeW { get; set; }
+        public int resizeH { get; set; }
 
         public ImageDetails(ImageDetails image)
         {
@@ -90,6 +96,12 @@ namespace DSLR_Tool_PC.ViewModels
             this.Size = image.Size;
             this.TimeModified = image.TimeModified;
             this.Width = image.Width;
+            this.crop_H = image.crop_H;
+            this.crop_W = image.crop_W;
+            this.crop_X = image.crop_X;
+            this.crop_Y = image.crop_Y;
+            this.resizeH = image.resizeH;
+            this.resizeW = image.resizeW;
         }
         public ImageDetails() { }
     }

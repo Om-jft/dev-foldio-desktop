@@ -336,19 +336,9 @@ namespace DSLR_Tool_PC.ViewModels
             string tempfile = null;
             try {
                 Bitmap _finalBmp;
-                if (ApplyAll)
-                {
-                    __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
-                    __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(__mainWindowAdvanced.images_Folder[ind].OGFrame);
-                }
+                if (__mainWindowAdvanced.images_Folder[ind].Frame != null) { __mainWindowAdvanced.images_Folder[ind].Frame.Dispose(); }
+                __mainWindowAdvanced.images_Folder[ind].Frame = (Bitmap)getBitmapFromImageFolder(sourcefile).Clone();
                 Bitmap bmp = new Bitmap(__mainWindowAdvanced.images_Folder[ind].Frame);
-                
-                    if (destfile != "") 
-                    {
-                        tempfile = Path.Combine(Settings.ApplicationTempFolder, Path.GetFileName(sourcefile));
-                        File.Copy(sourcefile, tempfile);
-                        bmp = new Bitmap(tempfile); 
-                    }
                     _finalBmp = new Bitmap( bmp);
                     if (IsBrightnessApply)
                     {
@@ -431,16 +421,28 @@ namespace DSLR_Tool_PC.ViewModels
 
                     if (destfile == "" || destfile == null)
                     {
-                    WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+
+                    
+
                     if (Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0)
                         {
+                        if (__mainWindowAdvanced.images_Folder[ind].croppedImage)
+                        {
+                            _finalBmp = (Bitmap)__mainWindowAdvanced.CropFrame(_finalBmp, ind).Clone();
+
+                        }
+                        if (__mainWindowAdvanced.images_Folder[ind].rotateAngle != 0)
+                        {
+                            _finalBmp = new Bitmap(RotateFrame(__mainWindowAdvanced.images_Folder[ind].rotateAngle, _finalBmp));
+                        }
                         if (!ApplyAll)
                         {
-                            __mainWindowAdvanced.UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, ind, _finalBmp));
+                            WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_finalBmp);
+                            ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+                            __mainWindowAdvanced.UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, ind, (Bitmap)_finalBmp.Clone()));
                         }
                             __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
-                            __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(_finalBmp);
+                            __mainWindowAdvanced.images_Folder[ind].Frame = (Bitmap)_finalBmp.Clone();
                             _finalBmp.Dispose();
                             bmp.Dispose();
                         }
@@ -524,12 +526,10 @@ namespace DSLR_Tool_PC.ViewModels
             if (WhiteClipping < 0) { TempWhiteClipping = Convert.ToInt32(-WhiteClipping * 1.275); }
             StaticClass.WhiteClipping_usingPy(tempFile_In, tempFile_In, TempWhiteClipping, 0);
 
-            Bitmap bmp = (Bitmap)Image.FromFile(tempFile_In);
-
+            using(Bitmap bmp = (Bitmap)Image.FromFile(tempFile_In))
+                return bmp;
             //if (File.Exists(tempFile_In))
             //    File.Delete(tempFile_In);
-
-            return bmp;
         }
 
         private Bitmap Apply_BackgroundFilter(Bitmap _bmpImage)
@@ -806,6 +806,15 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 Log.Error("Unable to make backup ", ex);
                 return "";
+            }
+        }
+
+        public Bitmap getBitmapFromImageFolder(string path)
+        {
+            string filename = Path.GetFileName(path);
+            using(Bitmap bitmapresult=new Bitmap(path))
+            {
+                return (Bitmap)bitmapresult.Clone();
             }
         }
     }
