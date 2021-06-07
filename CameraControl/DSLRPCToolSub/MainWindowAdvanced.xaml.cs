@@ -40,13 +40,14 @@ using System.Drawing;
 using CameraControl.DSLRPCToolSub.ViewModels;
 using WpfAnimatedGif;
 using System.Drawing.Imaging;
+using CameraControl.DSLRPCToolSub.UndoRedo;
 
 namespace CameraControl
 {
     /// <summary>
     /// Interaction logic for MainWindowAdvanced.xaml
     /// </summary>
-    public partial class MainWindowAdvanced : IMainWindowPlugin, INotifyPropertyChanged
+    public partial class MainWindowAdvanced : IMainWindowPlugin, INotifyPropertyChanged, IDisposable
     {
         public string OGFolder = null;
         public string DisplayName { get; set; }
@@ -60,7 +61,8 @@ namespace CameraControl
         private string _folderpath = null;
         private bool _sortCameraOreder = true;
         public bool KeyPreview { get; set; }
-
+        private int changeCounter = 0;
+        public UndoRedo UnDoObject = null;
         public RelayCommand<AutoExportPluginConfig> ConfigurePluginCommand { get; set; }
         public RelayCommand<IAutoExportPlugin> AddPluginCommand { get; set; }
         public RelayCommand<CameraPreset> SelectPresetCommand { get; private set; }
@@ -74,10 +76,13 @@ namespace CameraControl
 
         public PathUpdate __Pathupdate = PathUpdate.getInstance();
 
-        PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
+        public PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
         ExportZipModel __exportZipModel = ExportZipModel.getInstance();
         ExportMP4ViewModel __exportMP4ViewModel = ExportMP4ViewModel.getInstance();
         ExportGIFModel __gIFModel = ExportGIFModel.getInstance();
+        Caretaker __caretaker = Caretaker.GetInstance();
+        Navigation navigation = null;
+
         public ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
@@ -88,7 +93,6 @@ namespace CameraControl
         public int rotateRightCounter = 1;
         public PhotoSession Session { get; set; }
         ///////////////////////////////////////////
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowAdvanced" /> class.
         /// </summary>
@@ -104,14 +108,18 @@ namespace CameraControl
             ConfigurePluginCommand = new RelayCommand<AutoExportPluginConfig>(ConfigurePlugin);
             AddPluginCommand = new RelayCommand<IAutoExportPlugin>(AddPlugin);
             this.KeyPreview = true;
-            InitializeComponent();
 
+            //Undo Object start
+
+            UnDoObject = new UndoRedo(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage,-1,null);
+            UnDoObject.SetStateForUndoRedo(null);
+            //Undo objects end
+            InitializeComponent();
             var image = new BitmapImage();
             image.BeginInit();
             image.UriSource = new Uri(Path.Combine(Settings.ApplicationFolder, "Spinner.gif"));
             image.EndInit();
             ImageBehavior.SetAnimatedSource(img, image);
-
 
             //preloader.Source = new Uri(Path.Combine(Settings.ApplicationFolder, "Spinner.gif"));
             ////Added code
@@ -134,7 +142,6 @@ namespace CameraControl
             _selectiontimer.Elapsed += _selectiontimer_Elapsed;
             _selectiontimer.AutoReset = false;
             ServiceProvider.WindowsManager.Event += WindowsManager_Event;
-
            
             bgWorker.DoWork += BgWorker_DoWork;
             bgWorker.ProgressChanged += BgWorker_ProgressChanged;
@@ -142,6 +149,11 @@ namespace CameraControl
 
             bgWorker.WorkerSupportsCancellation = true;
             bgWorker.WorkerReportsProgress = true;
+        }
+
+        private void DisplayEditImage_Changed(object sender, EventArgs e)
+        {
+            MessageBox.Show("Widow changed");
         }
 
         public virtual event PropertyChangedEventHandler PropertyChanged;
@@ -195,8 +207,9 @@ namespace CameraControl
             __exportZipModel.ExecuteInti(this);
             __exportMP4ViewModel.ExecuteInti(this);
             __gIFModel.ExecuteInti(this);
-
-
+            __caretaker.ExecuteInti(this);
+            UnDoObject.ExecuteInti(this);
+            
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -278,8 +291,8 @@ namespace CameraControl
 
         private static double __CameraGrid_ActualWidth = 0.0;
         private static double __CameraGrid_ActualHeight = 0.0;
-        private static double __EditPicGrid_ActualWidth = 0.0;
-        private static double __EditPicGrid_ActualHeight = 0.0;
+        public static double __EditPicGrid_ActualWidth = 0.0;
+        public static double __EditPicGrid_ActualHeight = 0.0;
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             __EditPicGrid_ActualWidth = EditPicGrid.ActualWidth;
@@ -1810,6 +1823,14 @@ namespace CameraControl
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
             int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
+            if (images_Folder[ind].Frame == null)
+            {
+                using (Bitmap b = new Bitmap(__photoEditModel.getBitmapFromImageFolder(images_Folder[ind].Path_Orginal)))
+                {
+                    images_Folder[ind].Frame = (Bitmap)b.Clone();
+                }
+                
+            }
             try
             {
                 RotateTransform rt1 = new RotateTransform();
@@ -1849,6 +1870,7 @@ namespace CameraControl
                 //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(__Pathupdate.PathImg, BitmapLoader.LargeThumbSize, (int)rt1.Angle);
                 WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
+                UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage,ind,images_Folder[ind].Frame));
                 //UpdateImageData();
             }
             catch (Exception ex) { Log.Debug("ERotateLeft_Click", ex); }
@@ -1858,6 +1880,11 @@ namespace CameraControl
             if (__Pathupdate.PathImg == null || __Pathupdate.PathImg == "") { return; }
             if (ServiceProvider.Settings.SelectedBitmap.DisplayEditImage == null) { return; }
             int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
+            if (images_Folder[ind].Frame == null)
+            {
+                using (Bitmap b = new Bitmap(__photoEditModel.getBitmapFromImageFolder(images_Folder[ind].Path_Orginal)))
+                    images_Folder[ind].Frame = (Bitmap)b.Clone();
+            }
             try
             {
                 RotateTransform rt1 = new RotateTransform();
@@ -1897,7 +1924,7 @@ namespace CameraControl
 
                 WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
-
+                UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage,ind,images_Folder[ind].Frame));
                 //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(__Pathupdate.PathImg, BitmapLoader.LargeThumbSize, (int)rt1.Angle);
                 //UpdateImageData();
             }
@@ -1932,11 +1959,14 @@ namespace CameraControl
                     _w = (int)(__EditPicGrid_ActualWidth - _x);
                     if (_x < 0) { _x = 0; }
                 }
-
-                var cImage = new CroppedBitmap(rtb, new Int32Rect(_x, _y, _w, _h));
+                int xF = (int)(__EditPicGrid_ActualWidth - EditFramePicEdit.ActualWidth) / 2;
+                int yF = (int)(__EditPicGrid_ActualHeight - EditFramePicEdit.ActualHeight) / 2;
+                int wb = (int)EditFramePicEdit.ActualWidth - (_x - xF);
+                int hb = (int)EditFramePicEdit.ActualHeight - _y;
+                var cImage = new CroppedBitmap(rtb, new Int32Rect(_x, _y, wb, hb));
                 //EditFramePic.Source = cImage;
 
-                var filename = Path.Combine(Settings.ApplicationTempFolder, Path.GetFileNameWithoutExtension(__Pathupdate.PathImg) + "(1)" + Path.GetExtension(__Pathupdate.PathImg));
+                var filename = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName() + Path.GetExtension(__Pathupdate.PathImg));
                 JpegBitmapEncoder encoder = new JpegBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(cImage));
                 using (System.IO.FileStream fs = File.Create(filename))
@@ -1944,10 +1974,21 @@ namespace CameraControl
                     encoder.Save(fs);
                 }
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(filename, BitmapLoader.LargeThumbSize, 0);
+                
                 int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
-                images_Folder[ind].Frame.Dispose();
-                images_Folder[ind].Frame = new Bitmap(filename);
+                using (Bitmap b=new Bitmap(filename))
+                {
+                    UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, ind, (Bitmap)b.Clone()));
+                    if (images_Folder[ind].Frame != null) { images_Folder[ind].Frame.Dispose(); }
+                    images_Folder[ind].Frame = (Bitmap)b.Clone();
+                }
+                
                 images_Folder[ind].croppedImage = true;
+                images_Folder[ind].crop_X =  _x-xF; images_Folder[ind].crop_Y = _y-yF;
+                images_Folder[ind].crop_H = (int)EditFramePicEdit.ActualHeight-_y;
+                images_Folder[ind].crop_W = (int)EditFramePicEdit.ActualWidth- images_Folder[ind].crop_X;
+                images_Folder[ind].resizeW = (int)EditFramePicEdit.ActualWidth;
+                images_Folder[ind].resizeH = (int)EditFramePicEdit.ActualHeight;
                 if (File.Exists(filename)) { File.Delete(filename); }
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click", ex); }
@@ -1955,40 +1996,6 @@ namespace CameraControl
             ETg_Btn9.IsChecked = false;
         }
         #endregion
-
-        public string RecreateFiles(string source,string tempfolder,string exFile)
-        {
-            string[] filePaths = Directory.GetFiles(source);
-            foreach (var filename in filePaths)
-            {
-                int a = filename.LastIndexOf("\\")+1;
-                int b = (filename.Length)-a;
-                string fl = filename.Substring(a,b);
-                if (fl == exFile) {
-                    //string file = Settings.ApplicationTempFolder +"\\"+ fl;
-
-                    ////Do your job with "file"  
-                    //string str = tempfolder.ToString() + "\\" + fl;
-                    //if (!File.Exists(str))
-                    //{
-                    //    File.Copy(file, str);
-                    //}
-                    continue;
-                } 
-                else
-                {
-                    string file = filename.ToString();
-
-                    //Do your job with "file"  
-                    string str = tempfolder.ToString() + "\\"+fl;
-                    if (!File.Exists(str))
-                    {
-                        File.Copy(file, str);
-                    }
-                }
-            }
-            return tempfolder;
-        }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
@@ -2071,8 +2078,6 @@ namespace CameraControl
                 RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, menu_crop);
                 menu_crop.RaiseEvent(routedEventArgs);
             }
-            if (_keyvalue == "Ctrl+L") { MessageBox.Show(_keyvalue); }
-
             if (_keyvalue == "Ctrl+1")
             {
                     RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.CheckedEvent, Zoomx1);
@@ -2105,11 +2110,13 @@ namespace CameraControl
             }
             if (_keyvalue == "Ctrl+Z")
             {
-                //undo
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, btnUndo);
+                btnUndo.RaiseEvent(routedEventArgs);
             }
             if (_keyvalue == "Ctrl+R")
             {
-               //redo
+                RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, btnRedo);
+                btnRedo.RaiseEvent(routedEventArgs);
             }
 
             //int _zoomValue = LVViewModel.lvInstance().ZoomSliderValue;
@@ -2371,75 +2378,6 @@ namespace CameraControl
                 bgWorker.RunWorkerAsync();
             }
         }
-
-        public void BrowseFolderImages(string _folderPath, string imr)
-        {
-
-            try
-            {
-                _ListBoxSelectedIndex = -1;
-                images_Folder = new List<ImageDetails>();
-
-                string root = System.IO.Path.GetDirectoryName(_folderPath);
-                string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
-
-                var files = Directory.GetFiles(_folderPath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
-
-                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
-                if (!Directory.Exists(tempfolder))
-                    Directory.CreateDirectory(tempfolder);
-                int count = 0;
-                foreach (var f in files)
-                {
-                    var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                    //StaticClass.GenerateSmallThumb(f, file);
-                    //FileInfo fi = new FileInfo(f);
-                    //File.Copy(f, file);
-                    StaticClass.GenerateLargeThumb(f, file);
-                    ImageDetails id = new ImageDetails()
-                    {
-                        Path_Orginal = f,
-                        Path = file,
-                        FileName = System.IO.Path.GetFileName(file),
-                        Extension = System.IO.Path.GetExtension(file),
-                        DateModified = (System.IO.File.GetCreationTime(file)).ToString("yyyy-MM-dd"),
-                        CreationDateTime = System.IO.File.GetCreationTimeUtc(file),
-                        TimeModified = System.IO.File.GetCreationTime(file).ToString("HH:mm:ss:ffffff")
-                    };
-                    count++;
-                    images_Folder.Add(id);
-                    Thread.Sleep(10);
-                }
-
-                this.Dispatcher.Invoke(() =>
-                {
-                    images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
-                    ImageListBox_Folder.Items.Clear();
-                    ImageLIstBox_Folder.Items.Clear();
-                    ListBoxSnapshots.Items.Clear();
-
-                    bool selectedImage = false;
-                    ImageDetails imrLocal = new ImageDetails();
-                    foreach (var img in images_Folder)
-                    {
-                        if (img.FileName.Equals(imr) && !selectedImage)
-                        {
-                            imrLocal = img;
-                            selectedImage = true;
-                        }
-                        ImageLIstBox_Folder.Items.Add(img);
-                        ImageListBox_Folder.Items.Add(img);
-                        ListBoxSnapshots.Items.Add(img);
-                    }
-                    EditFilterFlag++;
-                    LoadFolderSelectedItem(imrLocal);
-                    UpdateImageData();
-                });
-
-                
-            }
-            catch (Exception ex) { Log.Debug("BrowseFolderImages", ex); }
-        }
         private void ImgViewGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //Image clickedOnItem = (Image)StaticClass.GetParentDependencyObjectFromVisualTree((DependencyObject)e.MouseDevice.DirectlyOver, typeof(Image));
@@ -2462,24 +2400,35 @@ namespace CameraControl
             if (_item != null)
             {
                 int ind = ImageLIstBox_Folder.Items.IndexOf(_item);
-                if (_ListBoxSelectedIndex != ind)
+                try
                 {
-                    ImageLIstBox_Folder.ScrollIntoView(_item);
-                    ImageListBox_Folder.ScrollIntoView(_item);
-                    ListBoxSnapshots.ScrollIntoView(_item);
+                    if (_ListBoxSelectedIndex != ind)
+                    {
+                        ImageLIstBox_Folder.ScrollIntoView(_item);
+                        ImageListBox_Folder.ScrollIntoView(_item);
+                        ListBoxSnapshots.ScrollIntoView(_item);
 
-                    __Pathupdate.PathImg = _item.Path;
-                    __Pathupdate.__SelectedImageDetails = _item;
+                        __Pathupdate.PathImg = _item.Path;
+                        __Pathupdate.__SelectedImageDetails = _item;
 
-                    FileInfo f = new FileInfo(_item.FileName);
-                    string temp = Path.Combine(Settings.ApplicationTempFolder, f.Name);
-                    _item.Frame.Save(temp, System.Drawing.Imaging.ImageFormat.Bmp);
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(temp, BitmapLoader.LargeThumbSize, 0);
-                    if (File.Exists(temp)) { File.Delete(temp); }
+                        FileInfo f = new FileInfo(_item.FileName);
+                        string temp = Path.Combine(Settings.ApplicationTempFolder, f.Name);
+                        if (_item.Frame == null)
+                        {
+                            _item.Frame = (Bitmap)__photoEditModel.getBitmapFromImageFolder(_item.Path_Orginal).Clone();
+                        }
+                        _item.Frame.Save(temp, System.Drawing.Imaging.ImageFormat.Bmp);
+                        ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(temp, BitmapLoader.LargeThumbSize, 0);
 
-                    _ListBoxSelectedIndex = ind;
-                    __SelectedImage = _item;
-                }
+                        if (File.Exists(temp)) { File.Delete(temp); }
+                        _ListBoxSelectedIndex = ind;
+                        __SelectedImage = _item;
+                        navigation=Navigation.GetInstance();
+                        navigation.TxtFrame.Text=(Convert.ToString(ind + 1));
+                        int factor = 360/images_Folder.Count;
+                        navigation.TxtDegree.Text = Convert.ToString(ind * factor) + "°";
+                    }
+                }catch(Exception ex) { Log.Debug(ex.ToString()); }
                 ImageLIstBox_Folder.SelectedIndex = ind;
                 ImageListBox_Folder.SelectedIndex = ind;
                 ListBoxSnapshots.SelectedIndex = ind;
@@ -2502,6 +2451,7 @@ namespace CameraControl
 
                     __Pathupdate.PathImg = _item.Path;
                     __Pathupdate.__SelectedImageDetails = _item;
+                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage.Clear();
                     ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(_item.Path, BitmapLoader.LargeThumbSize, 0);
                     _ListBoxSelectedIndex = ind;
                     __SelectedImage = _item;
@@ -2577,6 +2527,7 @@ namespace CameraControl
                 {
                     ListBoxSnapshots.Items.Add(img);
                 }
+                Reset_ImageSelTabChange();
             }
             if (tab_folder.IsSelected)
             {
@@ -2584,8 +2535,9 @@ namespace CameraControl
                 {
                     ListBoxSnapshots.Items.Add(img);
                 }
+                if (__Pathupdate.__SelectedImageDetails != null) { _ListBoxSelectedIndex = -1; LoadFolderSelectedItem(__Pathupdate.__SelectedImageDetails); }
             }
-            Reset_ImageSelTabChange();
+           
             __IndexOfImageSelTab = tc_ImageSelection.SelectedIndex;
         }
 
@@ -3598,6 +3550,7 @@ namespace CameraControl
             grd_Edit_Canvasbg.IsEnabled = false;
             grd_Edit_canvasUpper.IsEnabled = false;
             grd_Edit_Bottom.IsEnabled = false;
+            grd_Edit_Buttons.IsEnabled = false;
         }
         public void HideProgress()
         {
@@ -3613,6 +3566,7 @@ namespace CameraControl
             grd_Edit_Canvasbg.IsEnabled = true;
             grd_Edit_canvasUpper.IsEnabled = true;
             grd_Edit_Bottom.IsEnabled = true;
+            grd_Edit_Buttons.IsEnabled = true;
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -3690,13 +3644,24 @@ namespace CameraControl
             {
                 newSource = null;
                 _ListBoxSelectedIndex = -1;
+                if (UnDoObject != null) { UnDoObject._Caretaker.Dispose(); }
+                if (images_Folder != null) 
+                {
+                    
+                    foreach(var item in images_Folder)
+                    {
+                        if (item.Frame != null) { item.Frame.Dispose(); }
+                        if (item.OGFrame != null) { item.OGFrame.Dispose(); }
+                    }
+                    Dispose(); GC.Collect(); GC.WaitForFullGCComplete();
+                }
                 images_Folder = new List<ImageDetails>();
-
+                changeCounter++;
                 string root = System.IO.Path.GetDirectoryName(_folderpath);
                 string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
 
                 var files = Directory.GetFiles(_folderpath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
-
+                if (files.Count() <= 0) { MessageBox.Show("File type images not found in selected folder.","Select Images Folder",MessageBoxButton.OK,MessageBoxImage.Exclamation); return; }
                 string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
                 if (!Directory.Exists(tempfolder))
                     Directory.CreateDirectory(tempfolder);
@@ -3704,8 +3669,6 @@ namespace CameraControl
                 foreach (var f in files)
                 {
                     var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                    //StaticClass.GenerateSmallThumb(f, file);
-
                     FileInfo fi = new FileInfo(f);
                     File.Copy(f, file);
                     //StaticClass.GenerateLargeThumb(f, file);
@@ -3720,18 +3683,19 @@ namespace CameraControl
                         DateModified = (System.IO.File.GetCreationTime(f)).ToString("yyyy-MM-dd"),
                         CreationDateTime = System.IO.File.GetCreationTimeUtc(f),
                         TimeModified = System.IO.File.GetCreationTime(f).ToString("HH:mm:ss:ffffff"),
-                        Frame = new Bitmap(file.ToString()),
+                        //Frame = new Bitmap(f.ToString()),
+                        //OGFrame = new Bitmap(f.ToString()),
                         rotateAngle = 0,
                         croppedImage = false
                     };
                     count++;
                     images_Folder.Add(id);
-                    Thread.Sleep(10);
+                    Thread.Sleep(100);
                 }
                 ImageDetails imrLocal = new ImageDetails();
                 this.Dispatcher.Invoke(() =>
                 {
-                    //images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
+                    images_Folder.Sort((x, y) => DateTime.Compare(Convert.ToDateTime(x.CreationDateTime), Convert.ToDateTime(y.CreationDateTime)));
                     ImageListBox_Folder.Items.Clear();
                     ImageLIstBox_Folder.Items.Clear();
                     ListBoxSnapshots.Items.Clear();
@@ -3753,28 +3717,107 @@ namespace CameraControl
                     LoadFolderSelectedItem(imrLocal);
                     UpdateImageData();
                     __exportPathUpdate.PathImg = __Pathupdate.PathImg;
+                    int total = images_Folder.Count;
+                    UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, 0, images_Folder[0].Frame));
+                    navigation = Navigation.GetInstance();
+                    navigation.txtbyFrame.Text = String.Format("/ " + total.ToString());
+                    navigation.txtFramedistance.Text = String.Format(Convert.ToString(360 / total) + " °");
                 });
+                
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex);}
         }
 
-        public void FrameToFile()
+        public string FrameToFile()
         {
-            string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
-            if (!Directory.Exists(tempfolder))
-                Directory.CreateDirectory(tempfolder);
-            foreach(var f in images_Folder)
+            try
             {
-                string filename = Path.GetFileName(f.Path_Orginal);
-                f.Frame.Save(Path.Combine(tempfolder, filename), System.Drawing.Imaging.ImageFormat.Jpeg);
+                string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempfolder))
+                    Directory.CreateDirectory(tempfolder);
+                foreach (var f in images_Folder)
+                {
+                    string filename = Path.GetFileName(f.Path_Orginal);
+                    if (f.Frame == null)
+                    {
+                        using(Bitmap b=new Bitmap(__photoEditModel.getBitmapFromImageFolder(f.Path_Orginal)))
+                            f.Frame = (Bitmap)b.Clone();
+                    }
+                    f.Frame.Save(Path.Combine(tempfolder, filename), System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
+                __exportPathUpdate.PathImg = Path.Combine(tempfolder, Path.GetFileName(images_Folder[0].Path_Orginal));
+                return tempfolder;
             }
-            __exportPathUpdate.PathImg = Path.Combine(tempfolder, Path.GetFileName(images_Folder[0].Path_Orginal));
+            catch(Exception ex) { Log.Debug("Frame to file exception: ",ex); }
+            return null;
         }
 
         private void QuickExport(object sender, RoutedEventArgs e)
         {
-            FrameToFile();
-            __gIFModel.ProduceGIF();
+            if (__Pathupdate.PathImg != null)
+            {
+                FrameToFile();
+                ExportGIFModel.getInstance().URIPathImgGIF = ExportPathUpdate.getInstance().PathImg;
+                __gIFModel.ProduceGIF();
+            }
+        }
+
+        private void UndoClick(object sender, RoutedEventArgs e)
+        {
+            if (UnDoObject._Caretaker.IsUndoPossible()) { UnDoObject.Undo(1); }
+            else { MessageBox.Show("No action to undo.", "Invalid Undo Operation", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
+            
+        }
+        private void RedoClick(object sender, RoutedEventArgs e)
+        {
+            if (UnDoObject._Caretaker.IsRedoPossible()) { UnDoObject.Redo(1); }
+            else { MessageBox.Show("No action to redo.", "Invalid Redo Operation", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
+        }
+        public void updateImageFolder(int index, Bitmap image)
+        {
+            try
+            {
+                images_Folder[index].Frame.Dispose();
+                images_Folder[index].Frame = new Bitmap(image);
+            }
+            catch (Exception ex) { Log.Debug("Update image folder memento: ", ex); }
+        }
+
+        public void Dispose()
+        {
+            images_Folder.Clear();
+        }
+
+        public Bitmap CropFrame(Bitmap frame, int index)
+        {
+            try
+            {
+                var _x = images_Folder[index].crop_X;
+                var _y = images_Folder[index].crop_Y;
+                var _w = images_Folder[index].crop_W;
+                var _h = images_Folder[index].crop_H;
+                using (Bitmap b = (Bitmap)ResizeBitmap(frame, images_Folder[index].resizeW, images_Folder[index].resizeH))
+                {
+                    using(Bitmap bmpCrop = b.Clone(new Rectangle(_x, _y, _w-1, _h-1), b.PixelFormat))
+                    {
+                        frame= (Bitmap)bmpCrop.Clone();
+                    }                    
+                }
+            }
+            catch (Exception ex) { Log.Debug("Crop image exception: ", ex); }
+            return frame;
+        }
+
+        public Bitmap ResizeBitmap(Bitmap bmp, int width, int height)
+        {
+            using (Bitmap result = new Bitmap(width, height))
+            {
+                using (Graphics g = Graphics.FromImage(result))
+                {
+                    g.DrawImage(bmp, 0, 0, width, height);
+                }
+                return result;
+            }
         }
     }
 }

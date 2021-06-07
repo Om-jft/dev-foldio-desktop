@@ -94,9 +94,6 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
-           
-
             foreach (var img in ImagesGif) //todaysFiles is list of file names (with full path) to be zipped
             {
                 count++;
@@ -437,7 +434,7 @@ namespace DSLR_Tool_PC.ViewModels
                 //catch (Exception) { }
             }
             catch (Exception ex) { Log.Debug("", ex); }
-            finally { __Parent_window.Close(); }
+            finally { if (__Parent_window != null) { __Parent_window.Close(); } }
         }
         private void GenerateGif(string tempFolder, string gifPath)
         {

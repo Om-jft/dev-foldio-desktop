@@ -29,6 +29,18 @@ namespace DSLR_Tool_PC.Controles
             InitializeComponent();
         }
 
+        //private static PhotoEdit _photoedit_inst = null;
+        //public static PhotoEdit GetInstance()
+        //{
+        //    if (_photoedit_inst == null)
+        //    {
+        //        _photoedit_inst = new PhotoEdit();
+
+        //    }
+        //    return _photoedit_inst;
+        //}
+
+
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
