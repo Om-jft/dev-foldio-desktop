@@ -324,7 +324,11 @@ namespace DSLR_Tool_PC.ViewModels
                     break;
             }
         }
-
+        
+        public int getframe()
+        {
+            return Convert.ToInt32(SelectedFrame.ItemName);
+        }
         public void CapturePhoto_360_Recursive()
         {
             __Thread = new Thread(CapturePhoto_360_RecursiveNew);
@@ -379,7 +383,7 @@ namespace DSLR_Tool_PC.ViewModels
                     IsFoldioFound = true;
                     IsDeviceActivityMode = false;
                     IsDeviceControlEnable = true;
-
+                    RecentHistory.Last360 = ServiceProvider.Settings.DefaultSession.Folder;
                     StaticClass.CapturedImageCount = 0;
                     StaticClass.IsCapturedPhoto = false;
                     StaticClass.Is360CaptureProcess = false;

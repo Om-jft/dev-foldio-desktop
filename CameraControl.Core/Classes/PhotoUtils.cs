@@ -126,7 +126,7 @@ namespace CameraControl.Core.Classes
 
         public static void Donate()
         {
-            Run("http://www.digicamcontrol.com/donate/");
+            Run("https://orangemonkie.com/");
         }
 
         public static bool IsFileLocked(string file)

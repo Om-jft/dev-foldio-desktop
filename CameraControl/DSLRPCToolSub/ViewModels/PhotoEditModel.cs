@@ -336,11 +336,26 @@ namespace DSLR_Tool_PC.ViewModels
             string tempfile = null;
             try {
                 Bitmap _finalBmp;
-                if (__mainWindowAdvanced.images_Folder[ind].Frame != null) { __mainWindowAdvanced.images_Folder[ind].Frame.Dispose(); }
-                __mainWindowAdvanced.images_Folder[ind].Frame = (Bitmap)getBitmapFromImageFolder(sourcefile).Clone();
+                if ((Brightness != 0 || WhiteClipping != 0 || _whiteBalance != 0 || Contrast != 0 || Saturation != 0 || BackgroundFilter != 0) && (IsBackgroundFilterApply || IsBrightnessApply || IsContrastApply || IsSaturationApply || IsWhiteBalanceApply || IsWhiteBalanceApply))
+                {
+                    if (__mainWindowAdvanced.images_Folder[ind].Frame != null)
+                    {
+                        _finalBmp = (Bitmap)__mainWindowAdvanced.images_Folder[ind].Frame.Clone();
+                        if (!ApplyAll) { __mainWindowAdvanced.UnDoObject.SetStateForUndoRedo(new Memento(ServiceProvider.Settings.SelectedBitmap.DisplayEditImage, ind, (Bitmap)_finalBmp.Clone())); }
+                        __mainWindowAdvanced.images_Folder[ind].Frame.Dispose();
+                        _finalBmp.Dispose();
+                    }
+                    __mainWindowAdvanced.images_Folder[ind].Frame = new Bitmap(__mainWindowAdvanced.images_Folder[ind].Path_Orginal);
+                }
+                else { return; }
+                    
                 Bitmap bmp = new Bitmap(__mainWindowAdvanced.images_Folder[ind].Frame);
-                    _finalBmp = new Bitmap( bmp);
-                    if (IsBrightnessApply)
+                    _finalBmp = (Bitmap)bmp.Clone();
+                
+                {
+                    
+                }
+                if (IsBrightnessApply)
                     {
                         int TempBrightness = 0;
                         if (Brightness > 0) { TempBrightness = Convert.ToInt32((2.55 * Brightness)); }

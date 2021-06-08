@@ -78,7 +78,9 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
         public void Dispose()
         {
             UndoStack.Clear();
+            UndoStack = new Stack<Memento>();
             RedoStack.Clear();
+            RedoStack = new Stack<Memento>();
         }
     }
 }

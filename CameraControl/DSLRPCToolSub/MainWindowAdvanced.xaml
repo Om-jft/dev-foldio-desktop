@@ -939,7 +939,7 @@
 
                                                                 </Border>
                                                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" >
-                                                                    <ListBox VirtualizingStackPanel.IsVirtualizing="True" Name="ImageLIstBox" BorderThickness="0" Focusable="False" 
+                                                                    <ListBox VirtualizingStackPanel.IsVirtualizing="True" Name="ImageLIstBox" BorderThickness="0" Focusable="true" 
                                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" SelectionChanged="ImageLIstBox_SelectionChanged" >
                                                                         <ListBox.ItemTemplate>
                                                                             <DataTemplate>
@@ -951,9 +951,9 @@
                                                                                     <TextBlock Margin="8,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding FileName}" />
                                                                                     <TextBlock Margin="8,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="120" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
                                                                                 </StackPanel>-->
-                                                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                                                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" >
                                                                                     <Image Margin="0,10,0,0" x:Name="ImgViewGrid" Source="{Binding Path}" Height="120" Width="207" Stretch="Uniform" MouseDown="ImgViewGrid_MouseDown"/>
-                                                                                    <TextBlock Margin="0,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding FileName}" />
+                                                                                    <TextBlock Margin="0,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding folderName}" />
                                                                                     <TextBlock Margin="0,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="120" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
                                                                                 </StackPanel>
                                                                             </DataTemplate>
@@ -981,7 +981,7 @@
                                                                 </Border>
                                                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2">
                                                                     <ListBox  VirtualizingStackPanel.IsVirtualizing="True" Name="ImageListBox" BorderThickness="0" Focusable="False" 
-                                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" SelectionChanged="ImageLIstBox_SelectionChanged" >
+                                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" SelectionChanged="ImageLIstBox_SelectionChanged"  >
                                                                         <ListBox.ItemTemplate>
                                                                             <DataTemplate>
                                                                                 <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="220">
@@ -995,9 +995,9 @@
                                                                                     </StackPanel>
                                                                                 </StackPanel>-->
                                                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-                                                                                    <Image Margin="0,10,0,0" x:Name="Img123" Source="{Binding Path}" Height="50" Width="89" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>
+                                                                                    <Image Margin="0,10,0,0" x:Name="Img123" Source="{Binding Path}" Height="50" Width="89" Stretch="Uniform" MouseDown="ImgViewGrid_MouseDown"/>
                                                                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                                                                        <TextBlock Margin="15,15,7,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="85" TextTrimming="WordEllipsis" VerticalAlignment="Top"  Foreground="#ffffff" Text="{Binding FileName}" />
+                                                                                        <TextBlock Margin="15,15,7,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="85" TextTrimming="WordEllipsis" VerticalAlignment="Top"  Foreground="#ffffff" Text="{Binding folderName}" />
                                                                                         <TextBlock Margin="15,5,7,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="80" TextTrimming="WordEllipsis" TextWrapping="Wrap" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
                                                                                     </StackPanel>
                                                                                 </StackPanel>
@@ -1343,7 +1343,7 @@
                                     <!--<local1:EditBottomControl />-->
                                     <ScrollViewer VerticalScrollBarVisibility="Disabled"  >
                                         <ListBox Name="ListBoxSnapshots" ScrollViewer.CanContentScroll="True" VirtualizingStackPanel.IsVirtualizing="True" ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                                                      BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#2e2f30"   SelectionChanged="ListBoxSnapshots_SelectionChanged" >
+                                                      BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#2e2f30"   SelectionChanged="ListBoxSnapshots_SelectionChanged" MouseDoubleClick="ListBoxSnapshots_MouseDoubleClick" >
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">

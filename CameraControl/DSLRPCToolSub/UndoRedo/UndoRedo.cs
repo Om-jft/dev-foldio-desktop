@@ -35,6 +35,10 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
                 for (int i = 1; i <= level; i++)
                 {
                     memento = _Caretaker.getUndoMemento();
+                    //Application.Current.Dispatcher.BeginInvoke(new Action(() => { __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = memento.ImageIndex;
+                    //    __mainWindowAdvanced.ListBoxSnapshots.UpdateLayout(); }));
+                    __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);
+                  
                     ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = memento.Image;
                     __mainWindowAdvanced.updateImageFolder(memento.ImageIndex, memento.ImageBitmap);
                     __mainWindowAdvanced.__photoEditModel.ResetAllControls();
@@ -54,6 +58,7 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
                 for (int i = 1; i <= level; i++)
                 {
                     memento = _Caretaker.getRedoMemento();
+                    __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);
                     ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = memento.Image;
                     __mainWindowAdvanced.updateImageFolder(memento.ImageIndex, memento.ImageBitmap);
                     __mainWindowAdvanced.__photoEditModel.ResetAllControls();

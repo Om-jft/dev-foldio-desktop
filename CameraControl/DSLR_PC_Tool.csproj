@@ -466,6 +466,7 @@
     <Compile Include="DSLRPCToolSub\Classes\HorizontalScrollBehavior.cs" />
     <Compile Include="DSLRPCToolSub\Classes\ObservableRangeCollection.cs" />
     <Compile Include="DSLRPCToolSub\Classes\ProgressReport.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\RecentHistory.cs" />
     <Compile Include="DSLRPCToolSub\Classes\StaticClass.cs" />
     <Compile Include="DSLRPCToolSub\Classes\VisualTreeHelpers.cs" />
     <Compile Include="DSLRPCToolSub\Controles\BatteryControler.xaml.cs">

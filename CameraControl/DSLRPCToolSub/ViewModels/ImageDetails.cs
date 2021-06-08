@@ -75,7 +75,7 @@ namespace DSLR_Tool_PC.ViewModels
         public int crop_H { get; set; }
         public int resizeW { get; set; }
         public int resizeH { get; set; }
-
+        public string folderName { get; set; }
         public ImageDetails(ImageDetails image)
         {
             this.CreationDateTime = image.CreationDateTime;
@@ -102,6 +102,7 @@ namespace DSLR_Tool_PC.ViewModels
             this.crop_Y = image.crop_Y;
             this.resizeH = image.resizeH;
             this.resizeW = image.resizeW;
+            this.folderName = image.folderName;
         }
         public ImageDetails() { }
     }
