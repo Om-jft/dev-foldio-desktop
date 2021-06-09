@@ -11,11 +11,11 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
 {
     public class Memento
     {
-        private WriteableBitmap _image;
-        public WriteableBitmap Image
-        {
-            get { return _image; }
-        }
+        //private WriteableBitmap _image;
+        //public WriteableBitmap Image
+        //{
+        //    get { return _image; }
+        //}
         private int _imageIndex;
         public int ImageIndex
         {
@@ -26,9 +26,9 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
         {
             get { return new Bitmap(_imageBitmap); }
         }
-        public Memento(WriteableBitmap image,int imageIndex,Bitmap bitmapImage)
+        public Memento(int imageIndex,Bitmap bitmapImage)
         {
-            this._image = image;
+            //this._image = image;
             this._imageIndex = imageIndex;
             this._imageBitmap = new Bitmap(bitmapImage);
         }

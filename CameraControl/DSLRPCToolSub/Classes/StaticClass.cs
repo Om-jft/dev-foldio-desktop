@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Drawing.Drawing2D;
 
 namespace DSLR_Tool_PC
 {
@@ -543,6 +544,24 @@ namespace DSLR_Tool_PC
            
         }
 
-        
+        public static void compressimagesize(string target, Bitmap bitmap)
+        {
+            using (var image = (Image)bitmap.Clone())
+            {
+                double scaleFactor = 0.3;
+                var imgnewwidth = (int)(image.Width * scaleFactor);
+                var imgnewheight = (int)(image.Height * scaleFactor);
+                var imgthumnail = new Bitmap(imgnewwidth, imgnewheight);
+                var imgthumbgraph = Graphics.FromImage(imgthumnail);
+                imgthumbgraph.CompositingQuality = CompositingQuality.Default;
+                imgthumbgraph.SmoothingMode = SmoothingMode.HighQuality;
+                imgthumbgraph.InterpolationMode = InterpolationMode.Default;
+                var imageRectangle = new Rectangle(0, 0, imgnewwidth, imgnewheight);
+                imgthumbgraph.DrawImage(image, imageRectangle);
+                imgthumnail.Save(target, image.RawFormat);
+                //return (Bitmap)image.Clone();
+               
+            }
+        }
     }
 }

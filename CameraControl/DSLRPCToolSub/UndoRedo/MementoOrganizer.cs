@@ -11,32 +11,31 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
 {
     public class MementoOrganizer
     {
-        private WriteableBitmap _Image;
+        //private WriteableBitmap _Image;
         private int _ImageIndex;
         private Bitmap _bitmapImage;
-        
-        public MementoOrganizer(WriteableBitmap image,int index,Bitmap bitmap)
+
+        //public MementoOrganizer(WriteableBitmap image,int index,Bitmap bitmap)
+        public MementoOrganizer(int index, Bitmap bitmap)
         {
-            _Image=image;
+            //_Image=image;
             _ImageIndex = index;
-            if (bitmap != null) { _bitmapImage = new Bitmap(bitmap); }
+            if (bitmap != null) { _bitmapImage = (Bitmap)bitmap.Clone(); }
         }
 
         public Memento getMemento()
         {
-            WriteableBitmap imageInEditorCanvas = null;
-            if (_Image == null) { return null; }
+            if (_bitmapImage == null) { return null; }
             else
             {
-                imageInEditorCanvas = _Image.Clone();
-                return new Memento(imageInEditorCanvas,_ImageIndex,_bitmapImage);
+                return new Memento(_ImageIndex,_bitmapImage);
             }
         }
 
         public void setMemento(Memento memento)
         {
-            _Image = memento.Image;
-            _bitmapImage = new Bitmap(memento.ImageBitmap);
+            //_Image = memento.Image;
+            _bitmapImage = (Bitmap)memento.ImageBitmap.Clone();
             _ImageIndex = memento.ImageIndex;
         }
     }

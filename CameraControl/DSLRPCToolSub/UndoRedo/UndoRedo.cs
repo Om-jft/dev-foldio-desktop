@@ -1,4 +1,5 @@
 ﻿using CameraControl.Core;
+using CameraControl.Core.Classes;
 using CameraControl.Devices;
 using DSLR_Tool_PC.ViewModels;
 using System;
@@ -23,9 +24,9 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
         public Caretaker _Caretaker = new Caretaker();
         MementoOrganizer _MementoOriginator = null;
 
-        public UndoRedo(WriteableBitmap image,int index,Bitmap bitmap)
+        public UndoRedo(int index,Bitmap bitmap)
         {
-            _MementoOriginator = new MementoOrganizer(image,index,bitmap);
+            _MementoOriginator = new MementoOrganizer(index,bitmap);
         }        
         public void Undo(int level)
         {
@@ -35,11 +36,8 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
                 for (int i = 1; i <= level; i++)
                 {
                     memento = _Caretaker.getUndoMemento();
-                    //Application.Current.Dispatcher.BeginInvoke(new Action(() => { __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = memento.ImageIndex;
-                    //    __mainWindowAdvanced.ListBoxSnapshots.UpdateLayout(); }));
-                    __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);
-                  
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = memento.Image;
+                    __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);                  
+                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(memento.ImageBitmap);
                     __mainWindowAdvanced.updateImageFolder(memento.ImageIndex, memento.ImageBitmap);
                     __mainWindowAdvanced.__photoEditModel.ResetAllControls();
                 }
@@ -59,7 +57,7 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
                 {
                     memento = _Caretaker.getRedoMemento();
                     __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = memento.Image;
+                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(memento.ImageBitmap);
                     __mainWindowAdvanced.updateImageFolder(memento.ImageIndex, memento.ImageBitmap);
                     __mainWindowAdvanced.__photoEditModel.ResetAllControls();
                 }

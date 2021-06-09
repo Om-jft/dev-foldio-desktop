@@ -55,7 +55,7 @@ namespace DSLR_Tool_PC.Controles
                 if (e.Key == Key.Return)
                 {
                     //count = 0;
-                    int total = 0;
+                    float total = 0;
                     int txtFrameValue = Convert.ToInt32(TxtFrame.Text);
                     //count = txtFrameValue;
                     if (txtFrameValue != -1 && txtFrameValue != 0)
@@ -65,11 +65,12 @@ namespace DSLR_Tool_PC.Controles
                             if (txtFrameValue > window.ListBoxSnapshots.Items.Count) { MessageBox.Show("Frame not found", "360 PC Tool", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
                             window.ListBoxSnapshots.SelectedItem = window.ListBoxSnapshots.Items.GetItemAt(txtFrameValue - 1);
                             txtbyFrame.Text = "/" + window.ListBoxSnapshots.Items.Count;
-                            txtFramedistance.Text = Convert.ToString(360 / window.ListBoxSnapshots.Items.Count) +"°";
-                            total = 360 / window.ListBoxSnapshots.Items.Count;
+                            //txtFramedistance.Text = Convert.ToString((float)(360 / window.ListBoxSnapshots.Items.Count) +"°");
+                            total = (float) 360 / window.ListBoxSnapshots.Items.Count;
 
                         }
-                        TxtDegree.Text = string.Format(Convert.ToString((txtFrameValue-1) * total))+ "°";
+                        total= (float)(txtFrameValue - 1) * total;
+                        TxtDegree.Text = string.Format("{0:0.0}°",(float)total);
 
                     }
 
@@ -102,9 +103,9 @@ namespace DSLR_Tool_PC.Controles
                         txtbyFrame.Text = "/" + window.ListBoxSnapshots.Items.Count;
                         // txtFramedistance.Text = Convert.ToString(360 / window.ListBoxSnapshots.Items.Count);
                         //if (count == 23) { count = txtframevalue; }
-                        int factor = 360 / window.ListBoxSnapshots.Items.Count;
+                        float factor = (float)360 / window.ListBoxSnapshots.Items.Count;
                         TxtFrame.Text = Convert.ToString(txtframevalue-1);
-                        TxtDegree.Text = Convert.ToString((txtframevalue - 2) * factor)+"°";
+                        TxtDegree.Text = Convert.ToString((float)((txtframevalue - 2) * factor)+"°");
                         count--;
                     }
                 }
@@ -130,9 +131,9 @@ namespace DSLR_Tool_PC.Controles
                         window.ListBoxSnapshots.SelectedItem = window.ListBoxSnapshots.Items.GetItemAt(txtframevalue);
                         txtbyFrame.Text = "/" + window.ListBoxSnapshots.Items.Count;
                         // txtFramedistance.Text = Convert.ToString(360 / window.ListBoxSnapshots.Items.Count);
-                        int factor = 360 / window.ListBoxSnapshots.Items.Count;
+                        float factor = (float)360 / window.ListBoxSnapshots.Items.Count;
                         TxtFrame.Text = Convert.ToString(txtframevalue + 1);
-                        TxtDegree.Text = Convert.ToString(txtframevalue  * factor)+"°";
+                        TxtDegree.Text = Convert.ToString((float)(txtframevalue  * factor)+"°");
                         
                     }
 

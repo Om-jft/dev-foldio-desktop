@@ -18,10 +18,10 @@ namespace CameraControl.DSLRPCToolSub.Classes
                 try
                 {
                     if(!File.Exists(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref"))) { File.Create(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")); 
-                        using(StreamWriter sw = new StreamWriter(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")))
-                        {
-                            sw.WriteLine("xxxxxxxxx");
-                        }
+                        //using(StreamWriter sw = new StreamWriter(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")))
+                        //{
+                        //    sw.WriteLine("xxxxxxxxx");
+                        //}
                     }
                     using (StreamWriter sw = File.AppendText(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")))
                     {
