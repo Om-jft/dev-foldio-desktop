@@ -24,9 +24,9 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
         public Caretaker _Caretaker = new Caretaker();
         MementoOrganizer _MementoOriginator = null;
 
-        public UndoRedo(int index,Bitmap bitmap)
+        public UndoRedo(int index, ImageDetails imageDetails)
         {
-            _MementoOriginator = new MementoOrganizer(index,bitmap);
+            _MementoOriginator = new MementoOrganizer(index,imageDetails);
         }        
         public void Undo(int level)
         {
@@ -36,9 +36,8 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
                 for (int i = 1; i <= level; i++)
                 {
                     memento = _Caretaker.getUndoMemento();
-                    __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);                  
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(memento.ImageBitmap);
-                    __mainWindowAdvanced.updateImageFolder(memento.ImageIndex, memento.ImageBitmap);
+                    __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);
+                    __mainWindowAdvanced.__photoEditModel.applyStateFilter(memento.ImageIndex,memento.IDetails);
                     __mainWindowAdvanced.__photoEditModel.ResetAllControls();
                 }
                 if (memento != null)
@@ -57,8 +56,7 @@ namespace CameraControl.DSLRPCToolSub.UndoRedo
                 {
                     memento = _Caretaker.getRedoMemento();
                     __mainWindowAdvanced.ListBoxSnapshots.SelectedItem = __mainWindowAdvanced.ListBoxSnapshots.Items.GetItemAt(memento.ImageIndex);
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(memento.ImageBitmap);
-                    __mainWindowAdvanced.updateImageFolder(memento.ImageIndex, memento.ImageBitmap);
+                    __mainWindowAdvanced.__photoEditModel.applyStateFilter(memento.ImageIndex, memento.IDetails);
                     __mainWindowAdvanced.__photoEditModel.ResetAllControls();
                 }
                 if (memento != null)

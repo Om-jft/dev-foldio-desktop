@@ -327,7 +327,7 @@ namespace DSLR_Tool_PC
             string _PyScriptFile = Path.Combine(Settings.ApplicationFolder, "remove_bg.py");
             string _ModelPath = Path.Combine(Settings.ApplicationFolder, "model.yml");
             string argv = string.Format("{0} {1} {2} {3} {4}", _PyScriptFile, _ModelPath, _SourcePath, _DestinationPath, _GaussianKernal);
-            string commandText =  "\"" + _PyScriptFile + "\"" + " " + "\"" + _ModelPath + "\"" + " " + "\"" + _SourcePath + "\"" + " " + "\"" + _DestinationPath + "\"" + " " + "\"" + _GaussianKernal + "\"";
+            string commandText = "\"" + _PyScriptFile + "\"" + " " + "\"" + _ModelPath + "\"" + " " + "\"" + _SourcePath + "\"" + " " + "\"" + _DestinationPath + "\"" + " " + "\"" + _GaussianKernal + "\"";
             return RunPythonFile_cmdMode(commandText);
         }
 
@@ -548,7 +548,7 @@ namespace DSLR_Tool_PC
         {
             using (var image = (Image)bitmap.Clone())
             {
-                double scaleFactor = 0.3;
+                double scaleFactor = 0.45;
                 var imgnewwidth = (int)(image.Width * scaleFactor);
                 var imgnewheight = (int)(image.Height * scaleFactor);
                 var imgthumnail = new Bitmap(imgnewwidth, imgnewheight);

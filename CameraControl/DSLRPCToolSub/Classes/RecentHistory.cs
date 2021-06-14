@@ -18,10 +18,6 @@ namespace CameraControl.DSLRPCToolSub.Classes
                 try
                 {
                     if(!File.Exists(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref"))) { File.Create(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")); 
-                        //using(StreamWriter sw = new StreamWriter(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")))
-                        //{
-                        //    sw.WriteLine("xxxxxxxxx");
-                        //}
                     }
                     using (StreamWriter sw = File.AppendText(Path.Combine(Application.LocalUserAppDataPath, "Recent.pref")))
                     {
@@ -44,7 +40,7 @@ namespace CameraControl.DSLRPCToolSub.Classes
                 int i = 0;
                 foreach (string line in lines)
                 {
-                    if (i == 9) { break; }
+                    if (i == 10) { break; }
                     if (Directory.Exists(line))
                     {
                         recentFiles.Add(line);

@@ -300,6 +300,7 @@ namespace DSLR_Tool_PC.ViewModels
                 }
             }
             __mainWindowAdvanced.HideProgress();
+            __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
             __mainWindowAdvanced.ChangesProgress.Value = 0;
             count = 0;
 
@@ -403,6 +404,7 @@ namespace DSLR_Tool_PC.ViewModels
                   
                     __mainWindowAdvanced.ChangesProgress.Value = 0;
                     __mainWindowAdvanced.ProgressText.Text = "Exporting frames to ZIP...";
+                    __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Visible;
                     __mainWindowAdvanced.ShowProgress();
                     bgWorker.RunWorkerAsync();
                 }
@@ -477,10 +479,9 @@ namespace DSLR_Tool_PC.ViewModels
                 //clean up memory
                 foreach (System.Drawing.Bitmap image in bitimages)
                 {
-                    image.Dispose();
-
+                    if (image != null) { image.Dispose(); }
                 }
-                finalImage.Dispose();
+                if (finalImage != null) { finalImage.Dispose(); }
             }
         }
     }

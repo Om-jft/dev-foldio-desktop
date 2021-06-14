@@ -1235,7 +1235,7 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Grid x:Name="grd_Edit_Canvasbg" Grid.Row="2" Background="#131415" >
+                                <Grid x:Name="grd_Edit_Canvasbg" Grid.Row="2" Background="#131415"  >
 
                                     <Grid Grid.ColumnSpan="2" >
                                         <Grid.RowDefinitions>
@@ -1251,7 +1251,7 @@
 
                                         <Border Grid.Row="1" Grid.Column="1" Background="#ffffff" >
                                             <Grid x:Name="EditPicGrid" >
-                                                <Image Visibility="Collapsed" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                                                <Image Visibility="Visible" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                                                 <Image x:Name="EditFramePicEdit"  Grid.Column="1" Source="{Binding Source={x:Static Member=Core:ServiceProvider.Settings}, Path=SelectedBitmap.DisplayEditImage}" Stretch="Uniform"   Opacity="1" />
                                                 
                                                 <!--<Grid x:Name="preLoader" Visibility="Collapsed">
@@ -1261,20 +1261,26 @@
                                                 </Grid>-->
                                                  <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
-                                                <Grid x:Name="preLoader" Visibility="Collapsed">
+                                                <Border BorderBrush="Black" BorderThickness="2,1,1,2"  Margin="20"  Background="#77000000" x:Name="preLoader" Visibility="Collapsed">
+                                                <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="15*"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="8*"/>
-                                                        <RowDefinition Height="12*"/>
-                                                        <RowDefinition Height="9*"/>
+                                                        <RowDefinition Height="15*"/>
+                                                        <RowDefinition Height="12*" />
+                                                        <RowDefinition Height="15*"/>
                                                     </Grid.RowDefinitions>
+
+                                                   
                                                     <Image Grid.Column="0" Grid.Row="1" Name="img" gif:ImageBehavior.RepeatBehavior="Forever" 
-                /> <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
+                />
+                                                   
+                                                     <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
                                                     <TextBlock Grid.Row="2" Grid.Column="0" x:Name="preloaderText" Text="Loading images, please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" LineStackingStrategy="BlockLineHeight" Foreground="#FF0B0C0C"/>
                                                 </Grid>
-                                                 <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
+                                                </Border>
+                                                <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
                                                 <StackPanel x:Name="ProgressPannel" Background = "#c0c0c0" VerticalAlignment="Center" Visibility="Collapsed" Panel.ZIndex="888" Margin="10,0,10,0">
                                                     
@@ -1341,7 +1347,7 @@
 
                                 <Grid x:Name="grd_Edit_Bottom" Grid.Row="3" Background="#131415" >
                                     <!--<local1:EditBottomControl />-->
-                                    <ScrollViewer VerticalScrollBarVisibility="Disabled"  >
+                                    <ScrollViewer x:Name="ListScroller" VerticalScrollBarVisibility="Disabled"  >
                                         <ListBox Name="ListBoxSnapshots" ScrollViewer.CanContentScroll="True" VirtualizingStackPanel.IsVirtualizing="True" ItemContainerStyle="{StaticResource SimpleListBoxItem}"
                                                       BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#2e2f30"   SelectionChanged="ListBoxSnapshots_SelectionChanged" MouseDoubleClick="ListBoxSnapshots_MouseDoubleClick" >
                                             <ListBox.ItemTemplate>
