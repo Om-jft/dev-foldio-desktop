@@ -75,7 +75,15 @@ namespace DSLR_Tool_PC.ViewModels
         public int crop_H { get; set; }
         public int resizeW { get; set; }
         public int resizeH { get; set; }
-
+        public string folderName { get; set; }
+        public bool IsEdited { get; set; }
+        
+        public int BackgroundFilter { get; set; }
+        public int Brightness { get; set; }
+        public int Contrast { get; set; }
+        public int Saturation { get; set; }
+        public int WhiteBalance { get; set; }
+        public int WhiteClipping { get; set; }
         public ImageDetails(ImageDetails image)
         {
             this.CreationDateTime = image.CreationDateTime;
@@ -84,12 +92,12 @@ namespace DSLR_Tool_PC.ViewModels
             this.Description = image.Description;
             this.Extension = image.Extension;
             this.FileName = image.FileName;
-            this.Frame = image.Frame;
+            //this.Frame = image.Frame;
             this.Height = image.Height;
             this.IsSelected = image.IsSelected;
             this.IsZIPSelected = image.IsZIPSelected;
             this.Name = image.Name;
-            this.OGFrame = image.OGFrame;
+            //this.OGFrame = image.OGFrame;
             this.Path = image.Path;
             this.Path_Orginal = image.Path_Orginal;
             this.rotateAngle = image.rotateAngle;
@@ -102,6 +110,14 @@ namespace DSLR_Tool_PC.ViewModels
             this.crop_Y = image.crop_Y;
             this.resizeH = image.resizeH;
             this.resizeW = image.resizeW;
+            this.folderName = image.folderName;
+            this.IsEdited = image.IsEdited;
+            this.BackgroundFilter = image.BackgroundFilter;
+            this.Brightness = image.Brightness;
+            this.Contrast = image.Contrast;
+            this.Saturation = image.Saturation;
+            this.WhiteClipping = image.WhiteClipping;
+            this.WhiteBalance = image.WhiteBalance;
         }
         public ImageDetails() { }
     }

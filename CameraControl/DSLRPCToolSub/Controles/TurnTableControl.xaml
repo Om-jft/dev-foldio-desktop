@@ -501,7 +501,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="10">
+            <Grid Grid.Row="10" IsEnabled="{Binding IsFrameSettingsEnable}">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
@@ -538,11 +538,13 @@
                     <Button x:Name="btn_AngleNext" Style="{StaticResource Plus}" Margin="0,0,15,0" Width="20" Height="20" Background="Transparent" Command="{Binding Cmb_NextValue}" CommandParameter="Angle_Next" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="5" Orientation="Vertical" Margin="15,10,0,-3" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <StackPanel Grid.Row="5" Orientation="Vertical" Margin="15,10,0,-3" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Visible">
+                    <!--{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}-->
                     <Label Content="Speed" FontSize="9" FontWeight="Medium" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="DarkGray"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+                <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Visible">
+                    <!--{Binding IsDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}-->
                     <ComboBox Name="cmbSpeed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="180" Height="24" FontSize="13" FontWeight="Bold" 
                                   ItemsSource="{Binding Speeds}" SelectedValue="{Binding SelectedSpeed,Mode=TwoWay}" SelectedIndex="{Binding SelectedSpeedIndex, Mode=TwoWay}" DisplayMemberPath="ItemName"  >
                     </ComboBox>
@@ -579,7 +581,8 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="13" Margin="0,0,0,15" Visibility="{Binding IsNotDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}">
+            <Grid Grid.Row="13" Margin="0,0,0,15" Visibility="Visible">
+                <!--{Binding IsNotDomeMode, Converter={StaticResource BooleanToVisibilityConverter1}}-->
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>

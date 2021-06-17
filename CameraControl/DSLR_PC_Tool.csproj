@@ -63,7 +63,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>om.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -161,6 +161,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accord, Version=3.8.2.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
@@ -466,6 +473,7 @@
     <Compile Include="DSLRPCToolSub\Classes\HorizontalScrollBehavior.cs" />
     <Compile Include="DSLRPCToolSub\Classes\ObservableRangeCollection.cs" />
     <Compile Include="DSLRPCToolSub\Classes\ProgressReport.cs" />
+    <Compile Include="DSLRPCToolSub\Classes\RecentHistory.cs" />
     <Compile Include="DSLRPCToolSub\Classes\StaticClass.cs" />
     <Compile Include="DSLRPCToolSub\Classes\VisualTreeHelpers.cs" />
     <Compile Include="DSLRPCToolSub\Controles\BatteryControler.xaml.cs">
@@ -1122,6 +1130,7 @@
     <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5x1%402x.png" />
     <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5x1%403x.png" />
     <Resource Include="DSLRPCToolSub\Assets\Images\none\Component 5x1.png" />
+    <Resource Include="om.ico" />
     <Content Include="pyFiles\model.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

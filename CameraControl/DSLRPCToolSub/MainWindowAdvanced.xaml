@@ -39,7 +39,8 @@
                     StateChanged="Window_StateChanged" 
                     MouseWheel="Window_MouseWheel" 
                     SizeChanged="Window_SizeChanged"                        
-                    ContentRendered="Window_ContentRendered">
+                    ContentRendered="Window_ContentRendered"
+                     MouseDown="Window_MouseDown">
     <!--<i:Interaction.Behaviors>
         <Behaviours:BorderlessWindowBehavior/>
     </i:Interaction.Behaviors>-->
@@ -78,8 +79,8 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Window.TaskbarItemInfo>
-        <TaskbarItemInfo ProgressValue="{Binding Source={x:Static Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice.TransferProgress, Converter={StaticResource MyConverter}}" ProgressState="Normal"/>
+    <Window.TaskbarItemInfo  >
+        <TaskbarItemInfo ProgressValue="{Binding Source={x:Static Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice.TransferProgress, Converter={StaticResource MyConverter}}" ProgressState="Normal"  />
     </Window.TaskbarItemInfo>
 
     <!--<Controls:MetroWindow.RightWindowCommands>
@@ -104,7 +105,7 @@
             </Grid.RowDefinitions>
 
             <tb:TaskbarIcon Name="MyNotifyIcon" 
-                  IconSource="/CameraControl;component/logo.ico"
+                  IconSource="/CameraControl;component/om.ico"
                   ToolTipText="OrangeMonkie" TrayMouseDoubleClick="MyNotifyIcon_TrayMouseDoubleClick" MenuActivation="LeftOrRightClick">
                 <tb:TaskbarIcon.ContextMenu>
                     <ContextMenu>
@@ -238,8 +239,9 @@
                     </MenuItem>
                     <MenuItem Header="Center Line" Background="#222222" Foreground="White">
 
-                        <MenuItem Header="Vertical" x:Name="Vertical_mList" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Shift+V" Padding="0,0,20,0"/>
-                        <MenuItem Header="_Horizontal" x:Name="Horizontal_mList" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Shift+H" Padding="0,0,20,0" />
+                        <MenuItem Header="Vertical" x:Name="Vertical_mList"
+               Click="Tg_Btn6_Checked" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Shift+V" Padding="0,0,20,0"/>
+                        <MenuItem Header="_Horizontal" x:Name="Horizontal_mList" Click="Tg_Btn7_Checked" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Shift+H" Padding="0,0,20,0" />
                     </MenuItem>
                     <MenuItem Header="Grid"  Background="#222222" Foreground="White">
                         <MenuItem x:Name="Grid3x3" Header="3x3" IsCheckable="True" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Background="#222222" Foreground="White"  InputGestureText="Shift+1" Padding="0,0,20,0" />
@@ -939,7 +941,7 @@
 
                                                                 </Border>
                                                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" >
-                                                                    <ListBox VirtualizingStackPanel.IsVirtualizing="True" Name="ImageLIstBox" BorderThickness="0" Focusable="False" 
+                                                                    <ListBox VirtualizingStackPanel.IsVirtualizing="True" Name="ImageLIstBox" BorderThickness="0" Focusable="true" 
                                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" SelectionChanged="ImageLIstBox_SelectionChanged" >
                                                                         <ListBox.ItemTemplate>
                                                                             <DataTemplate>
@@ -951,9 +953,9 @@
                                                                                     <TextBlock Margin="8,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding FileName}" />
                                                                                     <TextBlock Margin="8,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="120" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
                                                                                 </StackPanel>-->
-                                                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                                                                                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" >
                                                                                     <Image Margin="0,10,0,0" x:Name="ImgViewGrid" Source="{Binding Path}" Height="120" Width="207" Stretch="Uniform" MouseDown="ImgViewGrid_MouseDown"/>
-                                                                                    <TextBlock Margin="0,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding FileName}" />
+                                                                                    <TextBlock Margin="0,6,0,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="120"  TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#FFFFFFFF" Text="{Binding folderName}" />
                                                                                     <TextBlock Margin="0,5,0,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="120" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
                                                                                 </StackPanel>
                                                                             </DataTemplate>
@@ -981,7 +983,7 @@
                                                                 </Border>
                                                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Grid.ColumnSpan="2">
                                                                     <ListBox  VirtualizingStackPanel.IsVirtualizing="True" Name="ImageListBox" BorderThickness="0" Focusable="False" 
-                                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" SelectionChanged="ImageLIstBox_SelectionChanged" >
+                                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#2e2f30" SelectionChanged="ImageLIstBox_SelectionChanged"  >
                                                                         <ListBox.ItemTemplate>
                                                                             <DataTemplate>
                                                                                 <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" MinWidth="220">
@@ -995,9 +997,9 @@
                                                                                     </StackPanel>
                                                                                 </StackPanel>-->
                                                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-                                                                                    <Image Margin="0,10,0,0" x:Name="Img123" Source="{Binding Path}" Height="50" Width="89" Stretch="Fill" MouseDown="ImgViewGrid_MouseDown"/>
+                                                                                    <Image Margin="0,10,0,0" x:Name="Img123" Source="{Binding Path}" Height="50" Width="89" Stretch="Uniform" MouseDown="ImgViewGrid_MouseDown"/>
                                                                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                                                                        <TextBlock Margin="15,15,7,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="85" TextTrimming="WordEllipsis" VerticalAlignment="Top"  Foreground="#ffffff" Text="{Binding FileName}" />
+                                                                                        <TextBlock Margin="15,15,7,0" FontWeight="Medium" FontSize="12" Height="14" MaxWidth="85" TextTrimming="WordEllipsis" VerticalAlignment="Top"  Foreground="#ffffff" Text="{Binding folderName}" />
                                                                                         <TextBlock Margin="15,5,7,0" FontWeight="Medium" FontSize="10" Height="11" MaxWidth="80" TextTrimming="WordEllipsis" TextWrapping="Wrap" VerticalAlignment="Bottom" Foreground="#7f8486" Text="{Binding DateModified}" />
                                                                                     </StackPanel>
                                                                                 </StackPanel>
@@ -1235,7 +1237,7 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Grid x:Name="grd_Edit_Canvasbg" Grid.Row="2" Background="#131415" >
+                                <Grid x:Name="grd_Edit_Canvasbg" Grid.Row="2" Background="#131415"  >
 
                                     <Grid Grid.ColumnSpan="2" >
                                         <Grid.RowDefinitions>
@@ -1251,7 +1253,7 @@
 
                                         <Border Grid.Row="1" Grid.Column="1" Background="#ffffff" >
                                             <Grid x:Name="EditPicGrid" >
-                                                <Image Visibility="Collapsed" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                                                <Image Visibility="Visible" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                                                 <Image x:Name="EditFramePicEdit"  Grid.Column="1" Source="{Binding Source={x:Static Member=Core:ServiceProvider.Settings}, Path=SelectedBitmap.DisplayEditImage}" Stretch="Uniform"   Opacity="1" />
                                                 
                                                 <!--<Grid x:Name="preLoader" Visibility="Collapsed">
@@ -1261,20 +1263,26 @@
                                                 </Grid>-->
                                                  <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
-                                                <Grid x:Name="preLoader" Visibility="Collapsed">
+                                                <Border BorderBrush="Black" BorderThickness="2,1,1,2"  Margin="20"  Background="#77000000" x:Name="preLoader" Visibility="Collapsed">
+                                                <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="15*"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="8*"/>
-                                                        <RowDefinition Height="12*"/>
-                                                        <RowDefinition Height="9*"/>
+                                                        <RowDefinition Height="15*"/>
+                                                        <RowDefinition Height="12*" />
+                                                        <RowDefinition Height="15*"/>
                                                     </Grid.RowDefinitions>
+
+                                                   
                                                     <Image Grid.Column="0" Grid.Row="1" Name="img" gif:ImageBehavior.RepeatBehavior="Forever" 
-                /> <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
+                />
+                                                   
+                                                     <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
                                                     <TextBlock Grid.Row="2" Grid.Column="0" x:Name="preloaderText" Text="Loading images, please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" LineStackingStrategy="BlockLineHeight" Foreground="#FF0B0C0C"/>
                                                 </Grid>
-                                                 <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
+                                                </Border>
+                                                <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
                                                 <StackPanel x:Name="ProgressPannel" Background = "#c0c0c0" VerticalAlignment="Center" Visibility="Collapsed" Panel.ZIndex="888" Margin="10,0,10,0">
                                                     
@@ -1341,9 +1349,9 @@
 
                                 <Grid x:Name="grd_Edit_Bottom" Grid.Row="3" Background="#131415" >
                                     <!--<local1:EditBottomControl />-->
-                                    <ScrollViewer VerticalScrollBarVisibility="Disabled"  >
+                                    <ScrollViewer x:Name="ListScroller" VerticalScrollBarVisibility="Disabled"  >
                                         <ListBox Name="ListBoxSnapshots" ScrollViewer.CanContentScroll="True" VirtualizingStackPanel.IsVirtualizing="True" ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                                                      BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#2e2f30"   SelectionChanged="ListBoxSnapshots_SelectionChanged" >
+                                                      BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#2e2f30"   SelectionChanged="ListBoxSnapshots_SelectionChanged" MouseDoubleClick="ListBoxSnapshots_MouseDoubleClick" >
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">

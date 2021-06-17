@@ -291,21 +291,30 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (ImageFilm == true)
+            try
             {
-                if (SelectedFileExtension == "" || SelectedFileExtension == null) { SelectedFileExtension = "Jpg"; }
-                using (ZipArchive archive = System.IO.Compression.ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                if (ImageFilm == true)
                 {
-                    archive.CreateEntryFromFile(Path.Combine(tempPathFolder, "imagefilm." + SelectedFileExtension), "imagefilm." + SelectedFileExtension);
+                    if (SelectedFileExtension == "" || SelectedFileExtension == null) { SelectedFileExtension = "Jpg"; }
+                    using (ZipArchive archive = System.IO.Compression.ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                    {
+                        archive.CreateEntryFromFile(Path.Combine(tempPathFolder, "imagefilm." + SelectedFileExtension), "imagefilm." + SelectedFileExtension);
+                    }
+                }
+                __mainWindowAdvanced.HideProgress();
+                __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
+                __mainWindowAdvanced.ChangesProgress.Value = 0;
+                count = 0;
+
+                if (successful == true)
+                {
+                    MessageBox.Show("Saved Successfully at location " + Environment.NewLine + zipPath, "ExportZIP", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
-            __mainWindowAdvanced.HideProgress();
-            __mainWindowAdvanced.ChangesProgress.Value = 0;
-            count = 0;
-
-            if (successful == true)
+            catch(Exception ex)
             {
-                MessageBox.Show("Saved Successfully at location " + Environment.NewLine + zipPath, "ExportZIP", MessageBoxButton.OK, MessageBoxImage.Information);
+                Log.Debug("ZipArchive Exception: ", ex);
+                MessageBox.Show("Unable to export images. Try after sometime...!", "360 PC Tool | Zip Export", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             //if (tempPathFolder != "")
@@ -403,6 +412,7 @@ namespace DSLR_Tool_PC.ViewModels
                   
                     __mainWindowAdvanced.ChangesProgress.Value = 0;
                     __mainWindowAdvanced.ProgressText.Text = "Exporting frames to ZIP...";
+                    __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Visible;
                     __mainWindowAdvanced.ShowProgress();
                     bgWorker.RunWorkerAsync();
                 }
@@ -477,10 +487,9 @@ namespace DSLR_Tool_PC.ViewModels
                 //clean up memory
                 foreach (System.Drawing.Bitmap image in bitimages)
                 {
-                    image.Dispose();
-
+                    if (image != null) { image.Dispose(); }
                 }
-                finalImage.Dispose();
+                if (finalImage != null) { finalImage.Dispose(); }
             }
         }
     }

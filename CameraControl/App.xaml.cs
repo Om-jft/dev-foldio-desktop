@@ -51,7 +51,7 @@ using MahApps.Metro;
 using Application = System.Windows.Application;
 using FileInfo = System.IO.FileInfo;
 using MessageBox = System.Windows.MessageBox;
-
+using System.Windows.Forms;
 #endregion
 
 namespace CameraControl
@@ -591,7 +591,11 @@ namespace CameraControl
            
             try
             {
-                if (File.Exists(Path.Combine(Settings.ApplicationFolder, "Dependency.dat")))
+                if (!File.Exists(Path.Combine(System.Windows.Forms.Application.LocalUserAppDataPath, "Recent.pref")))
+                {
+                     File.Create(Path.Combine(System.Windows.Forms.Application.LocalUserAppDataPath, "Recent.pref"));
+                }
+                    if (File.Exists(Path.Combine(Settings.ApplicationFolder, "Dependency.dat")))
                 {
                     List<string> lst = new List<string>();
                     string[] stringArray = System.IO.File.ReadAllLines(Path.Combine(Settings.ApplicationFolder, "Dependency.dat"));

@@ -180,6 +180,7 @@ namespace DSLR_Tool_PC.Controles
                 }
                 catch (Exception ex)
                 {
+                    Log.Debug("Exeception loading images: ", ex);
                 }
             }));
         }

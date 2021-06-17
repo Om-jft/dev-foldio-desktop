@@ -135,6 +135,7 @@ namespace DSLR_Tool_PC.ViewModels
                 var t = mBluetoothLEDevice.DeviceInformation.Properties;
                 IsDeviceControlEnable = true;
                 IsSelectedDevicePanel = false;
+                IsFrameSettingsEnable = true;
                 IsDomeMode = mBluetoothLEDevice.Name.Equals("Foldio360") ? false : true;
                 IsFoldioFound = true;
                 DeviceName = mBluetoothLEDevice.Name;
@@ -324,7 +325,11 @@ namespace DSLR_Tool_PC.ViewModels
                     break;
             }
         }
-
+        
+        public int getframe()
+        {
+            return Convert.ToInt32(SelectedFrame.ItemName);
+        }
         public void CapturePhoto_360_Recursive()
         {
             __Thread = new Thread(CapturePhoto_360_RecursiveNew);
@@ -334,6 +339,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             if (StaticClass.Is360CaptureProcess == false) { StopDeviceProcessing(); }
             IsDeviceControlEnable = false;
+            IsFrameSettingsEnable = false;
             DeviceActivityPanelTextChange(true, "Capture_360");
 
             if (ServiceProvider.DeviceManager.SelectedCameraDevice != CameraDevice || __StartRotation == false)
@@ -342,6 +348,7 @@ namespace DSLR_Tool_PC.ViewModels
                 IsFoldioFound = true;
                 IsDeviceActivityMode = false;
                 IsDeviceControlEnable = true;
+                IsFrameSettingsEnable = true;
 
                 StaticClass.CapturedImageCount = 0;
                 StaticClass.IsCapturedPhoto = false;
@@ -379,7 +386,8 @@ namespace DSLR_Tool_PC.ViewModels
                     IsFoldioFound = true;
                     IsDeviceActivityMode = false;
                     IsDeviceControlEnable = true;
-
+                    IsFrameSettingsEnable = true;
+                    RecentHistory.Last360 = ServiceProvider.Settings.DefaultSession.Folder;
                     StaticClass.CapturedImageCount = 0;
                     StaticClass.IsCapturedPhoto = false;
                     StaticClass.Is360CaptureProcess = false;
@@ -580,7 +588,16 @@ namespace DSLR_Tool_PC.ViewModels
                 NotifyPropertyChanged("IsDeviceControlEnable");
             }
         }
-
+        private bool _IsFrameSettingsEnable = false;
+        public bool IsFrameSettingsEnable
+        {
+            get { return _IsFrameSettingsEnable; }
+            set
+            {
+                _IsFrameSettingsEnable = value;
+                NotifyPropertyChanged("IsFrameSettingsEnable");
+            }
+        }
         private bool _isDeviceActivityMode = false;
         public bool IsDeviceActivityMode
         {
@@ -717,6 +734,7 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 int _repeate = BTCmd.REPEAT_ONCE;
                 IsDeviceControlEnable = false;
+                IsFrameSettingsEnable = false;
                 switch (_rotate_Direction)
                 {
                     case "MoveLeft_90":
@@ -777,6 +795,7 @@ namespace DSLR_Tool_PC.ViewModels
                 _rotate_angl = 0;
                 _rotate_Direction = "";
                 IsDeviceControlEnable = true;
+                IsFrameSettingsEnable = true;
                 __StartRotation = false;
                 DeviceActivityPanelTextChange(false, "");
                 MoveRightCheckedStatus = false;
@@ -874,7 +893,7 @@ namespace DSLR_Tool_PC.ViewModels
                 IsFoldioFound = true;
                 IsDeviceActivityMode = false;
                 IsDeviceControlEnable = true;
-
+                IsFrameSettingsEnable = true;
                 StaticClass.CapturedImageCount = 0;
                 StaticClass.IsCapturedPhoto = false;
                 StaticClass.Is360CaptureProcess = false;

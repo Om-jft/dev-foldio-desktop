@@ -128,8 +128,9 @@ namespace DSLR_Tool_PC.ViewModels
                 __mainWindowAdvanced.ChangesProgress.Value = 0;
                 __mainWindowAdvanced.ProgressLabel.Text = "Exporting to MP4...";
                 __mainWindowAdvanced.ProgressText.Text = "Expoting frames to MP4...";
-                _backgroundWorker.RunWorkerAsync();
                 __mainWindowAdvanced.ShowProgress();
+                __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Visible;
+                _backgroundWorker.RunWorkerAsync();
                 __Parent_window.Hide();
             }
             catch (Exception ex) { Log.Debug("", ex); }
@@ -448,6 +449,7 @@ namespace DSLR_Tool_PC.ViewModels
             //RaisePropertyChanged(() => IsFree);
             __Parent_window.Close();
             __mainWindowAdvanced.HideProgress();
+            __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
             __mainWindowAdvanced.ChangesProgress.Value = 0;
             if (!File.Exists(oPath))
             {
