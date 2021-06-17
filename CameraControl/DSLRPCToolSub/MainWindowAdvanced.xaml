@@ -239,8 +239,9 @@
                     </MenuItem>
                     <MenuItem Header="Center Line" Background="#222222" Foreground="White">
 
-                        <MenuItem Header="Vertical" x:Name="Vertical_mList" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Shift+V" Padding="0,0,20,0"/>
-                        <MenuItem Header="_Horizontal" x:Name="Horizontal_mList" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Shift+H" Padding="0,0,20,0" />
+                        <MenuItem Header="Vertical" x:Name="Vertical_mList"
+               Click="Tg_Btn6_Checked" Checked="Tg_Btn6_Checked" Unchecked="Tg_Btn6_Unchecked"  IsCheckable="True" IsChecked="False"   Background="#222222"  Foreground="White" InputGestureText="Shift+V" Padding="0,0,20,0"/>
+                        <MenuItem Header="_Horizontal" x:Name="Horizontal_mList" Click="Tg_Btn7_Checked" Checked="Tg_Btn7_Checked" Unchecked="Tg_Btn7_Unchecked" IsCheckable="True" IsChecked="False"  Background="#222222" Foreground="White" InputGestureText="Shift+H" Padding="0,0,20,0" />
                     </MenuItem>
                     <MenuItem Header="Grid"  Background="#222222" Foreground="White">
                         <MenuItem x:Name="Grid3x3" Header="3x3" IsCheckable="True" IsChecked="False" Checked="grid2_Checked" Unchecked="grid2_Unchecked" Background="#222222" Foreground="White"  InputGestureText="Shift+1" Padding="0,0,20,0" />
