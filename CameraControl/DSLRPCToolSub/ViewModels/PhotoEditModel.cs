@@ -345,7 +345,7 @@ namespace DSLR_Tool_PC.ViewModels
         string loaderText="this";
         public void FiltersCorrections(string _sourcefile, string _destfile,bool _ApplyAll)
         {
-            if (!IsBackgroundFilterApply && !IsBrightnessApply && !IsContrastApply && !IsSaturationApply && !IsWhiteBalanceApply && !IsWhiteClippingApply) { return; }
+            //if (!IsBackgroundFilterApply && !IsBrightnessApply && !IsContrastApply && !IsSaturationApply && !IsWhiteBalanceApply && !IsWhiteClippingApply) { return; }
             sourcefile = _sourcefile;
             destfile = _destfile;
             ApplyAll = _ApplyAll;
@@ -685,6 +685,12 @@ namespace DSLR_Tool_PC.ViewModels
         public int DiffContrast = 0;
         public int DiffWhiteClipping = 0;
         public int DiffBackgroundFilter = 0;
+        public bool DiffIsSaturationApply = false;
+        public bool DiffIsBrightnessApply = false;
+        public bool DiffIsBackgroundApply = false;
+        public bool DiffIsContrastApply = false;
+        public bool DiffWhitebalanceApply = false;
+        public bool DiffWhiteClippingApply = false;
         #endregion
 
         public bool getDiff()
@@ -692,7 +698,7 @@ namespace DSLR_Tool_PC.ViewModels
             if (Saturation == 0 && Brightness == 0 && WhiteBalance == 0 && Contrast == 0 && WhiteClipping == 0 && BackgroundFilter == 0) { return false; }
             else
             {
-                if (DiffSaturation == Saturation && DiffWhiteBalance== WhiteBalance && DiffWhiteClipping == WhiteClipping && DiffContrast== Contrast && DiffBrightness== Brightness && DiffBackgroundFilter== BackgroundFilter) { return false; }
+                if (DiffSaturation == Saturation && DiffWhiteBalance== WhiteBalance && DiffWhiteClipping == WhiteClipping && DiffContrast== Contrast && DiffBrightness== Brightness && DiffBackgroundFilter== BackgroundFilter && DiffIsBackgroundApply==IsBackgroundFilterApply&&DiffIsBrightnessApply==IsBrightnessApply&&DiffIsContrastApply==IsContrastApply&&DiffIsSaturationApply==IsSaturationApply&&DiffWhitebalanceApply==IsWhiteBalanceApply&&DiffWhiteClippingApply==IsWhiteClippingApply) { return false; }
                 else { return true; }
             }
         }
@@ -707,6 +713,12 @@ namespace DSLR_Tool_PC.ViewModels
                 DiffSaturation = Saturation;
                 DiffWhiteBalance = WhiteBalance;
                 DiffWhiteClipping = WhiteClipping;
+                DiffWhiteClippingApply = IsWhiteClippingApply;
+                DiffWhitebalanceApply = IsWhiteBalanceApply;
+                DiffIsBackgroundApply = IsBackgroundFilterApply;
+                DiffIsContrastApply = IsContrastApply;
+                DiffIsSaturationApply = IsSaturationApply;
+                DiffIsBrightnessApply = IsBrightnessApply;
             }
         }
 

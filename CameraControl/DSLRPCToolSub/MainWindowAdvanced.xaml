@@ -39,7 +39,8 @@
                     StateChanged="Window_StateChanged" 
                     MouseWheel="Window_MouseWheel" 
                     SizeChanged="Window_SizeChanged"                        
-                    ContentRendered="Window_ContentRendered">
+                    ContentRendered="Window_ContentRendered"
+                     MouseDown="Window_MouseDown">
     <!--<i:Interaction.Behaviors>
         <Behaviours:BorderlessWindowBehavior/>
     </i:Interaction.Behaviors>-->
@@ -78,8 +79,8 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Window.TaskbarItemInfo>
-        <TaskbarItemInfo ProgressValue="{Binding Source={x:Static Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice.TransferProgress, Converter={StaticResource MyConverter}}" ProgressState="Normal"/>
+    <Window.TaskbarItemInfo  >
+        <TaskbarItemInfo ProgressValue="{Binding Source={x:Static Core:ServiceProvider.DeviceManager}, Path=SelectedCameraDevice.TransferProgress, Converter={StaticResource MyConverter}}" ProgressState="Normal"  />
     </Window.TaskbarItemInfo>
 
     <!--<Controls:MetroWindow.RightWindowCommands>
@@ -104,7 +105,7 @@
             </Grid.RowDefinitions>
 
             <tb:TaskbarIcon Name="MyNotifyIcon" 
-                  IconSource="/CameraControl;component/logo.ico"
+                  IconSource="/CameraControl;component/om.ico"
                   ToolTipText="OrangeMonkie" TrayMouseDoubleClick="MyNotifyIcon_TrayMouseDoubleClick" MenuActivation="LeftOrRightClick">
                 <tb:TaskbarIcon.ContextMenu>
                     <ContextMenu>

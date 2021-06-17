@@ -88,7 +88,7 @@
         </Grid.RowDefinitions>
 
         <tb:TaskbarIcon Name="MyNotifyIcon"
-                  IconSource="/CameraControl;component/logo.ico"
+                  IconSource="/CameraControl;component/om.ico"
                   ToolTipText="Foldio 360" TrayMouseDoubleClick="MyNotifyIcon_TrayMouseDoubleClick" MenuActivation="LeftOrRightClick">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>

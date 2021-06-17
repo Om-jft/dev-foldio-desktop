@@ -285,7 +285,7 @@ Global
 		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Capture.Workflow|x64.ActiveCfg = Debug
 		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Capture.Workflow|x86.ActiveCfg = Debug
 		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Debug|Any CPU.ActiveCfg = Debug
-		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Debug|Mixed Platforms.ActiveCfg = Release
 		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Debug|x64.ActiveCfg = Debug
 		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Debug|x86.ActiveCfg = Debug
 		{6501DC35-5BF1-40D0-B4C4-E1F0E2FCD0EA}.Release|Any CPU.ActiveCfg = Release

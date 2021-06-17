@@ -1840,6 +1840,7 @@ namespace CameraControl
                 }
                 
             }
+            if (!images_Folder[ind].IsEdited) { UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind]))); }
             try
             {
                 RotateTransform rt1 = new RotateTransform();
@@ -1879,7 +1880,7 @@ namespace CameraControl
                 //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(__Pathupdate.PathImg, BitmapLoader.LargeThumbSize, (int)rt1.Angle);
                 WriteableBitmap writeableBitmap = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = writeableBitmap;
-                UnDoObject.SetStateForUndoRedo(new Memento(ind,images_Folder[ind]));
+                UnDoObject.SetStateForUndoRedo(new Memento(ind,new ImageDetails(images_Folder[ind])));
                 images_Folder[ind].IsEdited = true;
                 //UpdateImageData();
             }
@@ -1895,6 +1896,7 @@ namespace CameraControl
                 using (Bitmap b = new Bitmap(__photoEditModel.getBitmapFromImageFolder(images_Folder[ind].Path)))
                     images_Folder[ind].Frame = (Bitmap)b.Clone();
             }
+            if (!images_Folder[ind].IsEdited) { UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind]))); }
             try
             {
                 RotateTransform rt1 = new RotateTransform();
@@ -1985,8 +1987,9 @@ namespace CameraControl
                     encoder.Save(fs);
                 }
                 ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(filename, BitmapLoader.LargeThumbSize, 0);
-                
+
                 int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
+                if (!images_Folder[ind].IsEdited) { UnDoObject.SetStateForUndoRedo(new Memento(ind,new ImageDetails(images_Folder[ind]))); }
                 using (Bitmap b=new Bitmap(filename))
                 {
                    
@@ -2001,8 +2004,8 @@ namespace CameraControl
                 images_Folder[ind].resizeW = (int)EditFramePicEdit.ActualWidth;
                 images_Folder[ind].resizeH = (int)EditFramePicEdit.ActualHeight;
                 images_Folder[ind].IsEdited = true;
-                if (File.Exists(filename)) { File.Delete(filename); }
-                UnDoObject.SetStateForUndoRedo(new Memento(ind, images_Folder[ind]));
+                //if (File.Exists(filename)) { File.Delete(filename); }
+                UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind])));
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click ", ex); }
             CropOut.Visibility = Visibility.Collapsed;
@@ -3883,6 +3886,14 @@ namespace CameraControl
         {
             string result = path.Substring(0, path.LastIndexOf("\\") + 1);
             return result;
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }
