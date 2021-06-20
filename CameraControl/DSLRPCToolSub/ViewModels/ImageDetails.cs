@@ -56,7 +56,8 @@ namespace DSLR_Tool_PC.ViewModels
 
         public string DateModified { get; set; }
 
-        public bool IsZIPSelected { get; set; }
+        private bool _isZipSelected=true;
+        public bool IsZIPSelected { get { return _isZipSelected; } set { _isZipSelected = value; } }
 
         public bool IsSelected { get; set; }
 

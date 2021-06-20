@@ -17,6 +17,7 @@ using DSLR_Tool_PC.Controles;
 using CameraControl.Devices;
 using CameraControl;
 using CameraControl.DSLRPCToolSub.ViewModels;
+using System.Threading.Tasks;
 
 namespace DSLR_Tool_PC.ViewModels
 {
@@ -71,6 +72,7 @@ namespace DSLR_Tool_PC.ViewModels
             _backgroundWorker.DoWork += _backgroundWorker_DoWork;
             _backgroundWorker.RunWorkerCompleted += _backgroundWorker_RunWorkerCompleted;
             _backgroundWorker.WorkerSupportsCancellation = true;
+            //Task.Factory.StartNew(CallPreview);
         }
 
         public static string __SelectedFileName = "";
@@ -254,6 +256,14 @@ namespace DSLR_Tool_PC.ViewModels
         public bool FillImage { get; private set; }
 
         private int __PlayImagePosition = 0;
+
+        private void CallPreview()
+        {
+            for (; 0 < 1;)
+            {
+                ShowPreview();
+            }
+        }
         private void ShowPreview()
         {
             try
@@ -407,19 +417,19 @@ namespace DSLR_Tool_PC.ViewModels
                 foreach (var f in FilesGIF)
                 {
                     string a = f;
-                    if (watermarkName.ImageName != "")
-                    {
-                        var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                        File.Copy(f, file);
-                        a = WatermarkProperties.ApplyWatermark(file);
-                    }
+                    //if (watermarkName.ImageName != "")
+                    //{
+                    //    var file = Path.Combine(tempfolder, Path.GetFileName(f));
+                    //    File.Copy(f, file);
+                    //    WatermarkProperties.ApplyWatermark(file);
+                    //    a = file;
+                    //}
                     ImageDetails id = new ImageDetails()
                     {
                         Path = a,
                         FileName = System.IO.Path.GetFileName(a),
                         Extension = System.IO.Path.GetExtension(a),
-                        DateModified = System.IO.File.GetCreationTime(a).ToString("yyyy-MM-dd"),
-                        IsSelected = System.IO.Path.GetFileName(a).ToString() == __SelectedFileName ? true : false
+                        DateModified = System.IO.File.GetCreationTime(a).ToString("yyyy-MM-dd")
                     };
                     id.Width = (int)ExportWidth;
                     id.Height = (int)ExportHeight;

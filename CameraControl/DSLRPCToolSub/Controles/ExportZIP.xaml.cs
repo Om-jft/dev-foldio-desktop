@@ -59,6 +59,7 @@ namespace DSLR_Tool_PC.Controles
             if (chkbox.IsChecked == true)
             {
                 var selected_item = chkbox.DataContext;
+                //MessageBox.Show(selected_item.ToString());
                 if (selected_item != null)
                 {
                     exportZipModel.SelectedImageZip_Preview = ((ImageDetails)selected_item);
