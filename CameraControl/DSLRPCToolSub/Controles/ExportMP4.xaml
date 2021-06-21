@@ -20,9 +20,9 @@
                 <RowDefinition Height="1.8*"></RowDefinition>
                 <RowDefinition Height="0.7*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Visibility="Collapsed" Height="{Binding ExportHeight, Mode=OneWay}" Width="{Binding ExportWidth, Mode=OneWay}" Source="{Binding Path= URIPathImgGIF, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></Image>
+            <Image Grid.Row="0" Grid.ColumnSpan="2" Visibility="Collapsed" Height="{Binding ExportHeight, Mode=OneWay}" Width="{Binding ExportWidth, Mode=OneWay}" Source="{Binding Path= URIPathImgGIF, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></Image>
             <Border x:Name="ImagePanel" Grid.Row="0" BorderBrush="#7f8486" BorderThickness="0" CornerRadius="2">
-                <Image Source="{Binding URIPathImgGIF_Preview}" Width="330" Height="185" Stretch="Uniform"  HorizontalAlignment="Stretch" />
+                <Image Source="{Binding URIPathImgGIF_Preview}" Width="320" Height="175" Stretch="Uniform"  />
             </Border>
 
             <StackPanel Grid.Row="1" Margin="0,5,0,0">

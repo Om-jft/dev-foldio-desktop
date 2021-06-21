@@ -16,6 +16,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 using CameraControl.DSLRPCToolSub.ViewModels;
+using ImageMagick;
+using System.Threading;
 
 namespace DSLR_Tool_PC.ViewModels
 {
@@ -46,7 +48,7 @@ namespace DSLR_Tool_PC.ViewModels
         private bool _imgfilmchecked = false;
         private bool successful = false;
         private System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
-        private string tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
+        private string tempPathFolder = null;
         private string zipPath = null;
 
         private static bool bgInitializer = false;
@@ -136,7 +138,7 @@ namespace DSLR_Tool_PC.ViewModels
             get { return _SelectedImageZipPreview; }
             set
             {
-
+                
                 _SelectedImageZipPreview = value;
                 NotifyPropertyChanged("SelectedImageZip_Preview");
 
@@ -200,7 +202,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             if (uni_class_inst == null)
                 uni_class_inst = new ExportZipModel();
-           
+                
             return uni_class_inst;
         }
 
@@ -211,20 +213,21 @@ namespace DSLR_Tool_PC.ViewModels
                 return;
             }
 
-            SelectedImageZip_Preview = SelectedImageZip;
+            ImageDetails id = new ImageDetails() { Path = InitialImagePath.ToString() };
+            SelectedImageZip_Preview = id;
             BitmapImage img = new BitmapImage();
             img.BeginInit();
             img.CacheOption = BitmapCacheOption.OnLoad;
             img.UriSource = new Uri(InitialImagePath.ToString(), UriKind.Absolute);
 
             img.EndInit();
-
+            
             ratiowidthzip = img.PixelWidth;
             ratioheightzip = img.PixelHeight;
 
             ExportWidthZip = ratiowidthzip;
             ExportHeightZip = ratioheightzip;
-
+            
             if (!bgInitializer)
             {
                 bgWorker.DoWork += BgWorker_DoWork;
@@ -260,21 +263,20 @@ namespace DSLR_Tool_PC.ViewModels
                 foreach (var f in FilesDetails)
                 {
                     string a = f;
-                    if (watermarkName.ImageName != "")
-                    {
-                        var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                        File.Copy(f, file);
-                        a = WatermarkProperties.ApplyWatermark(file);
-                    }
+                    //if (watermarkName.ImageName != "")
+                    //{
+                    //    var file = Path.Combine(tempfolder, Path.GetFileName(f));
+                    //    File.Copy(f, file);
+                    //    WatermarkProperties.ApplyWatermark(file);
+                    //    a = file;
+                    //}
                     ImageDetails id = new ImageDetails()
                     {
                         Path = a,
                         FileName = System.IO.Path.GetFileName(a),
                         Extension = System.IO.Path.GetExtension(a),
-                        DateModified = System.IO.File.GetCreationTime(a).ToString("yyyy-MM-dd"),
-                        IsZIPSelected = false,
-                        Width = (int)ExportWidthZip,
-                        Height = (int)ExportHeightZip
+                        DateModified = System.IO.File.GetCreationTime(a).ToString("yyyy-MM-dd")
+
                     };
                     //FileExtensions.Add(id.Extension);
                     ImagesZip.Add(id);
@@ -293,6 +295,7 @@ namespace DSLR_Tool_PC.ViewModels
         {
             try
             {
+                if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); }
                 if (ImageFilm == true)
                 {
                     if (SelectedFileExtension == "" || SelectedFileExtension == null) { SelectedFileExtension = "Jpg"; }
@@ -301,10 +304,7 @@ namespace DSLR_Tool_PC.ViewModels
                         archive.CreateEntryFromFile(Path.Combine(tempPathFolder, "imagefilm." + SelectedFileExtension), "imagefilm." + SelectedFileExtension);
                     }
                 }
-                __mainWindowAdvanced.HideProgress();
-                __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
-                __mainWindowAdvanced.ChangesProgress.Value = 0;
-                count = 0;
+                
 
                 if (successful == true)
                 {
@@ -315,6 +315,13 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 Log.Debug("ZipArchive Exception: ", ex);
                 MessageBox.Show("Unable to export images. Try after sometime...!", "360 PC Tool | Zip Export", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                __mainWindowAdvanced.HideProgress();
+                __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
+                __mainWindowAdvanced.ChangesProgress.Value = 0;
+                count = 0;
             }
 
             //if (tempPathFolder != "")
@@ -334,18 +341,16 @@ namespace DSLR_Tool_PC.ViewModels
            
             try
             {
-                
+                tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
                 try { if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); } }
                 catch (Exception) { return; }
                 
                 zipPath = _saveFileDialog.SelectedPath;//Path.Combine(FolderNameZip.ToString(), "ZIPFiles");
-                if (!Directory.Exists(zipPath)) { Directory.CreateDirectory(zipPath); }
-
-                if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
+                if (!Directory.Exists(zipPath)) { Directory.CreateDirectory(zipPath); }                
 
                 string _ZipFileName = "zp_" + DateTime.Now.Ticks.ToString() + ".zip";
                 zipPath = Path.Combine(zipPath, _ZipFileName);
-
+                if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
                 total = ZipImageCount;
 
                 foreach (var img in ImagesZip) //todaysFiles is list of file names (with full path) to be zipped
@@ -424,7 +429,7 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void ImageFilmGeneration(string tempPath)
         {
-            List<System.Drawing.Bitmap> bitimages = new List<System.Drawing.Bitmap>();
+            //List<System.Drawing.Bitmap> bitimages = new List<System.Drawing.Bitmap>();
             System.Drawing.Bitmap finalImage = null;
 
             try
@@ -437,13 +442,13 @@ namespace DSLR_Tool_PC.ViewModels
                     //create a Bitmap from the file and add it to the list
                     if (image.IsZIPSelected == true)
                     {
-                        System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(image.Path);
+                        //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(image.Path);
 
                         //update the size of the final bitmap
-                        height += (int)ExportHeightZip;
-                        width = (int)ExportWidthZip > width ? (int)ExportWidthZip : width;
+                        height += (int)((double)ExportHeightZip*0.3);
+                        width = (int)((double)ExportWidthZip * 0.3) > width ? (int)((double)ExportWidthZip*0.3) : width;
 
-                        bitimages.Add(bitmap);
+                        //bitimages.Add(bitmap);
                     }
                 }
 
@@ -458,10 +463,23 @@ namespace DSLR_Tool_PC.ViewModels
 
                     //go through each image and draw it on the final image
                     int offset = 0;
-                    foreach (System.Drawing.Bitmap image in bitimages)
+                    //foreach (System.Drawing.Bitmap image in bitimages)
+                    //{
+                    //    g.DrawImage(image, new System.Drawing.Rectangle(0, offset, (int)ExportWidthZip, (int)ExportHeightZip));
+                    //    offset += (int)ExportHeightZip;
+                    //}
+                    foreach (var image in ImagesZip)
                     {
-                        g.DrawImage(image, new System.Drawing.Rectangle(0, offset, (int)ExportWidthZip, (int)ExportHeightZip));
-                        offset += (int)ExportHeightZip;
+                        if (image.IsZIPSelected == true)
+                        {
+                            Bitmap b = compressimagesize(new Bitmap(image.Path));
+                            {
+                                g.DrawImage(b, new System.Drawing.Rectangle(0, offset, (int)b.Width, (int)b.Height));
+                                offset += (int)b.Height;
+                                b.Dispose();
+                                Thread.Sleep(20);
+                            }
+                        }
                     }
                 }
                 using (var ms = new MemoryStream())
@@ -475,7 +493,7 @@ namespace DSLR_Tool_PC.ViewModels
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 if (finalImage != null)
                     finalImage.Dispose();
@@ -485,13 +503,31 @@ namespace DSLR_Tool_PC.ViewModels
             finally
             {
                 //clean up memory
-                foreach (System.Drawing.Bitmap image in bitimages)
-                {
-                    if (image != null) { image.Dispose(); }
-                }
+                //foreach (System.Drawing.Bitmap image in bitimages)
+                //{
+                //    if (image != null) { image.Dispose(); }
+                //}
                 if (finalImage != null) { finalImage.Dispose(); }
+            }
+        }
+
+        public Bitmap compressimagesize(Bitmap bitmap)
+        {
+            using (var image = (Image)bitmap.Clone())
+            {
+                double scaleFactor = 0.3;
+                var imgnewwidth = (int)(image.Width * scaleFactor);
+                var imgnewheight = (int)(image.Height * scaleFactor);
+                var imgthumnail = new Bitmap(imgnewwidth, imgnewheight);
+                var imgthumbgraph = Graphics.FromImage(imgthumnail);
+                imgthumbgraph.CompositingQuality = CompositingQuality.HighQuality;
+                imgthumbgraph.SmoothingMode = SmoothingMode.HighQuality;
+                imgthumbgraph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                var imageRectangle = new Rectangle(0, 0, imgnewwidth, imgnewheight);
+                imgthumbgraph.DrawImage(image, imageRectangle);
+                //image.Save("C:\\a.jpg");
+                return (Bitmap)imgthumnail;
             }
         }
     }
 }
-

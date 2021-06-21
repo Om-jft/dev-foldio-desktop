@@ -22,7 +22,7 @@
             </Grid.RowDefinitions>
             <Image Grid.Row="0" Grid.ColumnSpan="2" Visibility="Collapsed" Height="{Binding ExportHeight, Mode=OneWay}" Width="{Binding ExportWidth, Mode=OneWay}" Source="{Binding Path= URIPathImgGIF, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></Image>
             <Border x:Name="ImagePanel" Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="#7f8486" BorderThickness="0" CornerRadius="2">
-                <Image Source="{Binding URIPathImgGIF_Preview}" Width="330" Height="185" Stretch="Uniform"  HorizontalAlignment="Stretch" />
+                <Image Source="{Binding URIPathImgGIF_Preview}" Width="320" Height="175" Stretch="Uniform" />
             </Border>
             <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,15,0,0">
                 <Grid>
@@ -100,12 +100,7 @@
 
                     <CheckBox Grid.Row="3" Grid.ColumnSpan="6" x:Name="ReverseRotationChkBox" IsChecked="{Binding RotationCheck, Mode=TwoWay}" Content="Reverse Rotation"
                           Foreground="#ffffff" FontSize="12" FontWeight="Bold" Background="Transparent" Style="{StaticResource ChkboxSelector_new}"  />
-
-
                 </Grid>
-
-
-
             </StackPanel>
             <Button Grid.Row="2"  Grid.ColumnSpan="2"  x:Name="ExportGIFButton" Content="Done" Click="ExportGIF_Click" Background="#007aff" Width="330" Height="35" Foreground="#ffffff" 
                     FontSize="13" FontWeight="Bold" FontFamily="roboto" HorizontalAlignment="Center" VerticalAlignment="Center" />

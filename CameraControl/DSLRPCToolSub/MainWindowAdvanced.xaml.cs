@@ -85,7 +85,7 @@ namespace CameraControl
         ExportGIFModel __gIFModel = ExportGIFModel.getInstance();
         Caretaker __caretaker = Caretaker.GetInstance();
         Navigation navigation = null;
-
+        public WatermarkProperties __WatermarkProperties = WatermarkProperties.getInstance();
         public ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
@@ -212,6 +212,7 @@ namespace CameraControl
             __gIFModel.ExecuteInti(this);
             __caretaker.ExecuteInti(this);
             UnDoObject.ExecuteInti(this);
+            __WatermarkProperties.ExecuteInti(this);
             
         }
 
@@ -2333,6 +2334,7 @@ namespace CameraControl
         }
         private void BrowseFolderImages(string _folderPath)
         {
+            this.Cursor = Cursors.Wait;
             _folderpath = _folderPath;
             if (!bgWorker.IsBusy)
             {
@@ -3685,7 +3687,7 @@ namespace CameraControl
                 string[] supportedExtensions = new[] { ".bmp", ".jpeg", ".jpg", ".png", ".tiff" };
 
                 var files = Directory.GetFiles(_folderpath).Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower()));
-                if (files.Count() <= 0) { MessageBox.Show("File type images not found in selected folder. "+files.ToString(),"Select Images Folder ",MessageBoxButton.OK,MessageBoxImage.Exclamation); return; }
+                if (files.Count() <= 0) { MessageBox.Show("File type images not found in selected folder. "+files.ToString(),"Select Images Folder ",MessageBoxButton.OK,MessageBoxImage.Exclamation); this.Cursor = Cursors.Arrow; return; }
                 string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
                 if (!Directory.Exists(tempfolder))
                     Directory.CreateDirectory(tempfolder);
@@ -3741,14 +3743,18 @@ namespace CameraControl
                     navigation.txtbyFrame.Text = String.Format("/ " + images_Folder.Count);
                     float factor = (float)360 / images_Folder.Count;
                     navigation.txtFramedistance.Text = String.Format("{0:0.0}°", factor);
+                    this.Cursor = Cursors.Arrow;
+                    GC.Collect();
                 });
                 
             }
             catch (Exception ex) { Log.Debug("BrowseFolderImages", ex);}
         }
         //public List<ImageDetails> zip_folder = new List<ImageDetails>();
+        DSLR_Tool_PC.ViewModels.Watermark watermarkName = DSLR_Tool_PC.ViewModels.Watermark.GetInstance();
         public string FrameToFile()
         {
+            this.Cursor = Cursors.Wait;
             try
             {
                 string tempfolder = Path.Combine(Settings.ApplicationTempFolder, "og_" + Path.GetRandomFileName());
@@ -3764,26 +3770,19 @@ namespace CameraControl
                     }
                     f.Frame.Save(Path.Combine(tempfolder, filename), System.Drawing.Imaging.ImageFormat.Jpeg);
                     f.Frame.Dispose();f.Frame = null;
-                    //var e = Path.Combine(tempfolder, filename);
-                    //ImageDetails id = new ImageDetails()
-                    //{
-                    //    Path_Orginal = Path.Combine(tempfolder, filename),
-                    //    Path = Path.Combine(tempfolder, filename),
-
-                    //    FileName = System.IO.Path.GetFileName(e),
-                    //    Extension = System.IO.Path.GetExtension(e),
-                    //    DateModified = (System.IO.File.GetCreationTime(e)).ToString("yyyy-MM-dd"),
-                    //    CreationDateTime = System.IO.File.GetCreationTimeUtc(e),
-                    //    TimeModified = System.IO.File.GetCreationTime(e).ToString("HH:mm:ss:ffffff"),
-                    //    IsZIPSelected = true,
-                    //};
-                    //zip_folder.Add(id);
-                    //Thread.Sleep(100);
+                    if (watermarkName.ImageName != "")
+                    {
+                        var file = Path.Combine(tempfolder, filename);
+                        WatermarkProperties.ApplyWatermark(file);
+                    }
+                    Thread.Sleep(10);
                 }
                 __exportPathUpdate.PathImg = Path.Combine(tempfolder, Path.GetFileName(images_Folder[0].Path));
+                this.Cursor = Cursors.Arrow;
                 return tempfolder;
             }
             catch(Exception ex) { Log.Debug("Frame to file exception: ",ex); }
+            this.Cursor = Cursors.Arrow;
             return null;
         }
 
@@ -3799,20 +3798,24 @@ namespace CameraControl
 
         private void UndoClick(object sender, RoutedEventArgs e)
         {
+            this.Cursor = Cursors.Wait;
             if (!__photoEditModel.state_bgWorker.IsBusy && !__photoEditModel.FilterCorrection_bgWorker.IsBusy)
             {
                 if (ETg_Btn8.IsChecked == true) { ETg_Btn8.IsChecked = false; }
                 if (UnDoObject._Caretaker.IsUndoPossible()) { UnDoObject.Undo(1); }
             }
+            this.Cursor = Cursors.Arrow;
             //else { MessageBox.Show("No action to undo.", "Invalid Undo Operation", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
             
         }
         private void RedoClick(object sender, RoutedEventArgs e)
         {
+            this.Cursor = Cursors.Wait;
             if(!__photoEditModel.state_bgWorker.IsBusy && !__photoEditModel.FilterCorrection_bgWorker.IsBusy)
             {
                 if (UnDoObject._Caretaker.IsRedoPossible()) { UnDoObject.Redo(1); }
             }
+            this.Cursor = Cursors.Arrow;
             //else { MessageBox.Show("No action to redo.", "Invalid Redo Operation", MessageBoxButton.OK, MessageBoxImage.Exclamation); }
         }
         public void updateImageFolder(int index, Bitmap image)

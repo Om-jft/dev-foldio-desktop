@@ -426,13 +426,11 @@ namespace DSLR_Tool_PC.ViewModels
 
         private Bitmap Apply_BackgroundFilter(Bitmap _bmpImage,int bgf)
         {
-            Bitmap _returnBmp = null;
+            string tempbg = Path.Combine(Settings.ApplicationTempFolder, "BGApply");
+            if (!Directory.Exists(tempbg)) { Directory.CreateDirectory(tempbg); }
+            string tempFile_In = Path.Combine(tempbg, Path.GetRandomFileName().Replace(".", "") + "." + ImageFormat.Jpeg);
             try
             {
-                string tempbg = Path.Combine(Settings.ApplicationTempFolder, "BGApply");
-                if (!Directory.Exists(tempbg)) { Directory.CreateDirectory(tempbg); }
-                string tempFile_In = Path.Combine(tempbg, Path.GetRandomFileName().Replace(".", "") + "." + ImageFormat.Jpeg);
-
                 if (File.Exists(tempFile_In))
                     File.Delete(tempFile_In);
 
@@ -446,18 +444,17 @@ namespace DSLR_Tool_PC.ViewModels
                      StaticClass.RemoveBG_usingPy(tempFile_In, tempFile_In, TempBgFilter);
                     Log.Debug(tempFile_In);
                 }
-
-                Bitmap bmp = (Bitmap)Image.FromFile(tempFile_In);
-                _returnBmp = bmp;
-
                 //bmp.Dispose();
 
                 //if (File.Exists(tempFile_In))
                 //    File.Delete(tempFile_In);
             }
             catch (Exception ex) { Log.Debug("Apply_BackgroundFilter", ex); }
-
-            return _returnBmp;
+            //using(Bitmap bmp = (Bitmap)Image.FromFile(tempFile_In))
+            //{
+            //    return (Bitmap)bmp;
+            //}
+            return new Bitmap(tempFile_In);
         }
 
         public void ResetAllControls()

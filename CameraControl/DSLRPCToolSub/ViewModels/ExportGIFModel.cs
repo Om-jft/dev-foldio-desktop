@@ -47,7 +47,7 @@ namespace DSLR_Tool_PC.ViewModels
         private string _uripathimgGIFPreview = "";
         private bool SkipPreview = false;
 
-        private string tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
+        private string tempPathFolder = null;
         private System.Windows.Forms.FolderBrowserDialog _saveFileDialog = new System.Windows.Forms.FolderBrowserDialog();
         private int total=0;
         private int count=0;
@@ -348,13 +348,13 @@ namespace DSLR_Tool_PC.ViewModels
                 foreach (var f in FilesGIF)
                 {
                     string a = f;
-                    if (watermarkName.ImageName != "")
-                    {
-                        var file = Path.Combine(tempfolder, Path.GetFileName(f));
-                        File.Copy(f, file);
-                        a = WatermarkProperties.ApplyWatermark(file);
-                    }
-
+                    //if (watermarkName.ImageName != "")
+                    //{
+                    //    var file = Path.Combine(tempfolder, Path.GetFileName(f));
+                    //    File.Copy(f, file);
+                    //    WatermarkProperties.ApplyWatermark(file);
+                    //    a = file;
+                    //}
                     ImageDetails id = new ImageDetails()
                     {
                         Path = a,
@@ -420,7 +420,7 @@ namespace DSLR_Tool_PC.ViewModels
             {
                 _saveFileDialog.ShowDialog();
                 if (_saveFileDialog.SelectedPath == "") { return; }
-
+                tempPathFolder = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName());
                 try { if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); } }
                 catch (Exception) { return; }
 
