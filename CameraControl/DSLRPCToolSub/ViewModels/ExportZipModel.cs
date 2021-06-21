@@ -293,47 +293,30 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            try
+            __mainWindowAdvanced.HideProgress();
+            __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
+            if (successful == true)
             {
-                if (!Directory.Exists(tempPathFolder)) { Directory.CreateDirectory(tempPathFolder); }
-                if (ImageFilm == true)
-                {
-                    if (SelectedFileExtension == "" || SelectedFileExtension == null) { SelectedFileExtension = "Jpg"; }
-                    using (ZipArchive archive = System.IO.Compression.ZipFile.Open(zipPath, ZipArchiveMode.Update))
-                    {
-                        archive.CreateEntryFromFile(Path.Combine(tempPathFolder, "imagefilm." + SelectedFileExtension), "imagefilm." + SelectedFileExtension);
-                    }
-                }
-                
-
-                if (successful == true)
-                {
-                    MessageBox.Show("Saved Successfully at location " + Environment.NewLine + zipPath, "ExportZIP", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                MessageBox.Show("Saved Successfully at location " + Environment.NewLine + zipPath, "ExportZIP", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            catch(Exception ex)
-            {
-                Log.Debug("ZipArchive Exception: ", ex);
-                MessageBox.Show("Unable to export images. Try after sometime...!", "360 PC Tool | Zip Export", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                __mainWindowAdvanced.HideProgress();
-                __mainWindowAdvanced.ProgressPannel.Visibility = Visibility.Collapsed;
-                __mainWindowAdvanced.ChangesProgress.Value = 0;
-                count = 0;
-            }
-
+            __mainWindowAdvanced.ChangesProgress.Value = 0;
+            count = 0;
+            __mainWindowAdvanced.ProgressLabel.Text = "";
             //if (tempPathFolder != "")
             //    Directory.Delete(tempPathFolder, true);
-            
-            
         }
 
         private void BgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             __mainWindowAdvanced.ChangesProgress.Value = (count * 100) / total;
-            __mainWindowAdvanced.ProgressLabel.Text = string.Format("Saving frame " + e.ProgressPercentage + " of " + total);
+            if ((int)e.ProgressPercentage > total)
+            {
+                __mainWindowAdvanced.ProgressLabel.Text = string.Format("Generating image film...");
+            }
+            else
+            {
+                __mainWindowAdvanced.ProgressLabel.Text = string.Format("Saving frame " + e.ProgressPercentage + " of " + total);
+            }
         }
 
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -350,7 +333,7 @@ namespace DSLR_Tool_PC.ViewModels
 
                 string _ZipFileName = "zp_" + DateTime.Now.Ticks.ToString() + ".zip";
                 zipPath = Path.Combine(zipPath, _ZipFileName);
-                if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
+                //if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
                 total = ZipImageCount;
 
                 foreach (var img in ImagesZip) //todaysFiles is list of file names (with full path) to be zipped
@@ -399,6 +382,27 @@ namespace DSLR_Tool_PC.ViewModels
                         GC.Collect();
                     }
                 }
+                bgWorker.ReportProgress(count + 1);
+                if (ImageFilm == true) { ImageFilmGeneration(tempPathFolder); }
+                try
+                {
+                    if (!Directory.Exists(tempPathFolder)) {  }
+                    {
+                        if (ImageFilm == true)
+                        {
+                            if (SelectedFileExtension == "" || SelectedFileExtension == null) { SelectedFileExtension = "Jpg"; }
+                            using (ZipArchive archive = System.IO.Compression.ZipFile.Open(zipPath, ZipArchiveMode.Update))
+                            {
+                                archive.CreateEntryFromFile(Path.Combine(tempPathFolder, "imagefilm." + SelectedFileExtension), "imagefilm." + SelectedFileExtension);
+                            }
+                        }                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("ZipArchive Exception: ", ex);
+                    MessageBox.Show("Unable to export images. Try after sometime...!", "360 PC Tool | Zip Export", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             catch (Exception ex) { Log.Debug("Zip images exception: ",ex); }
         }
@@ -429,85 +433,23 @@ namespace DSLR_Tool_PC.ViewModels
 
         private void ImageFilmGeneration(string tempPath)
         {
-            //List<System.Drawing.Bitmap> bitimages = new List<System.Drawing.Bitmap>();
-            System.Drawing.Bitmap finalImage = null;
-
             try
             {
-                int width = 0;
-                int height = 0;
-
-                foreach (var image in ImagesZip)
-                {
-                    //create a Bitmap from the file and add it to the list
-                    if (image.IsZIPSelected == true)
-                    {
-                        //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(image.Path);
-
-                        //update the size of the final bitmap
-                        height += (int)((double)ExportHeightZip*0.3);
-                        width = (int)((double)ExportWidthZip * 0.3) > width ? (int)((double)ExportWidthZip*0.3) : width;
-
-                        //bitimages.Add(bitmap);
-                    }
-                }
-
-                //create a bitmap to hold the combined image
-                finalImage = new System.Drawing.Bitmap(width, height);
-
-                //get a graphics object from the image so we can draw on it
-                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(finalImage))
-                {
-                    //set background color
-                    g.Clear(System.Drawing.Color.Black);
-
-                    //go through each image and draw it on the final image
-                    int offset = 0;
-                    //foreach (System.Drawing.Bitmap image in bitimages)
-                    //{
-                    //    g.DrawImage(image, new System.Drawing.Rectangle(0, offset, (int)ExportWidthZip, (int)ExportHeightZip));
-                    //    offset += (int)ExportHeightZip;
-                    //}
-                    foreach (var image in ImagesZip)
-                    {
-                        if (image.IsZIPSelected == true)
-                        {
-                            Bitmap b = compressimagesize(new Bitmap(image.Path));
-                            {
-                                g.DrawImage(b, new System.Drawing.Rectangle(0, offset, (int)b.Width, (int)b.Height));
-                                offset += (int)b.Height;
-                                b.Dispose();
-                                Thread.Sleep(20);
-                            }
-                        }
-                    }
-                }
-                using (var ms = new MemoryStream())
-                {
-                    using (FileStream fs = new FileStream(Path.Combine(tempPath, "imagefilm." + SelectedFileExtension), FileMode.Create, FileAccess.ReadWrite))
-                    {
-                        finalImage.Save(ms, ImageFormat.Jpeg);
-                        byte[] bytes = ms.ToArray();
-                        fs.Write(bytes, 0, bytes.Length);
-                    }
-                }
-
+                string input = tempPath + "\\*." + SelectedFileExtension.ToString();
+                string output =tempPath+"\\imagefilm." + SelectedFileExtension.ToString();
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C convert -append " + input + " " + output;
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+                process.Close();
             }
             catch (Exception ex)
             {
-                if (finalImage != null)
-                    finalImage.Dispose();
-                //throw ex;
-                //throw;
-            }
-            finally
-            {
-                //clean up memory
-                //foreach (System.Drawing.Bitmap image in bitimages)
-                //{
-                //    if (image != null) { image.Dispose(); }
-                //}
-                if (finalImage != null) { finalImage.Dispose(); }
+                Log.Debug("ImageFilm Exception: ", ex);
             }
         }
 
@@ -527,6 +469,70 @@ namespace DSLR_Tool_PC.ViewModels
                 imgthumbgraph.DrawImage(image, imageRectangle);
                 //image.Save("C:\\a.jpg");
                 return (Bitmap)imgthumnail;
+            }
+        }
+
+        public void OldMethodForImageFilm()
+        {
+            //List<System.Drawing.Bitmap> bitimages = new List<System.Drawing.Bitmap>();
+            System.Drawing.Bitmap finalImage = null;
+
+            int width = 0;
+            int height = 0;
+
+            foreach (var image in ImagesZip)
+            {
+                //create a Bitmap from the file and add it to the list
+                if (image.IsZIPSelected == true)
+                {
+                    //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(image.Path);
+
+                    //update the size of the final bitmap
+                    height += (int)((double)ExportHeightZip * 0.3);
+                    width = (int)((double)ExportWidthZip * 0.3) > width ? (int)((double)ExportWidthZip * 0.3) : width;
+
+                    //bitimages.Add(bitmap);
+                }
+            }
+
+            //create a bitmap to hold the combined image
+            finalImage = new System.Drawing.Bitmap(width, height);
+
+            //get a graphics object from the image so we can draw on it
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(finalImage))
+            {
+                //set background color
+                g.Clear(System.Drawing.Color.Black);
+
+                //go through each image and draw it on the final image
+                int offset = 0;
+                //foreach (System.Drawing.Bitmap image in bitimages)
+                //{
+                //    g.DrawImage(image, new System.Drawing.Rectangle(0, offset, (int)ExportWidthZip, (int)ExportHeightZip));
+                //    offset += (int)ExportHeightZip;
+                //}
+                foreach (var image in ImagesZip)
+                {
+                    if (image.IsZIPSelected == true)
+                    {
+                        Bitmap b = compressimagesize(new Bitmap(image.Path));
+                        {
+                            g.DrawImage(b, new System.Drawing.Rectangle(0, offset, (int)b.Width, (int)b.Height));
+                            offset += (int)b.Height;
+                            b.Dispose();
+                            Thread.Sleep(20);
+                        }
+                    }
+                }
+            }
+            using (var ms = new MemoryStream())
+            {
+                using (FileStream fs = new FileStream(Path.Combine(/*tempPath*/"", "imagefilm." + SelectedFileExtension), FileMode.Create, FileAccess.ReadWrite))
+                {
+                    finalImage.Save(ms, ImageFormat.Jpeg);
+                    byte[] bytes = ms.ToArray();
+                    fs.Write(bytes, 0, bytes.Length);
+                }
             }
         }
     }
