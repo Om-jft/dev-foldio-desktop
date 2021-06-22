@@ -441,7 +441,7 @@ namespace DSLR_Tool_PC.ViewModels
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C convert -append " + input + " " + output;
+                startInfo.Arguments = "/C convert -append \"" + input + "\" \"" + output+"\"";
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
