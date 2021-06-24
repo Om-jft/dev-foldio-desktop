@@ -987,6 +987,10 @@ namespace CameraControl
                 DSLR_Tool_PC.StaticClass.IsCapturedPhoto = true;
                 Dispatcher.Invoke(() =>
                 {
+                    if (ratio1.IsChecked == true || ratio2.IsChecked == true || ratio3.IsChecked == true)
+                    {
+                        ApplyAspectRatio(fileName, GetSelectedRatio());
+                    }
                     if (tab_Single.IsSelected) { ServiceProvider.Settings.DefaultSession.Folder = LastLocation; }
                     else { if (StaticClass.CapturedImageCount == _ttVM.getframe()) { RecentHistory.Last360 = ServiceProvider.Settings.DefaultSession.Folder; } }
                     button3.IsEnabled = true;
@@ -3896,6 +3900,44 @@ namespace CameraControl
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 this.DragMove();
+            }
+        }
+
+        public string GetSelectedRatio()
+        {
+            string result = "";
+            if (ratio1.IsChecked==true)
+            {
+                result = "1:1";
+            }
+            if (ratio2.IsChecked == true)
+            {
+                result = "4:3";
+            }
+            if (ratio3.IsChecked == true)
+            {
+                result = "16:9";
+            }
+            return result;
+        }
+
+        public void ApplyAspectRatio(string filename, string ratio)
+        {
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C magick \"" + filename + "\" -gravity center -extent \"" + ratio + "\" \"" + filename + "\"";
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+                process.Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug("Capture aspect Exception: ", ex);
             }
         }
     }
