@@ -570,9 +570,11 @@ namespace DSLR_Tool_PC.ViewModels
                 }
                 string _outLastfileName = Path.Combine(tempFolder, "img%06d.jpg");
                 float fr = Convert.ToSingle(images.Count / PlayTime); //(1f / (Convert.ToSingle(PlayTime) * (1f / 3f)));
-
+                if (ExportHeight % 2 != 0) { ExportHeight = ExportHeight - 1; }
+                if (ExportWidth % 2 != 0) { ExportWidth = ExportWidth - 1; }
                 //string parameters = @"-r {0} -i {1}\img00%04d.jpg -c:v libx264 -vf fps=25 -pix_fmt yuv420p";
-                string parameters = @" -framerate {0} -i {1} -c:v libx264 -vf fps=25 -pix_fmt yuv420p -vf scale={3}:{4} {2}";
+                //string parameters = @" -framerate {0} -i {1} -c:v libx264 -vf fps=25 -pix_fmt yuv420p -vf scale={3}:{4} {2}";
+                string parameters = @"-framerate {0} -i {1} -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p -vf scale={3}:{4} {2}";
 
                 //new VideoType("4K 16:9", 3840, 2160, ".mp4"),
                 //new VideoType("HD 1080 16:9", 1920, 1080, ".mp4"),

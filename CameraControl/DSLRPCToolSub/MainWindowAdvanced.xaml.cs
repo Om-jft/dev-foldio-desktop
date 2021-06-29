@@ -87,6 +87,7 @@ namespace CameraControl
         Navigation navigation = null;
         public WatermarkProperties __WatermarkProperties = WatermarkProperties.getInstance();
         public ExportPathUpdate __exportPathUpdate = ExportPathUpdate.getInstance();
+        public TurnTableViewModel __turnTableViewModel = TurnTableViewModel.GetInstance();
         LVControler __lvControler = null;
         //public double CameraGrid_width;
         //public double CameraGrid_height;
@@ -213,7 +214,9 @@ namespace CameraControl
             __caretaker.ExecuteInti(this);
             UnDoObject.ExecuteInti(this);
             __WatermarkProperties.ExecuteInti(this);
-            
+            __turnTableViewModel.ExecuteInti(this);
+            TurnOffControl();
+
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -1981,36 +1984,19 @@ namespace CameraControl
                 int yF = (int)(__EditPicGrid_ActualHeight - EditFramePicEdit.ActualHeight) / 2;
                 int wb = (int)EditFramePicEdit.ActualWidth - (_x - xF);
                 int hb = (int)EditFramePicEdit.ActualHeight - _y;
-                var cImage = new CroppedBitmap(rtb, new Int32Rect(_x, _y, _w, _h));
-                //EditFramePic.Source = cImage;
-
-                var filename = Path.Combine(Settings.ApplicationTempFolder, Path.GetRandomFileName() + Path.GetExtension(__Pathupdate.PathImg));
-                JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(cImage));
-                using (System.IO.FileStream fs = File.Create(filename))
-                {
-                    encoder.Save(fs);
-                }
-                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(filename, BitmapLoader.LargeThumbSize, 0);
 
                 int ind = __photoEditModel.getIndex(Path.GetFileName(__Pathupdate.PathImg));
-                if (!images_Folder[ind].IsEdited) { UnDoObject.SetStateForUndoRedo(new Memento(ind,new ImageDetails(images_Folder[ind]))); }
-                using (Bitmap b=new Bitmap(filename))
-                {
-                   
-                    if (images_Folder[ind].Frame != null) { images_Folder[ind].Frame.Dispose(); }
-                    images_Folder[ind].Frame = (Bitmap)b.Clone();
-                }
-                
+                if (!images_Folder[ind].IsEdited) { UnDoObject.SetStateForUndoRedo(new Memento(ind,new ImageDetails(images_Folder[ind]))); }                
                 images_Folder[ind].croppedImage = true;
-                images_Folder[ind].crop_X =  _x-xF; images_Folder[ind].crop_Y = _y-yF;
-                images_Folder[ind].crop_H = /*(int)EditFramePicEdit.ActualHeight-_y*/_h;
-                images_Folder[ind].crop_W = /*(int)EditFramePicEdit.ActualWidth- images_Folder[ind].crop_X*/_w;
+                images_Folder[ind].crop_X =  Math.Abs(_x - xF); images_Folder[ind].crop_Y = Math.Abs(_y - yF);
+                images_Folder[ind].crop_H = _h;
+                images_Folder[ind].crop_W = _w;
                 images_Folder[ind].resizeW = (int)EditFramePicEdit.ActualWidth;
                 images_Folder[ind].resizeH = (int)EditFramePicEdit.ActualHeight;
                 images_Folder[ind].IsEdited = true;
-                //if (File.Exists(filename)) { File.Delete(filename); }
                 UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind])));
+
+                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(CropFrame(new Bitmap(images_Folder[ind].Path),ind));
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click ", ex); }
             CropOut.Visibility = Visibility.Collapsed;
@@ -2057,6 +2043,7 @@ namespace CameraControl
                 if (tab_video.IsSelected)
                 {
                     btn_liveview.Visibility = Visibility.Visible;
+                    //_ttVM.IsDeviceAndVedioMode = true;
                     __showstatus = true;
                     StaticClass.TypeOfCapture_SelectedTabIndex = 2;
                 }
@@ -2578,7 +2565,6 @@ namespace CameraControl
         {
             double width = CameraGrid.Width;
             double height = CameraGrid.Height;
-
             if (CGrid1.IsChecked == true) { GridLines_Capture(1, width, height); }
             else if (CGrid2.IsChecked == true) { GridLines_Capture(2, width, height); }
             else if (CGrid3.IsChecked == true) { GridLines_Capture(3, width, height); }
@@ -3639,6 +3625,7 @@ namespace CameraControl
             try
             {
                 tab_video.IsSelected = true;
+                //_ttVM.IsDeviceAndVedioMode = true;
                 modeSingle.IsEnabled = true;
                 mode360.IsEnabled = true;
                 modeVideo.IsEnabled = false;
@@ -3932,13 +3919,23 @@ namespace CameraControl
                 startInfo.Arguments = "/C magick \"" + filename + "\" -gravity center -extent \"" + ratio + "\" \"" + filename + "\"";
                 process.StartInfo = startInfo;
                 process.Start();
-                process.WaitForExit();
+                //process.WaitForExit();
                 process.Close();
             }
             catch (Exception ex)
             {
                 Log.Debug("Capture aspect Exception: ", ex);
             }
+        }
+
+        public void TurnOnControl()
+        {
+            button3.IsEnabled = true; tab_360.IsSelected = true; btn_liveview.IsEnabled = true;
+
+        }
+        public void TurnOffControl()
+        {
+            button3.IsEnabled = false; tab_360.IsSelected = true; btn_liveview.IsEnabled = false;
         }
     }
 }
