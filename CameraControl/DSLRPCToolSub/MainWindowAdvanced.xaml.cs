@@ -1994,9 +1994,10 @@ namespace CameraControl
                 images_Folder[ind].resizeW = (int)EditFramePicEdit.ActualWidth;
                 images_Folder[ind].resizeH = (int)EditFramePicEdit.ActualHeight;
                 images_Folder[ind].IsEdited = true;
+                images_Folder[ind].Frame = CropFrame(new Bitmap(images_Folder[ind].Path), ind);
                 UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind])));
 
-                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(CropFrame(new Bitmap(images_Folder[ind].Path),ind));
+                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
             }
             catch (Exception ex) { Log.Debug("ButtonOK_Click ", ex); }
             CropOut.Visibility = Visibility.Collapsed;
@@ -2571,6 +2572,8 @@ namespace CameraControl
             else { GridLines_Capture(0, width, height); }
         }
 
+        Stretch _stretch = Stretch.Fill;
+
         private void ratio1_Checked(object sender, RoutedEventArgs e)
         {
             __CropChangeFromButtons = true;
@@ -2583,7 +2586,7 @@ namespace CameraControl
                 ratio_4.IsChecked = false;
                 ratio_16.IsChecked = false;
 
-                LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
+                LVViewModel.lvInstance().IsStretchToFill = _stretch;
 
                 double W, H; W = H = 0;
 
@@ -2666,7 +2669,7 @@ namespace CameraControl
                 ratio_4.IsChecked = true;
                 ratio_16.IsChecked = false;
 
-                LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
+                LVViewModel.lvInstance().IsStretchToFill = _stretch;
 
                 if (__CameraGrid_ActualHeight > __CameraGrid_ActualWidth)
                 {
@@ -2777,7 +2780,7 @@ namespace CameraControl
                 ratio_4.IsChecked = false;
                 ratio_16.IsChecked = true;
 
-                LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
+                LVViewModel.lvInstance().IsStretchToFill = _stretch;
 
                 if (__CameraGrid_ActualHeight > __CameraGrid_ActualWidth)
                 {
@@ -3916,7 +3919,7 @@ namespace CameraControl
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C magick \"" + filename + "\" -gravity center -extent \"" + ratio + "\" \"" + filename + "\"";
+                startInfo.Arguments = "/C convert \"" + filename + "\" -resize \"" + ratio + "\" \"" + filename + "\"";
                 process.StartInfo = startInfo;
                 process.Start();
                 //process.WaitForExit();

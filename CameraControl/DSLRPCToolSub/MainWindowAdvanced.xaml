@@ -1251,11 +1251,14 @@
                                             <ColumnDefinition Width="4*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Border Grid.Row="1" Grid.Column="1" Background="#ffffff" >
+                                        <Border Grid.Row="1" Grid.Column="1"  >
                                             <Grid x:Name="EditPicGrid" >
-                                                <Image Visibility="Visible" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
-                                                <Image x:Name="EditFramePicEdit"  Grid.Column="1" Source="{Binding Source={x:Static Member=Core:ServiceProvider.Settings}, Path=SelectedBitmap.DisplayEditImage}" Stretch="Uniform"   Opacity="1" />
                                                 
+                                                    <Image Visibility="Visible" x:Name="EditFramePic"  Grid.Column="1" Source="{Binding Path= PathImg, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                                                <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Image x:Name="EditFramePicEdit"  Grid.Column="1" Source="{Binding Source={x:Static Member=Core:ServiceProvider.Settings}, Path=SelectedBitmap.DisplayEditImage}" Stretch="Uniform"   Opacity="1" />
+                                                </Border>
+
                                                 <!--<Grid x:Name="preLoader" Visibility="Collapsed">
                                                     <Image Name="img" gif:ImageBehavior.RepeatBehavior="Forever" 
                 /> --><!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"--><!--
@@ -1263,7 +1266,7 @@
                                                 </Grid>-->
                                                  <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->
 
-                                                <Border BorderBrush="Black" BorderThickness="2,1,1,2"  Margin="20"  Background="#77000000" x:Name="preLoader" Visibility="Collapsed">
+                                                <Border BorderBrush="#131415" BorderThickness="2,1,1,2"  Margin="20"  Background="#44000000" x:Name="preLoader" Visibility="Collapsed">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="15*"/>
@@ -1279,7 +1282,7 @@
                 />
                                                    
                                                      <!--Visibility="Visible" gif:ImageBehavior.AnimatedSource="assets/images/spinner.gif"-->
-                                                    <TextBlock Grid.Row="2" Grid.Column="0" x:Name="preloaderText" Text="Loading images, please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" LineStackingStrategy="BlockLineHeight" Foreground="#FF0B0C0C"/>
+                                                    <TextBlock Grid.Row="2" Grid.Column="0" x:Name="preloaderText" Text="Loading images, please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Medium" LineStackingStrategy="BlockLineHeight" Foreground="#ffffff"/>
                                                 </Grid>
                                                 </Border>
                                                 <!--gif:ImageBehavior.AnimatedSource="dslrpctoolsub/assets/images/spinner.gif"-->

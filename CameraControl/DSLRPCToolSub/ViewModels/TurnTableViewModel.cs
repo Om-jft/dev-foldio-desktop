@@ -383,7 +383,7 @@ namespace DSLR_Tool_PC.ViewModels
                     _RotateAngle = _RotateAngle + ExceedAngle;
                     ExceedAngle = 0;
                 }
-                _RotateAngle = (_RotateAngle / BTCmd.ANGLE_DIVIDENT);
+                //_RotateAngle = (_RotateAngle / BTCmd.ANGLE_DIVIDENT);
             }
 
             if (_FrameNum > 0 && _RotateAngle > 0)
