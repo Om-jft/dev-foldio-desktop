@@ -23,6 +23,7 @@ using CameraControl.DSLRPCToolSub.Classes;
 using System.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Bluetooth.Advertisement;
+using CameraControl;
 
 namespace DSLR_Tool_PC.ViewModels
 {
@@ -35,6 +36,11 @@ namespace DSLR_Tool_PC.ViewModels
         int ExportWidth = 1920;
         int ExportHeight = 1080;
 
+        MainWindowAdvanced __mainWindowAdvanced = null;
+        public void ExecuteInti(object __this)
+        {
+            __mainWindowAdvanced = (MainWindowAdvanced)__this;
+        }
 
         private System.Timers.Timer _timer = new System.Timers.Timer(1000);
         private System.Timers.Timer _TimerSearchFoldioStatus = new System.Timers.Timer(1000);
@@ -153,11 +159,13 @@ namespace DSLR_Tool_PC.ViewModels
 
                 _rotationAngle_Text = 0;
                 RotationAngle_Text = 0;
+                __mainWindowAdvanced.TurnOnControl();
             }
             else
             {
                 IsSelectedDevicePanel = true; IsFoldioFound = false;
                 DisconnectedBluetoothDevice();
+                __mainWindowAdvanced.TurnOffControl();
             }
         }
 
@@ -375,7 +383,7 @@ namespace DSLR_Tool_PC.ViewModels
                     _RotateAngle = _RotateAngle + ExceedAngle;
                     ExceedAngle = 0;
                 }
-                _RotateAngle = (_RotateAngle / BTCmd.ANGLE_DIVIDENT);
+                //_RotateAngle = (_RotateAngle / BTCmd.ANGLE_DIVIDENT);
             }
 
             if (_FrameNum > 0 && _RotateAngle > 0)
@@ -747,12 +755,12 @@ namespace DSLR_Tool_PC.ViewModels
                         break;
                     case "MoveLeft_360":
                         //if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == false && IsCheckedContinueTurn == true) { _repeate = BTCmd.REPEAT_INFINITE; }
-                        _rotate_angl = (360 / BTCmd.ANGLE_DIVIDENT);
+                        _rotate_angl = (360 /*/ BTCmd.ANGLE_DIVIDENT*/);
                         sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateLeft(_rotate_angl, getSpeed(), _repeate));
                         break;
                     case "MoveRight_360":
                         //if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == false && IsCheckedContinueTurn == true) { _repeate = BTCmd.REPEAT_INFINITE; }
-                        _rotate_angl = (360 / BTCmd.ANGLE_DIVIDENT);
+                        _rotate_angl = (360 /*/ BTCmd.ANGLE_DIVIDENT*/);
                         sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateRight(_rotate_angl, getSpeed(), _repeate));
                         break;
                     case "MoveLeft_with_Angle":
@@ -783,7 +791,7 @@ namespace DSLR_Tool_PC.ViewModels
                         break;
                     case "VideoRight":
                         if (IsDeviceAndVedioMode == true && IsCheckedContinueTurn == true) { _repeate = BTCmd.REPEAT_INFINITE; _rotate_angl = 0; }
-                        if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == true) { _repeate = BTCmd.REPEAT_ONCE; _rotate_angl = (360 / BTCmd.ANGLE_DIVIDENT); }
+                        if (IsDeviceAndVedioMode == true && IsCheckedSingleTurn == true) { _repeate = BTCmd.REPEAT_ONCE; _rotate_angl = (360 /*/ BTCmd.ANGLE_DIVIDENT*/); }
                         sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateRight(_rotate_angl, getSpeed(), _repeate));
                         break;
                 }
@@ -1709,6 +1717,7 @@ namespace DSLR_Tool_PC.ViewModels
                 {
                     _isDeviceAndVedioMode = value;
                     NotifyPropertyChanged("IsDeviceAndVedioMode");
+
                 }
             }
         }
