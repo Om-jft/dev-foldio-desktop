@@ -2103,7 +2103,7 @@ namespace DSLR_Tool_PC.ViewModels
                 return;
             }
 
-            if (LiveViewData.ImageData.Length < 50)
+            if (LiveViewData.ImageData.Length < 50 || LiveViewData.ImageData.Length==null)
             {
                 return;
             }
@@ -3437,5 +3437,6 @@ namespace DSLR_Tool_PC.ViewModels
             get { return _IsStretchToFill; }
             set { _IsStretchToFill = value; RaisePropertyChanged(() => IsStretchToFill); }
         }
+
     }
 }
