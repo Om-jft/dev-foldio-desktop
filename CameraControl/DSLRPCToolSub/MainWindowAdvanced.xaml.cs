@@ -3940,5 +3940,10 @@ namespace CameraControl
         {
             button3.IsEnabled = false; tab_360.IsSelected = true; btn_liveview.IsEnabled = false;
         }
+
+        public void StopRecording()
+        {
+            Dispatcher.Invoke(new Action(delegate { LVViewModel.lvInstance().RecordLiveView(); }));
+        }
     }
 }

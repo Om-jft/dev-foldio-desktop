@@ -798,6 +798,7 @@ namespace DSLR_Tool_PC.ViewModels
 
                 __StartRotation = true;
                 WaitingForDeviceActivity(_rotate_angl);
+                if(IsDeviceAndVedioMode && IsCheckedSingleTurn) { __mainWindowAdvanced.StopRecording(); }
                 if ( _rotate_Direction == "VideoRight"  && _rotate_angl == 0) { return; }
                 if (_rotate_Direction == "MoveLeft" || _rotate_Direction == "MoveRight" ) { return; }
                 _rotate_angl = 0;
