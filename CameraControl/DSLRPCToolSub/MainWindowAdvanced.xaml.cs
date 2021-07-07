@@ -65,6 +65,9 @@ namespace CameraControl
         public bool KeyPreview { get; set; }
         private int changeCounter = 0;
         private string LastLocation = null;
+        private int refIndex = 0;
+        private string ChangeFolder = null;
+
         public UndoRedo UnDoObject = null;
         public RelayCommand<AutoExportPluginConfig> ConfigurePluginCommand { get; set; }
         public RelayCommand<IAutoExportPlugin> AddPluginCommand { get; set; }
@@ -72,11 +75,11 @@ namespace CameraControl
         public RelayCommand<CameraPreset> DeletePresetCommand { get; private set; }
         public RelayCommand<CameraPreset> LoadInAllPresetCommand { get; private set; }
         public RelayCommand<CameraPreset> VerifyPresetCommand { get; private set; }
-
+        private string LoaderText = null;
         public int EditFilterFlag = 0;
         //Added Code
         BackgroundWorker bgWorker = new BackgroundWorker();
-
+        BackgroundWorker CropWorker = new BackgroundWorker();
         public PathUpdate __Pathupdate = PathUpdate.getInstance();
 
         public PhotoEditModel __photoEditModel = PhotoEditModel.GetInstance();
@@ -178,6 +181,16 @@ namespace CameraControl
             ServiceProvider.DeviceManager.CameraSelected += DeviceManager_CameraSelected;
             ServiceProvider.DeviceManager.CameraConnected += DeviceManager_CameraConnected;
             ServiceProvider.DeviceManager.CameraDisconnected += DeviceManager_CameraDisconnected;
+
+            
+
+            CropWorker.DoWork += CropWorker_DoWork;
+            CropWorker.ProgressChanged += CropWorker_ProgressChanged;
+            CropWorker.RunWorkerCompleted += CropWorker_RunWorkerCompleted;
+
+            CropWorker.WorkerSupportsCancellation = true;
+            CropWorker.WorkerReportsProgress = true;
+
             SetLayout(ServiceProvider.Settings.SelectedLayout);
 
             var thread = new Thread(StartupThread);
@@ -1994,12 +2007,15 @@ namespace CameraControl
                 images_Folder[ind].resizeW = (int)EditFramePicEdit.ActualWidth;
                 images_Folder[ind].resizeH = (int)EditFramePicEdit.ActualHeight;
                 images_Folder[ind].IsEdited = true;
-                images_Folder[ind].Frame = CropFrame(new Bitmap(images_Folder[ind].Path), ind);
-                UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind])));
+                refIndex = ind;
+                //images_Folder[ind].Frame = CropFrame(new Bitmap(images_Folder[ind].Path), ind);
+                //UnDoObject.SetStateForUndoRedo(new Memento(ind, new ImageDetails(images_Folder[ind])));
 
-                ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
+                //ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(images_Folder[ind].Frame);
+
+                CropWorker.RunWorkerAsync();
             }
-            catch (Exception ex) { Log.Debug("ButtonOK_Click ", ex); }
+            catch (Exception ex) { Log.Debug("Crop_Click ", ex); }
             CropOut.Visibility = Visibility.Collapsed;
             ETg_Btn9.IsChecked = false;
         }
@@ -3512,6 +3528,13 @@ namespace CameraControl
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
+            
+            string resp = LVViewModel.lvInstance().Recording ? "" : LVViewModel.lvInstance().CameraDevice.GetProhibitionCondition(OperationEnum.RecordMovie);
+            if (!string.IsNullOrEmpty(resp))
+            {
+                MessageBox.Show("Camera ran into an error. Please restart the application to continue image capturing.", "Camera Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
             ServiceProvider.Settings.DefaultSession.AlowFolderChange = true;
             ServiceProvider.Settings.DefaultSession.ReloadOnFolderChange = true;
             button3.IsEnabled = false;
@@ -3538,6 +3561,12 @@ namespace CameraControl
 
         private void btn_liveview_Click(object sender, RoutedEventArgs e)
         {
+            string resp = LVViewModel.lvInstance().Recording ? "" : LVViewModel.lvInstance().CameraDevice.GetProhibitionCondition(OperationEnum.RecordMovie);
+            if (!string.IsNullOrEmpty(resp))
+            {
+                MessageBox.Show("Camera ran into an error. Please restart the application to continue image capturing.", "Camera Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
             if (!ServiceProvider.DeviceManager.SelectedCameraDevice.IsBusy && ServiceProvider.DeviceManager.SelectedCameraDevice.IsConnected)
             {
                 StaticClass.Is360CaptureProcess = true;
@@ -3945,5 +3974,55 @@ namespace CameraControl
         {
             Dispatcher.Invoke(new Action(delegate { LVViewModel.lvInstance().RecordLiveView(); }));
         }
+
+        
+
+
+        private void CropWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //worker complete events
+            preLoader.Visibility = Visibility.Collapsed;
+            preloaderText.Text =LoaderText;
+            BrowseReload(ChangeFolder);
+            HideProgress();
+        }
+
+        private void CropWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //progresschage events
+            LoaderText = preloaderText.Text;
+            preLoader.Visibility = Visibility.Visible;
+            preloaderText.Text = "Cropping frames...";
+            ShowProgress();
+        }
+
+        private void CropWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                CropWorker.ReportProgress(1);
+                ImageDetails _imageDetails = __Pathupdate.__SelectedImageDetails;
+                if (_imageDetails == null) { return; }
+
+                DirectoryInfo _dirInfoApplPath = new DirectoryInfo(System.IO.Path.GetDirectoryName(_imageDetails.Path_Orginal));
+                string[] _pathImagFiles = Directory.GetFiles(_dirInfoApplPath.ToString());
+
+                string tempSF = Path.Combine(Settings.ApplicationTempFolder, ".CropAllFrame_" + Path.GetRandomFileName());
+                if (!Directory.Exists(tempSF)) { Directory.CreateDirectory(tempSF); }
+                foreach (var _imgfl in _pathImagFiles)
+                {
+                    Bitmap bitmap = CropFrame(new Bitmap(_imgfl), refIndex);
+                    bitmap.Save(Path.Combine(tempSF,Path.GetFileName(_imgfl)));
+                    bitmap.Dispose();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    Thread.Sleep(100);
+                }
+                ChangeFolder = tempSF;
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+
+        }
+
     }
 }
