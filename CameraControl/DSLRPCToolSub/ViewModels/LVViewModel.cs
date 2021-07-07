@@ -2666,6 +2666,11 @@ namespace DSLR_Tool_PC.ViewModels
             try
             {
                 string resp = Recording ? "" : CameraDevice.GetProhibitionCondition(OperationEnum.RecordMovie);
+                if (!string.IsNullOrEmpty(resp))
+                {
+                    MessageBox.Show("Camera ran into an error. Please restart the application to continue image capturing.", "Camera Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Shutdown();
+                }
                 if (string.IsNullOrEmpty(resp))
                 {
                     _recordLength = 0;

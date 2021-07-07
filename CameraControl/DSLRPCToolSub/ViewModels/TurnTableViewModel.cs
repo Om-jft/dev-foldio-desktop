@@ -1718,7 +1718,6 @@ namespace DSLR_Tool_PC.ViewModels
                 {
                     _isDeviceAndVedioMode = value;
                     NotifyPropertyChanged("IsDeviceAndVedioMode");
-
                 }
             }
         }
