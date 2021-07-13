@@ -746,11 +746,11 @@ namespace DSLR_Tool_PC.ViewModels
                 switch (_rotate_Direction)
                 {
                     case "MoveLeft_90":
-                        _rotate_angl = (90 / BTCmd.ANGLE_DIVIDENT);
+                        _rotate_angl = (90 /*/ BTCmd.ANGLE_DIVIDENT*/);
                         sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateLeft(_rotate_angl, getSpeed(), _repeate));
                         break;
                     case "MoveRight_90":
-                        _rotate_angl = (90 / BTCmd.ANGLE_DIVIDENT);
+                        _rotate_angl = (90 /*/ BTCmd.ANGLE_DIVIDENT*/);
                         sendBluetoothMessage(BTCmd.STATE_ROTATING_90_DEGREE, BTCmd.rotateRight(_rotate_angl, getSpeed(), _repeate));
                         break;
                     case "MoveLeft_360":
@@ -766,7 +766,7 @@ namespace DSLR_Tool_PC.ViewModels
                     case "MoveLeft_with_Angle":
                         if (RotationAngle_Text > 0)
                         {
-                            _rotate_angl = (RotationAngle_Text / BTCmd.ANGLE_DIVIDENT);
+                            _rotate_angl = (RotationAngle_Text /*/ BTCmd.ANGLE_DIVIDENT*/);
                             if (_rotate_angl == 0 && RotationAngle_Text > 0) { _rotate_angl = RotationAngle_Text; }
                             rotateInControlMode(BTCmd.ROTATATION_DIRECTION_LEFT, _rotate_angl, getSpeed(), _repeate, true);
                         }
@@ -775,7 +775,7 @@ namespace DSLR_Tool_PC.ViewModels
                     case "MoveRight_with_Angle":
                         if (RotationAngle_Text > 0)
                         {
-                            _rotate_angl = (RotationAngle_Text / BTCmd.ANGLE_DIVIDENT);
+                            _rotate_angl = (RotationAngle_Text /*/ BTCmd.ANGLE_DIVIDENT*/);
                             if (_rotate_angl == 0 && RotationAngle_Text > 0) { _rotate_angl = RotationAngle_Text; }
                             rotateInControlMode(BTCmd.ROTATATION_DIRECTION_RIGHT, _rotate_angl, getSpeed(), _repeate, true);
                         }

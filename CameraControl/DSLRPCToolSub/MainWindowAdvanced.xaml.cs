@@ -1823,6 +1823,7 @@ namespace CameraControl
                 int ind = 0;
                 if (tab_history.IsSelected)
                 {
+                    EditorControler.IsEnabled = false;
                     ind = ImageLIstBox.Items.IndexOf(__SelectedImage);
                     if (ind >= 2) { Overlay1.Source = (WriteableBitmap)BitmapLoader.Instance.LoadImage(images_History[ind - 2].Path_Orginal, BitmapLoader.LargeThumbSize, 0); Overlay1.Visibility = Visibility.Visible; }
                     if (ind >= 1) { Overlay2.Source = (WriteableBitmap)BitmapLoader.Instance.LoadImage(images_History[ind - 1].Path_Orginal, BitmapLoader.LargeThumbSize, 0); Overlay2.Visibility = Visibility.Visible; }
@@ -1831,6 +1832,7 @@ namespace CameraControl
                 }
                 else
                 {
+                    EditorControler.IsEnabled = true;
                     ind = ImageListBox_Folder.Items.IndexOf(__SelectedImage);
                     if (ind >= 2) { Overlay1.Source = (WriteableBitmap)BitmapLoader.Instance.LoadImage(images_Folder[ind - 2].Path_Orginal, BitmapLoader.LargeThumbSize, 0); Overlay1.Visibility = Visibility.Visible; }
                     if (ind >= 1) { Overlay2.Source = (WriteableBitmap)BitmapLoader.Instance.LoadImage(images_Folder[ind - 1].Path_Orginal, BitmapLoader.LargeThumbSize, 0); Overlay2.Visibility = Visibility.Visible; }
@@ -1963,6 +1965,47 @@ namespace CameraControl
                 //UpdateImageData();
             }
             catch (Exception ex) { Log.Debug("ERotateRight_Click", ex); }
+        }
+
+        private int CounterRight(int angle)
+        {
+            int counter=4;
+            switch (angle)
+            {
+                case 270:
+                    counter = 1;
+                    break;
+                case 180:
+                    counter = 2;
+                    break;
+                case 90:
+                    counter = 3;
+                    break;
+                //case 0:
+                //    counter = 4;
+                //    break;
+            }
+            return counter;
+        }
+        private int CounterLeft(int angle)
+        {
+            int counter = 1;
+            switch (rotateLeftCounter)
+            {
+                case 90:
+                    counter = 1;
+                    break;
+                case 180:
+                    counter = 2;
+                    break;
+                case 270:
+                    counter = 3;
+                    break;
+                //case 0:
+                //    counter = 4;
+                //    break;
+            }
+            return counter;
         }
         #endregion
 
@@ -2379,7 +2422,16 @@ namespace CameraControl
                         ListBoxSnapshots.ScrollIntoView(_item);
                         __Pathupdate.PathImg = _item.Path;
                         __Pathupdate.__SelectedImageDetails = _item;
-                        if (_item.Frame == null){_item.Frame = (Bitmap)__photoEditModel.getBitmapFromImageFolder(_item.Path).Clone();}
+                    if (_item.rotateAngle != 0)
+                    {
+                        rotateLeftCounter = CounterLeft(_item.rotateAngle);
+                        rotateRightCounter = CounterRight(_item.rotateAngle);
+                    }
+                        if (_item.Frame == null)
+                        {
+                            _item.Frame = (Bitmap)__photoEditModel.getBitmapFromImageFolder(_item.Path).Clone();
+                            //if (_item.rotateAngle != 0) { _item.Frame = new Bitmap(Rotate_Frame(_item.Frame, _item.rotateAngle)); }
+                        }
                         //StaticClass.compressimagesize(0.2, _item.Frame);
                         ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_item.Frame);
                     if (!images_Folder[ind].IsEdited) { images_Folder[ind].Frame.Dispose();images_Folder[ind].Frame = null; }
@@ -2408,7 +2460,13 @@ namespace CameraControl
                     ImageLIstBox.ScrollIntoView(_item);
                     ImageListBox.ScrollIntoView(_item);
                     ListBoxSnapshots.ScrollIntoView(_item);
-                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = (WriteableBitmap)BitmapLoader.Instance.LoadImage(_item.Path, BitmapLoader.LargeThumbSize, 0);
+                    if (_item.Frame == null)
+                    {
+                        using (Bitmap b = new Bitmap(__photoEditModel.getBitmapFromImageFolder(_item.Path)))
+                            _item.Frame = (Bitmap)b.Clone();
+                        //if(_item.rotateAngle != 0) { _item.Frame = new Bitmap(Rotate_Frame(_item.Frame, _item.rotateAngle)); }
+                    }
+                    ServiceProvider.Settings.SelectedBitmap.DisplayEditImage = BitmapSourceConvert.CreateWriteableBitmapFromBitmap(_item.Frame);
                     _ListBoxSelectedIndex = ind;
                     __SelectedImage = _item;
                 }
@@ -2588,7 +2646,7 @@ namespace CameraControl
             else { GridLines_Capture(0, width, height); }
         }
 
-        Stretch _stretch = Stretch.Fill;
+        Stretch _stretch = Stretch.Uniform;
 
         private void ratio1_Checked(object sender, RoutedEventArgs e)
         {
@@ -3790,6 +3848,7 @@ namespace CameraControl
                     {
                         using(Bitmap b=new Bitmap(__photoEditModel.getBitmapFromImageFolder(f.Path)))
                             f.Frame = (Bitmap)b.Clone();
+                        //if (f.rotateAngle != 0) { f.Frame = new Bitmap(Rotate_Frame(f.Frame, f.rotateAngle)); }
                     }
                     f.Frame.Save(Path.Combine(tempfolder, filename), System.Drawing.Imaging.ImageFormat.Jpeg);
                     f.Frame.Dispose();f.Frame = null;
@@ -3798,6 +3857,8 @@ namespace CameraControl
                         var file = Path.Combine(tempfolder, filename);
                         WatermarkProperties.ApplyWatermark(file);
                     }
+                    GC.Collect();
+                    GC.WaitForFullGCComplete();
                     Thread.Sleep(10);
                 }
                 __exportPathUpdate.PathImg = Path.Combine(tempfolder, Path.GetFileName(images_Folder[0].Path));
@@ -3874,13 +3935,21 @@ namespace CameraControl
                     _w = (int)(images_Folder[index].resizeW - _x);
                     if (_x < 0) { _x = 0; }
                 }
-                using (Bitmap b = (Bitmap)ResizeBitmap(frame, images_Folder[index].resizeW, images_Folder[index].resizeH))
+                double hFactor = (double)frame.Height / (double)images_Folder[index].resizeH;
+                double wFactor = (double)frame.Width / (double)images_Folder[index].resizeW;
+
+                using (Bitmap bmpCrop = frame.Clone(new Rectangle((int)(_x*wFactor),(int) (_y*hFactor),(int)( _w*wFactor) - 1,(int) (_h*hFactor) - 1), frame.PixelFormat))
                 {
-                    using(Bitmap bmpCrop = b.Clone(new Rectangle(_x, _y, _w-1, _h-1), b.PixelFormat))
-                    {
-                       frame= (Bitmap)bmpCrop.Clone();
-                    }
+                    frame = (Bitmap)bmpCrop.Clone();
                 }
+
+                //using (Bitmap b = (Bitmap)ResizeBitmap(frame, images_Folder[index].resizeW, images_Folder[index].resizeH))
+                //{
+                //    using(Bitmap bmpCrop = b.Clone(new Rectangle(_x, _y, _w-1, _h-1), b.PixelFormat))
+                //    {
+                //       frame= (Bitmap)bmpCrop.Clone();
+                //    }
+                //}
             }
             catch (Exception ex) { Log.Debug("Crop image exception: ", ex); }
             return frame;
@@ -4020,8 +4089,29 @@ namespace CameraControl
                 }
                 ChangeFolder = tempSF;
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+            catch (Exception ex) { Log.Debug("Crop Exception: ",ex); }
 
+        }
+
+
+        public Bitmap Rotate_Frame(Bitmap b,int angle)
+        {
+            using (b)
+            {
+                switch (angle)
+                {
+                    case 270:
+                        b.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                    case 180:
+                        b.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                        break;
+                    case 90:
+                        b.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                }
+                return new Bitmap(b);
+            }
         }
 
     }

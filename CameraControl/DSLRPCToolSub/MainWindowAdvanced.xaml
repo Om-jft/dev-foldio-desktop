@@ -1374,7 +1374,7 @@
 
                             </Grid>
 
-                            <Border Grid.Column="2" Background="#2e2f30"  BorderThickness="1" BorderBrush="#535657">
+                            <Border Grid.Column="2" Background="#2e2f30"  BorderThickness="1" BorderBrush="#535657" x:Name="EditorControler">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <ScrollViewer.RenderTransform>
                                         <TransformGroup>
@@ -1387,9 +1387,9 @@
                                     <StackPanel x:Name="leftEdit" IsEnabled="True">
                                         <local1:LevelGraph x:Name="EditLevelGraph" Background="#2e2f30"  />
                                         <Separator Height="1" Background="Black"/>
-                                        <local1:Navigation/>
+                                        <local1:Navigation />
                                         <Separator Height="1" Background="Black"/>
-                                        <local1:PhotoEdit/>
+                                        <local1:PhotoEdit />
                                         <Separator Height="1" Background="Black"/>
                                         <local1:WatermarkSettings/>
                                     </StackPanel>

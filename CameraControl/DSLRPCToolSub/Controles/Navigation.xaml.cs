@@ -51,7 +51,8 @@ namespace DSLR_Tool_PC.Controles
         {
             try
             {
-
+                MainWindowAdvanced windowM = Application.Current.Windows.OfType<MainWindowAdvanced>().FirstOrDefault();
+                if (windowM.tab_history.IsSelected) { return; }
                 if (e.Key == Key.Return)
                 {
                     //count = 0;
@@ -89,12 +90,15 @@ namespace DSLR_Tool_PC.Controles
         {
             
             //count = Convert.ToInt32(TxtFrame.Text);
-            int txtframevalue = Convert.ToInt32(TxtFrame.Text);
-            if (count == 0) { count=txtframevalue - 1; }
+            
+            
             try
             {
                 foreach (MainWindowAdvanced window in Application.Current.Windows.OfType<MainWindowAdvanced>())
                 {
+                    if (window.tab_history.IsSelected) { return; }
+                    int txtframevalue = Convert.ToInt32(TxtFrame.Text);
+                    if (count == 0) { count = txtframevalue - 1; }
                     if (txtframevalue>1)
                     {
                         if (count==window.ListBoxSnapshots.Items.Count) { count--; }
@@ -119,12 +123,15 @@ namespace DSLR_Tool_PC.Controles
 
         private void SkipNext_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            
             //count = Convert.ToInt32(TxtFrame.Text);
-            int txtframevalue = Convert.ToInt32(TxtFrame.Text);
+            
             try
             {
                 foreach (MainWindowAdvanced window in Application.Current.Windows.OfType<MainWindowAdvanced>())
                 {
+                    if (window.tab_history.IsSelected) { return; }
+                    int txtframevalue = Convert.ToInt32(TxtFrame.Text);
                     if (txtframevalue < window.ListBoxSnapshots.Items.Count)
                     {
                         //var ct = txtFrameValue - 1;

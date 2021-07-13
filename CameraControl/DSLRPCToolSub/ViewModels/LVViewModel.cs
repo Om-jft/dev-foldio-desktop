@@ -1295,8 +1295,6 @@ namespace DSLR_Tool_PC.ViewModels
         public RelayCommand ClosePreviewCommand { get; set; }
 
         public RelayCommand CaptureSnapshotCommand { get; set; }
-
-
         #endregion
 
         public bool IsActive { get; set; }
