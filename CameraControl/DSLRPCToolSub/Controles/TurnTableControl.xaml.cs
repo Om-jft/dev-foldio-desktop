@@ -126,5 +126,15 @@ namespace DSLR_Tool_PC.Controles
 
             _turntablemodel.StopDeviceProcessing();
         }
+
+        private void IndicatorOFF(object sender, RoutedEventArgs e)
+        {
+            _turntablemodel.IndicatorOff();
+        }
+
+        private void IndicatorON(object sender, RoutedEventArgs e)
+        {
+            _turntablemodel.IndicatorOn();
+        }
     }
 }

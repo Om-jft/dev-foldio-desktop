@@ -67,6 +67,7 @@ namespace CameraControl
         private string LastLocation = null;
         private int refIndex = 0;
         private string ChangeFolder = null;
+        private int ZoomValue = 0;
 
         public UndoRedo UnDoObject = null;
         public RelayCommand<AutoExportPluginConfig> ConfigurePluginCommand { get; set; }
@@ -866,27 +867,27 @@ namespace CameraControl
                 if ((!eventArgs.CameraDevice.CaptureInSdRam || PhotoUtils.IsMovie(fileName)) && session.DeleteFileAfterTransfer)
                     eventArgs.CameraDevice.DeleteObject(new DeviceObject() { Handle = eventArgs.Handle });
 
-                if (LVViewModel.lvInstance().ZoomSliderValue > 0)
-                {
-                    int _cRatio = LVViewModel.lvInstance().ZoomSliderValue;
-                    using (MagickImage image = new MagickImage(tempFile))
-                    {
-                        int _X = image.Width / 2 * _cRatio / 100;
-                        int _Y = image.Height / 2 * _cRatio / 100;
+                //if (LVViewModel.lvInstance().ZoomSliderValue > 0)
+                //{
+                //    int _cRatio = LVViewModel.lvInstance().ZoomSliderValue;
+                //    using (MagickImage image = new MagickImage(tempFile))
+                //    {
+                //        int _X = image.Width / 2 * _cRatio / 100;
+                //        int _Y = image.Height / 2 * _cRatio / 100;
 
-                        int _Width = image.Width - (_X * 2);
-                        int _Height = image.Height - (_Y * 2);
+                //        int _Width = image.Width - (_X * 2);
+                //        int _Height = image.Height - (_Y * 2);
 
-                        MagickGeometry geometry = new MagickGeometry();
-                        geometry.Width = _Width;
-                        geometry.Height = _Height;
-                        geometry.X = _X;
-                        geometry.Y = _Y;
-                        image.Crop(geometry);
-                        //image.Format = MagickFormat.Jpeg;
-                        image.Write(tempFile);
-                    }
-                }
+                //        MagickGeometry geometry = new MagickGeometry();
+                //        geometry.Width = _Width;
+                //        geometry.Height = _Height;
+                //        geometry.X = _X;
+                //        geometry.Y = _Y;
+                //        image.Crop(geometry);
+                //        //image.Format = MagickFormat.Jpeg;
+                //        image.Write(tempFile);
+                //    }
+                //}
 
                 File.Copy(tempFile, fileName);
 
@@ -2109,6 +2110,7 @@ namespace CameraControl
                 }
                 Dispatcher.Invoke(new Action(delegate { LVViewModel.lvInstance().ShowLiveImagePart(__showstatus); }));
                 Dispatcher.Invoke(new Action(delegate { _ttVM.LoadSettingsDefaultValues(__showstatus); }));
+                ratio1.IsChecked = false; ratio2.IsChecked = false; ratio3.IsChecked = false;
             }
             catch (Exception ex) { Log.Debug("TabControl_SelectionChanged", ex); }
         }
@@ -2216,6 +2218,23 @@ namespace CameraControl
             {
                 RoutedEventArgs routedEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, menu_rotate);
                 menu_rotate.RaiseEvent(routedEventArgs);
+            }
+
+            if (_keyvalue == "Up")
+            {
+                if (ZoomValue > 1 && !EditTab.IsSelected) { LVViewModel.lvInstance().LiveZoomPanY = LVViewModel.lvInstance().LiveZoomPanY - 10; }
+            }
+            if (_keyvalue == "Down")
+            {
+                if (ZoomValue > 1 && !EditTab.IsSelected) { LVViewModel.lvInstance().LiveZoomPanY = LVViewModel.lvInstance().LiveZoomPanY + 10; }
+            }
+            if (_keyvalue == "Left")
+            {
+                if (ZoomValue > 1 && !EditTab.IsSelected) { LVViewModel.lvInstance().LiveZoomPanX = LVViewModel.lvInstance().LiveZoomPanX - 10; }
+            }
+            if (_keyvalue == "Right")
+            {
+                if (ZoomValue > 1 && !EditTab.IsSelected) { LVViewModel.lvInstance().LiveZoomPanY = LVViewModel.lvInstance().LiveZoomPanY + 10; }
             }
         }
 
@@ -2660,7 +2679,8 @@ namespace CameraControl
                 ratio_4.IsChecked = false;
                 ratio_16.IsChecked = false;
 
-                LVViewModel.lvInstance().IsStretchToFill = _stretch;
+                LVViewModel.lvInstance().IsStretchToFill = Stretch.UniformToFill;
+                
 
                 double W, H; W = H = 0;
 
@@ -2692,8 +2712,8 @@ namespace CameraControl
                 }
 
                 double X, Y, W, H; X = Y = W = H = 0;
-                EditGrid_height = (int)__EditPicGrid_ActualHeight;
-                EditGrid_width = (int)__EditPicGrid_ActualWidth;
+                EditGrid_height = (int)/*__EditPicGrid_ActualHeight*/EditFramePicEdit.ActualHeight;
+                EditGrid_width = (int)/*__EditPicGrid_ActualWidth*/EditFramePicEdit.ActualWidth;
                 if (EditGrid_height < EditGrid_width)
                 {
                     W = H = EditGrid_height;
@@ -2704,6 +2724,10 @@ namespace CameraControl
                 }
                 X = Math.Round(((EditGrid_width - W) / 2), 2);
                 Y = Math.Round(((EditGrid_height - H) / 2), 2);
+                int dx = ((int)EditPicGrid.ActualWidth - (int)EditFramePicEdit.ActualWidth) / 2;
+                int dy = ((int)EditPicGrid.ActualHeight - (int)EditFramePicEdit.ActualHeight) / 2;
+                X = Math.Round((((int)EditGrid_width - W) / 2), 2) + dx;
+                Y = Math.Round((((int)EditGrid_height - H) / 2), 2) + dy;
 
                 Text_X.Text = ((int)X).ToString();
                 Text_Y.Text = ((int)Y).ToString();
@@ -2768,7 +2792,7 @@ namespace CameraControl
                     i = i - 1;
                 }
                 GridRatio_Capture(true, W, H);
-                Thread.Sleep(200);
+                Thread.Sleep(50);
 
                 CameraGrid.Width = W;
                 CameraGrid.Height = H;
@@ -2787,10 +2811,10 @@ namespace CameraControl
                     Eratio3.IsChecked = false;
                 }
 
-                EditGrid_height = (int)__EditPicGrid_ActualHeight;
-                EditGrid_width = (int)__EditPicGrid_ActualWidth;
+                EditGrid_height = (int)EditFramePicEdit.ActualHeight;
+                EditGrid_width = (int)EditFramePicEdit.ActualWidth;
 
-                if (__EditPicGrid_ActualHeight > __EditPicGrid_ActualWidth)
+                if (EditFramePicEdit.ActualHeight > EditFramePicEdit.ActualWidth)
                 {
                     H = W = EditGrid_width;
                 }
@@ -2812,8 +2836,10 @@ namespace CameraControl
                     }
                     i = i - 1;
                 }
-                X = Math.Round(((EditGrid_width - W) / 2), 2);
-                Y = Math.Round(((EditGrid_height - H) / 2), 2);
+                int dx = ((int)EditPicGrid.ActualWidth - (int)EditFramePicEdit.ActualWidth) / 2;
+                int dy = ((int)EditPicGrid.ActualHeight - (int)EditFramePicEdit.ActualHeight) / 2;
+                X = Math.Round((((int)EditFramePicEdit.ActualWidth - W) / 2), 2) + dx;
+                Y = Math.Round((((int)EditFramePicEdit.ActualHeight - H) / 2), 2) + dy;
 
                 Text_X.Text = ((int)X).ToString();
                 Text_Y.Text = ((int)Y).ToString();
@@ -2879,7 +2905,7 @@ namespace CameraControl
                     i = i--;
                 }
                 GridRatio_Capture(true, W, H);
-                Thread.Sleep(200);
+                Thread.Sleep(50);
 
                 CameraGrid.Width = W;
                 CameraGrid.Height = H;
@@ -2898,8 +2924,8 @@ namespace CameraControl
                     Eratio3.IsChecked = true;
                 }
 
-                EditGrid_height = (int)__EditPicGrid_ActualHeight;
-                EditGrid_width = (int)__EditPicGrid_ActualWidth;
+                EditGrid_height = (int)EditFramePicEdit.ActualHeight;
+                EditGrid_width = (int)EditFramePicEdit.ActualWidth;
 
                 if (EditGrid_height > EditGrid_width)
                 {
@@ -2923,8 +2949,10 @@ namespace CameraControl
                     }
                     i = i--;
                 }
-                X = Math.Round(((EditGrid_width - W) / 2), 2);
-                Y = Math.Round(((EditGrid_height - H) / 2), 2);
+                int dx = ((int)EditPicGrid.ActualWidth - (int)EditFramePicEdit.ActualWidth) / 2;
+                int dy = ((int)EditPicGrid.ActualHeight - (int)EditFramePicEdit.ActualHeight) / 2;
+                X = Math.Round((((int)EditFramePicEdit.ActualWidth- W) / 2), 2)+dx;
+                Y = Math.Round((((int)EditFramePicEdit.ActualHeight - H) / 2), 2)+dy;
 
                 Text_X.Text = ((int)X).ToString();
                 Text_Y.Text = ((int)Y).ToString();
@@ -2971,8 +2999,12 @@ namespace CameraControl
                 CropOut.Visibility = Visibility.Visible;
 
                 double X, Y, W, H; X = Y = W = H = 0;
-                W = Math.Round(__EditPicGrid_ActualWidth, 2);
-                H = Math.Round(__EditPicGrid_ActualHeight, 2);
+                W = Math.Round(EditFramePicEdit.ActualWidth, 2);
+                H = Math.Round(EditFramePicEdit.ActualHeight, 2);
+                int dx = ((int)EditPicGrid.ActualWidth - (int)EditFramePicEdit.ActualWidth) / 2;
+                int dy = ((int)EditPicGrid.ActualHeight - (int)EditFramePicEdit.ActualHeight) / 2;
+                X = Math.Round((((int)EditFramePicEdit.ActualWidth - W) / 2), 2) + dx;
+                Y = Math.Round((((int)EditFramePicEdit.ActualHeight - H) / 2), 2) + dy;
 
                 Text_X.Text = ((int)X).ToString();
                 Text_Y.Text = ((int)Y).ToString();
@@ -3179,20 +3211,20 @@ namespace CameraControl
                     this.ratio_1.IsChecked = false;
                     this.ratio_4.IsChecked = false;
                     this.ratio_16.IsChecked = false;
-                    this.Vertical_mList.IsChecked = false;
-                    this.Horizontal_mList.IsChecked = false;
-                    this.Grid3x3.IsChecked = false;
-                    this.Grid6x4.IsChecked = false;
-                    this.Grid3x3Dial.IsChecked = false;
-                    this.Grid3x3.IsEnabled = true;
-                    this.Grid6x4.IsEnabled = true;
-                    this.Grid3x3Dial.IsEnabled = true;
+                    //this.Vertical_mList.IsChecked = false;
+                    //this.Horizontal_mList.IsChecked = false;
+                    //this.Grid3x3.IsChecked = false;
+                    //this.Grid6x4.IsChecked = false;
+                    //this.Grid3x3Dial.IsChecked = false;
+                    //this.Grid3x3.IsEnabled = true;
+                    //this.Grid6x4.IsEnabled = true;
+                    //this.Grid3x3Dial.IsEnabled = true;
 
-                    this.Tg_Btn6.IsChecked = false;
-                    this.Tg_Btn7.IsChecked = false;
+                    //this.Tg_Btn6.IsChecked = false;
+                    //this.Tg_Btn7.IsChecked = false;
 
-                    CGrid_0();
-                    Tg_Btn7_Unchecked(sender, e);
+                    //CGrid_0();
+                    //Tg_Btn7_Unchecked(sender, e);
                 }
             }
         }
@@ -3403,15 +3435,18 @@ namespace CameraControl
                 if (LVViewModel.lvInstance().CameraDevice == null) { return; }
 
                 int value = 0;
-                if (cmb_Zoom.SelectedIndex == 0) { value = 50; }
-                if (cmb_Zoom.SelectedIndex == 1) { value = 45; }
-                if (cmb_Zoom.SelectedIndex == 2) { value = 40; }
-                if (cmb_Zoom.SelectedIndex == 3) { value = 35; }
-                if (cmb_Zoom.SelectedIndex == 4) { value = 30; }
-                if (cmb_Zoom.SelectedIndex == 5) { value = 25; }
-                if (cmb_Zoom.SelectedIndex == 6) { value = 0; }
+                if (cmb_Zoom.SelectedIndex == 0) { value = 10; }
+                if (cmb_Zoom.SelectedIndex == 1) { value = 9; }
+                if (cmb_Zoom.SelectedIndex == 2) { value = 8; }
+                if (cmb_Zoom.SelectedIndex == 3) { value = 7; }
+                if (cmb_Zoom.SelectedIndex == 4) { value = 6; }
+                if (cmb_Zoom.SelectedIndex == 5) { value = 5; }
+                if (cmb_Zoom.SelectedIndex == 6) { value = 1; }
 
-                LVViewModel.lvInstance().ZoomSliderValue = value;
+                //LVViewModel.lvInstance().ZoomSliderValue = value;
+                LVViewModel.lvInstance().LiveViewScaleX = value;
+                LVViewModel.lvInstance().LiveViewScaleY = value;
+                ZoomValue = value;
             }
             catch (Exception ex) { Log.Debug("Slider_ValueChanged", ex); }
         }
@@ -3419,10 +3454,16 @@ namespace CameraControl
         {
             try
             {
-                if (LVViewModel.lvInstance() == null) { return; }
-                if (LVViewModel.lvInstance().CameraDevice == null) { return; }
+                if ((int)sldZoom.Value > 0)
+                {
+                    if (LVViewModel.lvInstance() == null) { return; }
+                    if (LVViewModel.lvInstance().CameraDevice == null) { return; }
 
-                LVViewModel.lvInstance().ZoomSliderValue = (int)sldZoom.Value;
+                    //LVViewModel.lvInstance().ZoomSliderValue = (int)sldZoom.Value;
+                    LVViewModel.lvInstance().LiveViewScaleX = (int)sldZoom.Value;
+                    LVViewModel.lvInstance().LiveViewScaleY = (int)sldZoom.Value;
+                    ZoomValue = (int)sldZoom.Value;
+                }
             }
             catch (Exception ex) { Log.Debug("Slider_ValueChanged", ex); }
         }
@@ -4013,6 +4054,74 @@ namespace CameraControl
         {
             try
             {
+                //System.Diagnostics.Process process = new System.Diagnostics.Process();
+                //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                //startInfo.FileName = "cmd.exe";
+                //int x = 0, y = 0;
+                //Bitmap b = new Bitmap(filename);
+                //if (ratio.Equals("1:1"))
+                //{
+                //    if (b.Height > b.Width) { x = y = b.Width; }
+                //    if (b.Width > b.Height) { x = y = b.Height; }
+                //}
+                //if (ratio.Equals("4:3"))
+                //{
+                //    if (b.Height > b.Width)
+                //    {
+                //        x = y = b.Width;
+                //    }
+                //    else
+                //    {
+                //        x = b.Width;
+                //        y = b.Height;
+                //    }
+                //    int remainder = (int)x % 4;
+                //    x = x - remainder;
+                //    int i = (int)x;
+                //    while (i > 0)
+                //    {
+                //        if (i % 4 == 0 && ((i / 4) * 3) <= y)
+                //        {
+                //            x = i;
+                //            y = (i / 4) * 3;
+                //            break;
+                //        }
+                //        i = i - 1;
+                //    }
+                //}
+                //if (ratio.Equals("16:9"))
+                //{
+                //    if (b.Height > b.Width)
+                //    {
+                //        x = y = b.Width;
+                //    }
+                //    else
+                //    {
+                //        x = b.Width;
+                //        y = b.Height;
+                //    }
+                //    int remainder = (int)x % 16;
+                //    x = x - remainder;
+                //    int i = (int)x;
+                //    while (i > 0)
+                //    {
+                //        if (i % 16 == 0 && ((i / 16) * 9) <= y)
+                //        {
+                //            x = i;
+                //            y = (i / 16) * 9;
+                //            break;
+                //        }
+                //        i = i--;
+                //    }
+                //}
+                //b.Dispose();
+                //startInfo.Arguments = "/C mogrify -crop " + x + "x" + y + "+" + "0+0" + " \"" + filename + "\"";
+                //process.StartInfo = startInfo;
+                //process.Start();
+                ////process.WaitForExit();
+                //process.Close();
+
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
@@ -4043,9 +4152,6 @@ namespace CameraControl
         {
             Dispatcher.Invoke(new Action(delegate { LVViewModel.lvInstance().RecordLiveView(); }));
         }
-
-        
-
 
         private void CropWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -4114,5 +4220,6 @@ namespace CameraControl
             }
         }
 
+        
     }
 }

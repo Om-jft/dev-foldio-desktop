@@ -595,8 +595,8 @@
                     <TextBlock Text="Center Point Indicator" Style="{StaticResource Sub_Heading_Title}" />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Margin="20,10,0,0" Orientation="Horizontal">
-                    <RadioButton Grid.Column="0" Width="120" Background="Transparent" Content="Indicator ON" GroupName="MC_Indicator" IsChecked="True" FontSize="10" FontWeight="Bold" Style="{StaticResource RadioSelector}" />
-                    <RadioButton Grid.Column="1" Background="Transparent" Content="Indicator OFF"  GroupName="MC_Indicator" FontSize="10" FontWeight="Bold" Style="{StaticResource RadioSelector}" />
+                    <RadioButton Grid.Column="0" Width="120" Background="Transparent" Content="Indicator ON" GroupName="MC_Indicator" IsChecked="True" FontSize="10" FontWeight="Bold" Style="{StaticResource RadioSelector}" Checked="IndicatorON"/>
+                    <RadioButton Grid.Column="1" Background="Transparent" Content="Indicator OFF"  GroupName="MC_Indicator" FontSize="10" FontWeight="Bold" Style="{StaticResource RadioSelector}" Checked="IndicatorOFF" />
                 </StackPanel>
             </Grid>
         </Grid>

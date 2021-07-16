@@ -502,6 +502,50 @@ namespace DSLR_Tool_PC.ViewModels
             }
         }
 
+        private int _liveViewScaleX = 1;
+        private int _liveViewScaleY = 1;
+        private int _liveZoomPanX = 0;
+        private int _liveZoomPanY = 0;
+        public int LiveViewScaleX
+        {
+            get { return _liveViewScaleX; }
+            set
+            {
+                _liveViewScaleX = value;
+                RaisePropertyChanged(() => LiveViewScaleX);
+            }
+        }
+
+        public int LiveViewScaleY
+        {
+            get { return _liveViewScaleY; }
+            set
+            {
+                _liveViewScaleY = value;
+                RaisePropertyChanged(() => LiveViewScaleY);
+            }
+        }
+
+        public int LiveZoomPanX
+        {
+            get { return _liveZoomPanX; }
+            set
+            {
+                _liveZoomPanX = value;
+                RaisePropertyChanged(() => LiveZoomPanX);
+            }
+        }
+
+        public int LiveZoomPanY
+        {
+            get { return _liveZoomPanY; }
+            set
+            {
+                _liveZoomPanY = value;
+                RaisePropertyChanged(() => LiveZoomPanY);
+            }
+        }
+
         public int PreviewTime
         {
             get { return CameraProperty.LiveviewSettings.PreviewTime; }
@@ -2101,7 +2145,7 @@ namespace DSLR_Tool_PC.ViewModels
                 return;
             }
 
-            if (LiveViewData.ImageData.Length < 50 || LiveViewData.ImageData.Length==null)
+            if (LiveViewData.ImageData.Length < 50 || LiveViewData.ImageData==null)
             {
                 return;
             }

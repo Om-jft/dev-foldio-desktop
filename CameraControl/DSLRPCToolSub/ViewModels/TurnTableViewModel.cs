@@ -410,17 +410,17 @@ namespace DSLR_Tool_PC.ViewModels
                 int CaptureTimeCount = 0;
                 StaticClass.FileName_LastCapturedImage = "";
                 ServiceProvider.WindowsManager.ExecuteCommand(CmdConsts.Capture);
-                Thread.Sleep(3000);
+                Thread.Sleep(500);
             V1:
                 if (System.IO.File.Exists(DSLR_Tool_PC.StaticClass.FileName_LastCapturedImage) || DSLR_Tool_PC.StaticClass.IsCapturedPhoto)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(10);
                     CollectImages(DSLR_Tool_PC.StaticClass.FileName_LastCapturedImage);
                     sendBluetoothMessage(BTCmd.STATE_ROTATING, BTCmd.rotateRight(_RotateAngle, getSpeed(), 1));
                     Thread.Sleep((int)((350.0 * _RotateAngle) / _FrameSpeed));
                     StaticClass.CapturedImageCount += 1;
 
-                    Thread.Sleep(500);
+                    Thread.Sleep(10);
 
                     CapturePhoto_360_RecursiveNew();
                 }
@@ -429,7 +429,7 @@ namespace DSLR_Tool_PC.ViewModels
                     if (CaptureTimeCount < 60)
                     {
                         CaptureTimeCount += 1;
-                        Thread.Sleep(100);
+                        Thread.Sleep(10);
                         goto V1;
                     }
                     else
@@ -917,6 +917,15 @@ namespace DSLR_Tool_PC.ViewModels
                 IsRightCheckedEvent = false;
                 IsLeftCheckedEvent = false;
             }
+        }
+
+        public void IndicatorOn()
+        {
+            sendBluetoothMessage(BTCmd.STATE_IDLE, BTCmd.indicator(true));
+        }
+        public void IndicatorOff()
+        {
+            sendBluetoothMessage(BTCmd.STATE_IDLE, BTCmd.indicator(false));
         }
 
         private void MoveLeft_90()

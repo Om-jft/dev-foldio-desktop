@@ -217,6 +217,11 @@ namespace CameraControl.Core.Classes
             if (_ctrlPressed && e.Key == Key.OemPlus) { __returnValue = "Ctrl++"; }
             if (_ctrlPressed && e.Key == Key.OemMinus) { __returnValue = "Ctrl+-"; }
 
+            if (e.Key == Key.Left) { __returnValue = "Left"; }
+            if (e.Key == Key.Right) { __returnValue = "Right"; }
+            if (e.Key == Key.Up) { __returnValue = "Up"; }
+            if (e.Key == Key.Down) { __returnValue = "Down"; }
+
             return __returnValue;
         }
     }

@@ -29,6 +29,7 @@ namespace DSLR_Tool_PC.Classes
         public static string CANCEL = "cancel({0})";
         public static string GET_BRIGHT = "get_bright";
         public static string GET_STATUS = "get_status";
+        public static string Botled = "bot_led({0})";
 
         // BT Status
         public static int STATE_NONE = -1;
@@ -100,6 +101,12 @@ namespace DSLR_Tool_PC.Classes
         {
             int indicator = withIndicator ? WITH_INDICATOR : NO_INDICATOR;
             return string.Format(CANCEL, indicator);
+        }
+
+        public static string indicator(bool withIndicator)
+        {
+            int indicator = withIndicator ? WITH_INDICATOR : NO_INDICATOR;
+            return string.Format(Botled, indicator);
         }
 
         public static List<BluetoothLEDevice> LEDevicesList = new List<BluetoothLEDevice>();

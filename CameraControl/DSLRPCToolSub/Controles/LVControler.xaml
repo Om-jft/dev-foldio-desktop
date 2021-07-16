@@ -13,7 +13,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Devices="clr-namespace:CameraControl.Devices;assembly=CameraControl.Devices" 
              xmlns:wpf1="clr-namespace:CameraControl.Core.Wpf;assembly=CameraControl.Core" 
-             xmlns:local="clr-namespace:CameraControl.Controls"
+             xmlns:local="clr-namespace:CameraControl.Controls" xmlns:local2="clr-namespace:CameraControl.DSLRPCToolSub.ViewModels"
              d:DesignHeight="782" d:DesignWidth="260" BorderBrush="{x:Null}" BorderThickness="1" >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -88,7 +88,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid x:Name="grd_Main">
+    <Grid x:Name="grd_Main" >
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -96,14 +96,24 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="_image" Stretch="{Binding IsStretchToFill}" MouseDown="image1_MouseDown" Source="{Binding Bitmap}" Grid.Column="0" Grid.Row="0" PreviewMouseDown="_image_PreviewMouseDown" >
-            <Image.InputBindings>
-                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding AutoFocusCommand}" />
-            </Image.InputBindings>
-            <Image.LayoutTransform>
-                <RotateTransform  Angle="{Binding Rotation}" />
-            </Image.LayoutTransform>
-        </Image>
+        <Border ClipToBounds="True">
+            <Image x:Name="_image" Stretch="{Binding IsStretchToFill}" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="image1_MouseDown" Source="{Binding Bitmap}" Grid.Column="0" Grid.Row="0" PreviewMouseDown="_image_PreviewMouseDown" >
+                <Image.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding AutoFocusCommand}" />
+                </Image.InputBindings>
+                <Image.LayoutTransform>
+                    <RotateTransform  Angle="{Binding Rotation}" />
+                </Image.LayoutTransform>
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="{Binding LiveViewScaleX}" ScaleY="{Binding LiveViewScaleY}"/>
+                        <TranslateTransform X="{Binding LiveZoomPanX}" Y="{Binding LiveZoomPanY}"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </Border>
+        <!--</ScrollViewer>-->
+        <!--</local2:ZoomBorder>-->
 
         <local1:ZoomAndPanControl Visibility="Collapsed" x:Name="zoomAndPanControl" MouseWheel="zoomAndPanControl_MouseWheel" Grid.Row="0" Grid.RowSpan="4" Grid.Column="2" Style="{StaticResource ZoomStyle}" 
             ZoneOneVisibility="{Binding PreviewBitmapVisible, Converter={StaticResource BooleanToVisibilityConverter1}}" SizeChanged="zoomAndPanControl_SizeChanged" MouseDoubleClick="zoomAndPanControl_MouseDoubleClick" ClipToBounds="True">
@@ -123,7 +133,7 @@
             <Grid.LayoutTransform>
                 <RotateTransform  Angle="{Binding Rotation}" />
             </Grid.LayoutTransform>
-            <Viewbox Stretch="Uniform" ClipToBounds="True" Width="{Binding ActualWidth, ElementName=_image}" Height="{Binding ActualHeight, ElementName=_image}"
+            <Viewbox Stretch="UniformToFill" ClipToBounds="True" Width="{Binding ActualWidth, ElementName=_image}" Height="{Binding ActualHeight, ElementName=_image}"
                 Visibility="{Binding SettingArea, Converter={StaticResource BooleanToVisibilityConverter1}}">
                 <Canvas Width="1000" Height="1000">
                     <Path Fill="#80000000">
